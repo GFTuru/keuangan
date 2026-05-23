@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencatatan Keuangan by gf</title>
+    <title>Pencatatan Keuangan Pro by gf</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="icon" type="image/png" href="logo.jpg">
+    <link rel="icon" type="image/jpg" href="logo.jpg">
     <link rel="apple-touch-icon" href="logo.jpg">
     <style>
         :root {
@@ -87,7 +87,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--success-color);
+            background: var(--warning-color);
             animation: pulse 2s ease-in-out infinite;
         }
         
@@ -129,6 +129,7 @@
         .balance-amount {
             font-size: 1.2rem;
             font-weight: 700;
+            word-break: break-word;
         }
 
         .section {
@@ -300,6 +301,9 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 1rem;
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
         }
 
         th, td {
@@ -320,23 +324,6 @@
             background: #e2e8f0;
         }
 
-        th.sortable::after {
-            content: ' ↕';
-            opacity: 0.3;
-        }
-
-        th.sort-asc::after {
-            content: ' ↑';
-            opacity: 1;
-            color: var(--primary-color);
-        }
-
-        th.sort-desc::after {
-            content: ' ↓';
-            opacity: 1;
-            color: var(--primary-color);
-        }
-
         .action-btns {
             display: flex;
             gap: 0.5rem;
@@ -348,45 +335,12 @@
             border-radius: 4px;
         }
 
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .pagination button {
-            padding: 0.5rem 0.75rem;
-            background: white;
-            border: 1px solid var(--medium-gray);
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .pagination button:hover:not(:disabled) {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .pagination button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .pagination .page-info {
-            font-size: 0.875rem;
-            color: var(--dark-gray);
-        }
-
         /* Charts */
         .chart-container {
             position: relative;
             height: 300px;
             margin-bottom: 2rem;
+            width: 100%;
         }
 
         .chart-grid {
@@ -402,24 +356,6 @@
             flex-wrap: wrap;
             gap: 0.5rem;
             margin-bottom: 1rem;
-        }
-        
-        .tag {
-            padding: 0.25rem 0.75rem;
-            background: var(--light-gray);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border: 1px solid var(--medium-gray);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        .tag-remove {
-            cursor: pointer;
-            color: var(--danger-color);
-            font-weight: 700;
         }
 
         /* Budget Progress */
@@ -645,6 +581,9 @@
             h1 { font-size: 1.5rem; }
             .card { padding: 1rem; }
             .balance-cards { gap: 0.5rem; }
+            .balance-card { padding: 0.75rem 0.5rem; }
+            .balance-title { font-size: 0.65rem; }
+            .balance-amount { font-size: 0.95rem; }
             .chart-grid { grid-template-columns: 1fr; }
             table { font-size: 0.8rem; }
             th, td { padding: 0.5rem; }
@@ -657,9 +596,9 @@
     <main>
         <div class="header-container">
             <h1>💰 Keuangan Pro</h1>
-            <div class="sync-indicator">
+            <div class="sync-indicator" onclick="showSyncModal()">
                 <div class="sync-status"></div>
-                <span>Local Mode</span>
+                <span id="sync-text">Menghubungkan...</span>
             </div>
         </div>
 
@@ -682,7 +621,7 @@
         <div id="input-section" class="section active">
             <div class="card">
                 <h2 class="section-title">📝 Input Transaksi</h2>
-                <form id="transaction-form">
+                <form id="transaction-form" onsubmit="addTransaction(event)">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div>
                             <label for="tanggal">📅 Tanggal</label>
@@ -811,7 +750,19 @@
                 </div>
                 
                 <h3>🔄 Recurring Transactions</h3>
-                <div id="recurring-list"></div>
+                <div id="recurring-list" style="margin-bottom: 2rem;"></div>
+
+                <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--medium-gray);">
+                
+                <h3>🔄 Sync Cloud Lintas Device</h3>
+                <p style="font-size: 0.875rem; color: var(--dark-gray); margin-bottom: 1rem;">
+                    Gunakan kode sync ini di perangkat lain untuk akses sinkronisasi otomatis via Cloud Firebase.
+                </p>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <input type="text" id="sync-code-display" readonly style="margin-bottom: 0; flex: 1;">
+                    <button onclick="copySyncCode()" class="btn btn-secondary" style="padding: 0.75rem 1rem; width: auto;">📋 Copy</button>
+                </div>
+                <button onclick="showSyncModal()" class="btn btn-primary">Atur Sync</button>
             </div>
         </div>
     </main>
@@ -885,6 +836,35 @@
         </div>
     </div>
 
+    <div id="sync-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Sync Lintas Device (Cloud Firebase)</h2>
+                <button class="modal-close" onclick="closeModal('sync-modal')">&times;</button>
+            </div>
+            <div>
+                <p>Kode sync Anda:</p>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <input type="text" id="modal-sync-code" readonly style="margin-bottom: 0; flex: 1; font-weight: 700; font-size: 1.1rem; text-align: center;">
+                    <button onclick="copySyncCode()" class="btn btn-secondary" style="padding: 0.75rem 1rem; width: auto;">📋</button>
+                </div>
+                
+                <p style="margin-top: 2rem;">Atau masukkan kode dari device lain:</p>
+                <input type="text" id="import-sync-code" placeholder="Masukkan kode sync" style="margin-bottom: 0.5rem;">
+                <button onclick="importFromSync()" class="btn btn-primary" style="width: 100%;">Tautkan Data</button>
+                
+                <div style="margin-top: 2rem; padding: 1rem; background: var(--light-gray); border-radius: 8px; font-size: 0.875rem;">
+                    <strong>💡 Cara menggunakan:</strong>
+                    <ol style="margin: 0.5rem 0 0 1.2rem; padding: 0;">
+                        <li>Copy kode sync dari device pertama Anda.</li>
+                        <li>Buka app di device kedua.</li>
+                        <li>Masukkan kode dan klik Tautkan Data.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bottom Navigation -->
     <div class="bottom-nav-container">
         <div class="bottom-nav">
@@ -911,11 +891,29 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Firebase Configuration & Initialization
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+
+        const firebaseConfig = {
+            databaseURL: "https://bygf-6f77-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let unsubscribeSnapshot = null;
+
         // GLOBAL STATE
         let transactions = JSON.parse(localStorage.getItem('transactions_v2') || '[]');
         let budgets = JSON.parse(localStorage.getItem('budgets_v2') || '[]');
         let recurringTransactions = JSON.parse(localStorage.getItem('recurring_v2') || '[]');
+        
+        function generateSyncCode() {
+            return 'GF-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+        let syncCode = localStorage.getItem('active_sync_code_v2') || generateSyncCode();
         
         const defaultCategories = [
             { id: 'parkir', name: 'Parkir', icon: '🅿️' },
@@ -928,21 +926,13 @@
         ];
 
         let charts = {};
-        let currentSort = { column: null, direction: 'desc' };
-        let currentPage = 1;
-        const itemsPerPage = 10;
 
         // INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
             setCurrentDate();
             loadCategories();
-            updateBalances();
-            renderHistory();
-            renderBudgets();
-            renderRecurring();
-            renderCharts();
+            updateAllUI();
             
-            document.getElementById('transaction-form').addEventListener('submit', addTransaction);
             document.getElementById('is-recurring').addEventListener('change', (e) => {
                 document.getElementById('recurring-options').style.display = e.target.checked ? 'block' : 'none';
             });
@@ -953,8 +943,79 @@
                 const el = document.getElementById(id);
                 if (el) el.addEventListener('input', formatCurrencyInput);
             });
+
+            initAppSync();
         });
 
+        // ---------------- FIREBASE SYNC LOGIC ----------------
+        function initAppSync() {
+            document.getElementById('sync-code-display').value = syncCode;
+            document.getElementById('modal-sync-code').value = syncCode;
+            localStorage.setItem('active_sync_code_v2', syncCode);
+            listenToData(syncCode);
+        }
+
+        function listenToData(code) {
+            document.getElementById('sync-text').textContent = 'Menghubungkan...';
+            document.querySelector('.sync-status').style.background = 'var(--warning-color)';
+
+            if (unsubscribeSnapshot) {
+                unsubscribeSnapshot();
+            }
+            
+            const dbRef = ref(db, 'sync_v2/' + code);
+            unsubscribeSnapshot = onValue(dbRef, (snapshot) => {
+                document.getElementById('sync-text').textContent = 'Sync Aktif';
+                document.querySelector('.sync-status').style.background = 'var(--success-color)';
+                
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    transactions = data.transactions || [];
+                    budgets = data.budgets || [];
+                    recurringTransactions = data.recurringTransactions || [];
+                    saveToLocal();
+                } else {
+                    updateDatabase();
+                }
+                updateAllUI();
+            }, (error) => {
+                console.error("Sync error:", error);
+                document.getElementById('sync-text').textContent = 'Sync Gagal';
+                document.querySelector('.sync-status').style.background = 'var(--danger-color)';
+                showToast('Gagal terhubung. Pastikan rules Realtime Database adalah true.', 'error');
+            });
+        }
+
+        function updateDatabase() {
+            saveToLocal();
+            if (!syncCode) return;
+            const dbRef = ref(db, 'sync_v2/' + syncCode);
+            set(dbRef, {
+                transactions,
+                budgets,
+                recurringTransactions,
+                updatedAt: new Date().toISOString()
+            }).catch(err => {
+                console.error(err);
+                showToast('Gagal menyimpan ke Cloud.', 'error');
+            });
+        }
+
+        function saveToLocal() {
+            localStorage.setItem('transactions_v2', JSON.stringify(transactions));
+            localStorage.setItem('budgets_v2', JSON.stringify(budgets));
+            localStorage.setItem('recurring_v2', JSON.stringify(recurringTransactions));
+        }
+
+        function updateAllUI() {
+            updateBalances();
+            renderHistory();
+            renderBudgets();
+            renderRecurring();
+            renderCharts();
+        }
+
+        // ---------------- CORE FUNCTIONS ----------------
         function setCurrentDate() {
             document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
         }
@@ -996,8 +1057,8 @@
             return isValid;
         }
 
-        function addTransaction(e) {
-            e.preventDefault();
+        window.addTransaction = function(e) {
+            if (e) e.preventDefault();
             
             if (!validateForm()) {
                 showToast('Periksa kembali form!', 'error');
@@ -1023,18 +1084,17 @@
                     type: document.getElementById('recurring-type').value,
                     template: transaction
                 });
-                localStorage.setItem('recurring_v2', JSON.stringify(recurringTransactions));
             }
             
-            saveData();
+            updateDatabase(); // trigger sync and ui updates
             document.getElementById('transaction-form').reset();
             setCurrentDate();
             document.getElementById('is-recurring').checked = false;
             document.getElementById('recurring-options').style.display = 'none';
             showToast('Transaksi berhasil ditambahkan!', 'success');
-        }
+        };
 
-        function editTransaction(id) {
+        window.editTransaction = function(id) {
             const t = transactions.find(tr => tr.id === id);
             if (!t) return;
             
@@ -1047,9 +1107,9 @@
             document.getElementById('edit-keterangan').value = t.keterangan || '';
             
             showModal('edit-modal');
-        }
+        };
 
-        function saveEdit() {
+        window.saveEdit = function() {
             const id = parseInt(document.getElementById('edit-id').value);
             const index = transactions.findIndex(t => t.id === id);
             if (index === -1) return;
@@ -1064,22 +1124,22 @@
                 keterangan: document.getElementById('edit-keterangan').value.trim()
             };
             
-            saveData();
+            updateDatabase();
             closeModal('edit-modal');
             showToast('Transaksi berhasil diupdate!', 'success');
-        }
+        };
 
-        function deleteTransaction(id) {
+        window.deleteTransaction = function(id) {
             if (!confirm('Hapus transaksi ini?')) return;
             transactions = transactions.filter(t => t.id !== id);
-            saveData();
+            updateDatabase();
             showToast('Transaksi dihapus!', 'success');
-        }
+        };
 
         function updateBalances() {
             let cash = 0, saldo = 0, celengan = 0;
             transactions.forEach(t => {
-                const amount = t.pemasukan - t.pengeluaran;
+                const amount = (t.pemasukan || 0) - (t.pengeluaran || 0);
                 if (t.jenisAkun === 'cash') cash += amount;
                 else if (t.jenisAkun === 'saldo') saldo += amount;
                 else if (t.jenisAkun === 'celengan') celengan += amount;
@@ -1118,16 +1178,16 @@
             
             container.innerHTML = months.map(month => {
                 const monthTransactions = grouped[month].sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
-                const totalIncome = monthTransactions.reduce((s, t) => s + t.pemasukan, 0);
-                const totalExpense = monthTransactions.reduce((s, t) => s + t.pengeluaran, 0);
+                const totalIncome = monthTransactions.reduce((s, t) => s + (t.pemasukan || 0), 0);
+                const totalExpense = monthTransactions.reduce((s, t) => s + (t.pengeluaran || 0), 0);
                 
                 return `
                     <div class="month-section">
                         <div class="month-header" onclick="toggleMonth('${month}')">
                             <div class="month-title">${formatMonthYear(month)}</div>
                             <div class="month-summary">
-                                <span style="color: rgba(255,255,255,0.9);">Pemasukan: ${formatCurrency(totalIncome)}</span>
-                                <span style="color: rgba(255,255,255,0.9);">Pengeluaran: ${formatCurrency(totalExpense)}</span>
+                                <span style="color: rgba(255,255,255,0.9);">In: ${formatCurrency(totalIncome)}</span>
+                                <span style="color: rgba(255,255,255,0.9);">Out: ${formatCurrency(totalExpense)}</span>
                             </div>
                             <button class="month-toggle" id="toggle-${month}">▼</button>
                         </div>
@@ -1135,12 +1195,12 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th class="sortable" onclick="sortTable('tanggal')">Tanggal</th>
-                                        <th class="sortable" onclick="sortTable('jenisAkun')">Jenis Akun</th>
-                                        <th class="sortable" onclick="sortTable('kategori')">Kategori</th>
+                                        <th>Tanggal</th>
+                                        <th>Jenis Akun</th>
+                                        <th>Kategori</th>
                                         <th>Keterangan</th>
-                                        <th class="sortable" onclick="sortTable('pemasukan')">Pemasukan</th>
-                                        <th class="sortable" onclick="sortTable('pengeluaran')">Pengeluaran</th>
+                                        <th>Pemasukan</th>
+                                        <th>Pengeluaran</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -1179,12 +1239,12 @@
             }).join('');
         }
 
-        function toggleMonth(month) {
+        window.toggleMonth = function(month) {
             const content = document.getElementById(`content-${month}`);
             const toggle = document.getElementById(`toggle-${month}`);
             content.classList.toggle('collapsed');
             toggle.classList.toggle('collapsed');
-        }
+        };
 
         function renderBudgets() {
             const container = document.getElementById('budget-list');
@@ -1214,7 +1274,7 @@
             }).join('');
         }
 
-        function addBudget() {
+        window.addBudget = function() {
             const budget = {
                 id: Date.now(),
                 category: document.getElementById('budget-category').value,
@@ -1223,18 +1283,16 @@
             };
             
             budgets.push(budget);
-            localStorage.setItem('budgets_v2', JSON.stringify(budgets));
-            renderBudgets();
+            updateDatabase();
             closeModal('budget-modal');
             showToast('Budget ditambahkan!', 'success');
-        }
+        };
 
-        function deleteBudget(id) {
+        window.deleteBudget = function(id) {
             budgets = budgets.filter(b => b.id !== id);
-            localStorage.setItem('budgets_v2', JSON.stringify(budgets));
-            renderBudgets();
+            updateDatabase();
             showToast('Budget dihapus!', 'success');
-        }
+        };
 
         function calculateBudgetSpent(budget) {
             const now = new Date();
@@ -1253,7 +1311,7 @@
             
             return transactions
                 .filter(t => t.kategori === budget.category && new Date(t.tanggal) >= filterDate)
-                .reduce((sum, t) => sum + t.pengeluaran, 0);
+                .reduce((sum, t) => sum + (t.pengeluaran || 0), 0);
         }
 
         function renderRecurring() {
@@ -1279,21 +1337,23 @@
             `).join('');
         }
 
-        function deleteRecurring(id) {
+        window.deleteRecurring = function(id) {
             recurringTransactions = recurringTransactions.filter(r => r.id !== id);
-            localStorage.setItem('recurring_v2', JSON.stringify(recurringTransactions));
-            renderRecurring();
+            updateDatabase();
             showToast('Recurring transaction dihapus!', 'success');
-        }
+        };
 
         function renderCharts() {
-            renderCategoryChart();
-            renderIncomeExpenseChart();
-            renderTrendChart();
+            if (document.getElementById('analytics-section').classList.contains('active')) {
+                renderCategoryChart();
+                renderIncomeExpenseChart();
+                renderTrendChart();
+            }
         }
 
         function renderCategoryChart() {
             const ctx = document.getElementById('categoryChart');
+            if (!ctx) return;
             if (charts.category) charts.category.destroy();
             
             const expensesByCategory = {};
@@ -1327,10 +1387,11 @@
 
         function renderIncomeExpenseChart() {
             const ctx = document.getElementById('incomeExpenseChart');
+            if (!ctx) return;
             if (charts.incomeExpense) charts.incomeExpense.destroy();
             
-            const totalIncome = transactions.reduce((s, t) => s + t.pemasukan, 0);
-            const totalExpense = transactions.reduce((s, t) => s + t.pengeluaran, 0);
+            const totalIncome = transactions.reduce((s, t) => s + (t.pemasukan || 0), 0);
+            const totalExpense = transactions.reduce((s, t) => s + (t.pengeluaran || 0), 0);
             
             charts.incomeExpense = new Chart(ctx, {
                 type: 'bar',
@@ -1369,14 +1430,15 @@
 
         function renderTrendChart() {
             const ctx = document.getElementById('trendChart');
+            if (!ctx) return;
             if (charts.trend) charts.trend.destroy();
             
             const monthlyData = {};
             transactions.forEach(t => {
                 const month = t.tanggal.substring(0, 7);
                 if (!monthlyData[month]) monthlyData[month] = { income: 0, expense: 0 };
-                monthlyData[month].income += t.pemasukan;
-                monthlyData[month].expense += t.pengeluaran;
+                monthlyData[month].income += (t.pemasukan || 0);
+                monthlyData[month].expense += (t.pengeluaran || 0);
             });
             
             const months = Object.keys(monthlyData).sort().slice(-6);
@@ -1424,7 +1486,7 @@
             });
         }
 
-        function exportPDF() {
+        window.exportPDF = function() {
             showToast('Generating PDF...', 'info');
             setTimeout(() => {
                 const { jsPDF } = window.jspdf;
@@ -1433,16 +1495,16 @@
                 doc.text('Laporan Keuangan', 20, 20);
                 doc.setFontSize(12);
                 doc.text(`Total Transaksi: ${transactions.length}`, 20, 35);
-                const totalIncome = transactions.reduce((s, t) => s + t.pemasukan, 0);
-                const totalExpense = transactions.reduce((s, t) => s + t.pengeluaran, 0);
+                const totalIncome = transactions.reduce((s, t) => s + (t.pemasukan || 0), 0);
+                const totalExpense = transactions.reduce((s, t) => s + (t.pengeluaran || 0), 0);
                 doc.text(`Total Pemasukan: ${formatCurrency(totalIncome)}`, 20, 45);
                 doc.text(`Total Pengeluaran: ${formatCurrency(totalExpense)}`, 20, 55);
                 doc.save('laporan-keuangan.pdf');
                 showToast('PDF berhasil didownload!', 'success');
             }, 1000);
-        }
+        };
 
-        function exportJSON() {
+        window.exportJSON = function() {
             const data = JSON.stringify({ transactions, budgets, recurringTransactions }, null, 2);
             const blob = new Blob([data], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
@@ -1452,13 +1514,13 @@
             link.click();
             URL.revokeObjectURL(url);
             showToast('JSON berhasil didownload!', 'success');
-        }
+        };
 
-        function exportCSV() {
+        window.exportCSV = function() {
             const headers = ['Tanggal', 'Jenis Akun', 'Kategori', 'Keterangan', 'Pemasukan', 'Pengeluaran'];
             let csv = headers.join(',') + '\n';
             transactions.forEach(t => {
-                csv += [t.tanggal, t.jenisAkun, t.kategori, `"${t.keterangan || ''}"`, t.pemasukan, t.pengeluaran].join(',') + '\n';
+                csv += [t.tanggal, t.jenisAkun, t.kategori, `"${t.keterangan || ''}"`, t.pemasukan || 0, t.pengeluaran || 0].join(',') + '\n';
             });
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
@@ -1468,9 +1530,9 @@
             link.click();
             URL.revokeObjectURL(url);
             showToast('CSV berhasil didownload!', 'success');
-        }
+        };
 
-        function importCSV(e) {
+        window.importCSV = function(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -1493,19 +1555,11 @@
                         });
                     }
                 });
-                saveData();
+                updateDatabase();
                 showToast(`${count} transaksi berhasil diimport!`, 'success');
             };
             reader.readAsText(file);
-        }
-
-        function saveData() {
-            localStorage.setItem('transactions_v2', JSON.stringify(transactions));
-            updateBalances();
-            renderHistory();
-            renderBudgets();
-            renderCharts();
-        }
+        };
 
         function formatCurrencyInput(e) {
             let value = e.target.value.replace(/\D/g, '');
@@ -1546,7 +1600,7 @@
             return icons[account] || account;
         }
 
-        function showSection(sectionName) {
+        window.showSection = function(sectionName) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(`${sectionName}-section`).classList.add('active');
             document.querySelectorAll('.bottom-nav-item').forEach(item => {
@@ -1558,15 +1612,50 @@
             if (sectionName === 'analytics') {
                 setTimeout(renderCharts, 100);
             }
-        }
+        };
 
-        function showModal(modalId) {
+        window.showModal = function(modalId) {
             document.getElementById(modalId).classList.add('show');
-        }
+        };
 
-        function closeModal(modalId) {
+        window.closeModal = function(modalId) {
             document.getElementById(modalId).classList.remove('show');
-        }
+        };
+
+        window.showSyncModal = function() {
+            window.showModal('sync-modal');
+        };
+
+        window.copySyncCode = function() {
+            navigator.clipboard.writeText(syncCode);
+            showToast('Kode sync disalin!', 'success');
+        };
+
+        window.importFromSync = async function() {
+            const code = document.getElementById('import-sync-code').value.trim().toUpperCase();
+            if (!code) {
+                showToast('Masukkan kode sync!', 'error');
+                return;
+            }
+            try {
+                const dbRef = ref(db, 'sync_v2/' + code);
+                const snapshot = await get(dbRef);
+                if (snapshot.exists()) {
+                    syncCode = code;
+                    localStorage.setItem('active_sync_code_v2', syncCode);
+                    document.getElementById('sync-code-display').value = syncCode;
+                    document.getElementById('modal-sync-code').value = syncCode;
+                    listenToData(syncCode);
+                    window.closeModal('sync-modal');
+                    showToast('Perangkat tertaut!', 'success');
+                } else {
+                    showToast('Kode sync tidak valid!', 'error');
+                }
+            } catch(e) {
+                showToast('Gagal menautkan data.', 'error');
+                console.error(e);
+            }
+        };
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
