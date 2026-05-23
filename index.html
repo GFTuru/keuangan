@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pencatatan Keuangan Pro by gf</title>
+    <title>Pencatatan Keuangan Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -335,6 +335,34 @@
             border-radius: 4px;
         }
 
+        /* Custom Categories */
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .category-card {
+            padding: 0.75rem;
+            background: var(--light-gray);
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .category-icon { font-size: 1.25rem; }
+        .category-name { font-weight: 600; font-size: 0.875rem; }
+
         /* Charts */
         .chart-container {
             position: relative;
@@ -348,14 +376,6 @@
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
             margin-bottom: 1.5rem;
-        }
-
-        /* Tags */
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
         }
 
         /* Budget Progress */
@@ -595,7 +615,7 @@
 
     <main>
         <div class="header-container">
-            <h1>💰 Keuangan Pro</h1>
+            <h1>💰Pencatatan Keuangan</h1>
             <div class="sync-indicator" onclick="showSyncModal()">
                 <div class="sync-status"></div>
                 <span id="sync-text">Menghubungkan...</span>
@@ -679,7 +699,7 @@
                 <h2 class="section-title">🕰️ History Transaksi</h2>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
-                    <input type="text" id="search-query" placeholder="🔍 Cari transaksi..." style="margin-bottom: 0;">
+                    <input type="text" id="search-query" placeholder="🔍 Cari..." style="margin-bottom: 0;">
                     <select id="filter-category" style="margin-bottom: 0;">
                         <option value="">Semua Kategori</option>
                     </select>
@@ -738,7 +758,13 @@
             <div class="card">
                 <h2 class="section-title">⚙️ Pengaturan</h2>
                 
-                <h3 style="margin-top: 0;">📤 Export & Import</h3>
+                <h3 style="margin-top: 0;">📂 Kategori Kustom</h3>
+                <button onclick="showModal('category-modal')" class="btn btn-secondary" style="margin-bottom: 1rem;">+ Tambah Kategori</button>
+                <div class="category-list" id="custom-categories"></div>
+
+                <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--medium-gray);">
+
+                <h3>📤 Export & Import</h3>
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem;">
                     <button onclick="exportPDF()" class="btn btn-danger">📄 Export PDF</button>
                     <button onclick="exportJSON()" class="btn btn-secondary">📦 Export JSON</button>
@@ -768,6 +794,25 @@
     </main>
 
     <!-- MODALS -->
+    <div id="category-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tambah Kategori</h2>
+                <button class="modal-close" onclick="closeModal('category-modal')">&times;</button>
+            </div>
+            <label for="category-name">Nama Kategori</label>
+            <input type="text" id="category-name" placeholder="Transportasi" required>
+            
+            <label for="category-icon">Icon (emoji)</label>
+            <input type="text" id="category-icon" placeholder="🚗" required maxlength="2">
+            
+            <div class="modal-actions">
+                <button onclick="closeModal('category-modal')" class="btn btn-secondary">Batal</button>
+                <button onclick="addCustomCategory()" class="btn btn-primary">Simpan</button>
+            </div>
+        </div>
+    </div>
+
     <div id="budget-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -909,20 +954,22 @@
         let transactions = JSON.parse(localStorage.getItem('transactions_v2') || '[]');
         let budgets = JSON.parse(localStorage.getItem('budgets_v2') || '[]');
         let recurringTransactions = JSON.parse(localStorage.getItem('recurring_v2') || '[]');
+        let customCategories = JSON.parse(localStorage.getItem('custom_categories_v2') || '[]'); // Menambahkan state custom categories
         
         function generateSyncCode() {
             return 'GF-' + Math.random().toString(36).substring(2, 8).toUpperCase();
         }
         let syncCode = localStorage.getItem('active_sync_code_v2') || generateSyncCode();
         
+        // DEFAULT CATEGORIES (Lainnya di urutan pertama)
         const defaultCategories = [
+            { id: 'lainnya', name: 'Lainnya', icon: '📦' },
             { id: 'parkir', name: 'Parkir', icon: '🅿️' },
             { id: 'sekolah', name: 'Sekolah', icon: '🎓' },
             { id: 'jajan', name: 'Jajan', icon: '🍿' },
             { id: 'uang-mingguan', name: 'Uang Mingguan', icon: '💵' },
             { id: 'shopping', name: 'Shopping', icon: '🛍️' },
-            { id: 'gift', name: 'Gift', icon: '🎁' },
-            { id: 'lainnya', name: 'Lainnya', icon: '📦' }
+            { id: 'gift', name: 'Gift', icon: '🎁' }
         ];
 
         let charts = {};
@@ -973,6 +1020,7 @@
                     transactions = data.transactions || [];
                     budgets = data.budgets || [];
                     recurringTransactions = data.recurringTransactions || [];
+                    customCategories = data.customCategories || []; // Ambil dari sinkronisasi
                     saveToLocal();
                 } else {
                     updateDatabase();
@@ -994,6 +1042,7 @@
                 transactions,
                 budgets,
                 recurringTransactions,
+                customCategories, // Simpan ke sinkronisasi
                 updatedAt: new Date().toISOString()
             }).catch(err => {
                 console.error(err);
@@ -1005,9 +1054,12 @@
             localStorage.setItem('transactions_v2', JSON.stringify(transactions));
             localStorage.setItem('budgets_v2', JSON.stringify(budgets));
             localStorage.setItem('recurring_v2', JSON.stringify(recurringTransactions));
+            localStorage.setItem('custom_categories_v2', JSON.stringify(customCategories));
         }
 
         function updateAllUI() {
+            loadCategories();
+            renderCustomCategories();
             updateBalances();
             renderHistory();
             renderBudgets();
@@ -1020,11 +1072,13 @@
             document.getElementById('tanggal').value = new Date().toISOString().split('T')[0];
         }
 
+        // Kategori Settings & Sync
         function loadCategories() {
+            const allCategories = [...defaultCategories, ...customCategories];
             ['kategori', 'budget-category', 'filter-category', 'edit-kategori'].forEach(id => {
                 const select = document.getElementById(id);
                 if (!select) return;
-                select.innerHTML = defaultCategories.map(c => 
+                select.innerHTML = allCategories.map(c => 
                     `<option value="${c.id}">${c.icon} ${c.name}</option>`
                 ).join('');
                 if (id === 'filter-category') {
@@ -1032,6 +1086,55 @@
                 }
             });
         }
+
+        function renderCustomCategories() {
+            const container = document.getElementById('custom-categories');
+            if (!container) return;
+            if (customCategories.length === 0) {
+                container.innerHTML = '<p style="color: var(--dark-gray); font-size: 0.875rem;">Belum ada kategori kustom</p>';
+                return;
+            }
+            container.innerHTML = customCategories.map(cat => `
+                <div class="category-card">
+                    <div class="category-info">
+                        <span class="category-icon">${cat.icon}</span>
+                        <span class="category-name">${cat.name}</span>
+                    </div>
+                    <button onclick="deleteCategory('${cat.id}')" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">🗑️</button>
+                </div>
+            `).join('');
+        }
+
+        window.addCustomCategory = function() {
+            const name = document.getElementById('category-name').value.trim();
+            const icon = document.getElementById('category-icon').value.trim();
+            const id = name.toLowerCase().replace(/\s+/g, '-');
+            
+            if (!name || !icon) {
+                showToast('Lengkapi nama dan icon!', 'error');
+                return;
+            }
+            if (customCategories.find(c => c.id === id) || defaultCategories.find(c => c.id === id)) {
+                showToast('Kategori sudah ada!', 'error');
+                return;
+            }
+            
+            customCategories.push({ id, name, icon });
+            updateDatabase(); // trigger sync and ui updates
+            
+            document.getElementById('category-name').value = '';
+            document.getElementById('category-icon').value = '';
+            closeModal('category-modal');
+            showToast('Kategori berhasil ditambahkan!', 'success');
+        };
+
+        window.deleteCategory = function(id) {
+            if (!confirm('Hapus kategori ini?')) return;
+            customCategories = customCategories.filter(c => c.id !== id);
+            updateDatabase();
+            showToast('Kategori berhasil dihapus!', 'success');
+        };
+
 
         function validateForm() {
             let isValid = true;
@@ -1505,7 +1608,7 @@
         };
 
         window.exportJSON = function() {
-            const data = JSON.stringify({ transactions, budgets, recurringTransactions }, null, 2);
+            const data = JSON.stringify({ transactions, budgets, recurringTransactions, customCategories }, null, 2);
             const blob = new Blob([data], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
@@ -1591,7 +1694,8 @@
         }
 
         function getCategoryName(categoryId) {
-            const cat = defaultCategories.find(c => c.id === categoryId);
+            const allCats = [...defaultCategories, ...customCategories];
+            const cat = allCats.find(c => c.id === categoryId);
             return cat ? `${cat.icon} ${cat.name}` : categoryId;
         }
 
