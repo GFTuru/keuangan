@@ -1,5 +1,5 @@
 // firebase-messaging-sw.js
-// Service Worker untuk reminder transaksi jam 20:00
+// Service Worker untuk reminder transaksi dengan jam Dinamis
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -9,13 +9,12 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(clients.claim());
 });
 
+let reminderTimeout = null;
+
 // Terima pesan dari halaman utama
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SCHEDULE_REMINDER') {
-    scheduleReminder(event.data.hasTransactionToday);
-  }
-  if (event.data && event.data.type === 'CANCEL_REMINDER') {
-    // Reset alarm jika user mau cancel (tidak dipakai tapi disiapkan)
+    scheduleReminder(event.data.time, event.data.hasTransactionToday);
   }
 });
 
@@ -37,27 +36,37 @@ self.addEventListener('notificationclick', (event) => {
 });
 
 // Fungsi schedule reminder
-function scheduleReminder(hasTransactionToday) {
-  // Jika sudah ada transaksi hari ini, tidak perlu reminder
+function scheduleReminder(timeString, hasTransactionToday) {
+  // Jika sudah ada transaksi hari ini, tidak perlu dikirim notifikasinya
   if (hasTransactionToday) return;
+
+  // Bersihkan timeout lama jika ada
+  if (reminderTimeout) clearTimeout(reminderTimeout);
 
   const now = new Date();
   const target = new Date();
-  target.setHours(20, 0, 0, 0);
+  
+  // Ambil jam dan menit dari format HH:MM (contoh 20:00)
+  if (timeString) {
+      const parts = timeString.split(':');
+      target.setHours(parseInt(parts[0]), parseInt(parts[1]), 0, 0);
+  } else {
+      target.setHours(20, 0, 0, 0); // Default jam 8 malam
+  }
 
-  // Kalau sudah lewat jam 20:00, jadwalkan besok
+  // Kalau jam di pengaturan sudah kelewat di hari ini, jadwalkan buat besoknya
   if (now >= target) {
     target.setDate(target.getDate() + 1);
   }
 
   const delay = target.getTime() - now.getTime();
 
-  // Simpan timer id di indexedDB agar persist
-  setTimeout(() => {
-    self.registration.showNotification('💰 Catat Keuangan Hari Ini!', {
-      body: 'Kamu belum mencatat transaksi hari ini. Yuk catat sekarang!',
-      icon: './icon-192.png',
-      badge: './icon-192.png',
+  // Jadwalkan Notifikasi
+  reminderTimeout = setTimeout(() => {
+    self.registration.showNotification('💰 Waktunya Catat Keuangan!', {
+      body: 'Kamu belum mencatat transaksi hari ini. Yuk catat pengeluaranmu sekarang!',
+      icon: './logo.jpg', 
+      badge: './logo.jpg',
       tag: 'daily-reminder',
       renotify: true,
       requireInteraction: false,
