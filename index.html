@@ -99,19 +99,135 @@
         .text-center { text-align: center; }
 
         /* ==========================================================================
-           AUTH SCREEN (LOGIN / REGISTER)
+           AUTH SCREEN (LOGIN / REGISTER) — PREMIUM REDESIGN
            ========================================================================== */
         .auth-view {
-            position: fixed; inset: 0; background: var(--bg-body); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 1.5rem; overflow-y: auto; transition: opacity var(--transition-normal);
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            overflow-y: auto; transition: opacity var(--transition-normal);
+            background: var(--bg-body);
         }
-        .auth-card {
-            background: var(--bg-surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-float);
-            padding: 2.5rem; width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border-light);
+
+        /* Animated background orbs */
+        .auth-bg {
+            position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
         }
+        .auth-orb {
+            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.25;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+        .auth-orb-1 { width: 500px; height: 500px; background: var(--primary); top: -150px; left: -150px; animation-delay: 0s; }
+        .auth-orb-2 { width: 350px; height: 350px; background: hsl(200, 80%, 60%); bottom: -100px; right: -100px; animation-delay: -3s; }
+        .auth-orb-3 { width: 200px; height: 200px; background: var(--premium-gold); top: 50%; right: 25%; animation-delay: -6s; }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+        [data-theme="dark"] .auth-orb { opacity: 0.12; }
+
+        /* Main card */
+        .auth-wrapper {
+            position: relative; z-index: 1;
+            display: grid; grid-template-columns: 1fr 1fr;
+            width: 100%; max-width: 900px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-float);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            margin: 1.5rem;
+        }
+        @media (max-width: 680px) {
+            .auth-wrapper { grid-template-columns: 1fr; margin: 1rem; }
+            .auth-hero { display: none; }
+        }
+
+        /* Left hero panel */
+        .auth-hero {
+            background: var(--primary-gradient);
+            padding: 3rem 2.5rem;
+            display: flex; flex-direction: column; justify-content: space-between;
+            position: relative; overflow: hidden;
+        }
+        .auth-hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .auth-hero-brand { position: relative; z-index: 1; }
+        .auth-hero-icon { width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1.5rem; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
+        .auth-hero h2 { color: white; font-size: 1.75rem; margin-bottom: 0.75rem; line-height: 1.2; }
+        .auth-hero p { color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.6; }
+        .auth-hero-features { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem; }
+        .auth-feature-item { display: flex; align-items: center; gap: 0.75rem; }
+        .auth-feature-dot { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+        .auth-feature-item span { color: rgba(255,255,255,0.9); font-size: 0.85rem; font-weight: 500; }
+
+        /* Right form panel */
+        .auth-panel { padding: 2.5rem 2.5rem; display: flex; flex-direction: column; }
+        @media (max-width: 680px) { .auth-panel { padding: 2rem 1.5rem; } }
+
+        .auth-panel-header { margin-bottom: 2rem; }
+        .auth-panel-header h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .auth-panel-header p { font-size: 0.875rem; color: var(--text-muted); }
+
+        /* Tab switcher */
+        .auth-tabs {
+            display: flex; background: var(--bg-body); border-radius: var(--radius-md);
+            padding: 4px; gap: 4px; margin-bottom: 1.75rem; border: 1px solid var(--border-light);
+        }
+        .auth-tab {
+            flex: 1; padding: 0.6rem 1rem; border: none; background: transparent;
+            border-radius: calc(var(--radius-md) - 2px); font-family: inherit;
+            font-size: 0.875rem; font-weight: 600; cursor: pointer;
+            color: var(--text-muted); transition: all var(--transition-normal);
+        }
+        .auth-tab.active {
+            background: var(--bg-surface); color: var(--primary);
+            box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
+        }
+
+        /* Input with icon */
+        .auth-input-group { position: relative; margin-bottom: 1rem; }
+        .auth-input-icon {
+            position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
+            font-size: 1rem; pointer-events: none; z-index: 1; opacity: 0.5;
+            transition: opacity var(--transition-fast);
+        }
+        .auth-input-group:focus-within .auth-input-icon { opacity: 1; }
+        .auth-input-group input {
+            padding-left: 2.75rem; width: 100%; padding-top: 0.875rem; padding-bottom: 0.875rem;
+            padding-right: 1rem;
+        }
+        .auth-input-group.has-toggle input { padding-right: 2.75rem; }
+        .auth-pwd-toggle {
+            position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer; color: var(--text-muted);
+            padding: 0.25rem; border-radius: 4px; font-size: 1rem;
+            transition: color var(--transition-fast); line-height: 1;
+        }
+        .auth-pwd-toggle:hover { color: var(--primary); }
+
+        /* Divider */
+        .auth-divider { display: flex; align-items: center; gap: 0.75rem; margin: 1.25rem 0; }
+        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+        .auth-divider span { font-size: 0.75rem; color: var(--text-light); font-weight: 600; }
+
+        /* Footer note */
+        .auth-footer-note { margin-top: auto; padding-top: 1.5rem; text-align: center; font-size: 0.8rem; color: var(--text-light); }
+        .auth-footer-note a { color: var(--primary); font-weight: 600; cursor: pointer; }
+
         .auth-brand { font-size: 2rem; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
         .auth-switch { color: var(--primary); cursor: pointer; font-weight: 600; text-decoration: underline; }
+
+        /* Slide animation for forms */
+        .auth-form-slide { animation: slideInForm 0.3s ease; }
+        @keyframes slideInForm { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Loading spinner inside button */
+        .btn-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+        @keyframes btnSpin { to { transform: rotate(360deg); } }
 
         /* ==========================================================================
            APP COMPONENTS
@@ -205,12 +321,117 @@
         .premium-lock.show { opacity: 1; pointer-events: auto; }
         .premium-lock-icon { font-size: 2rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(245,158,11,0.4)); }
 
-        /* Admin Panel Specific */
+        /* ==========================================================================
+           PROFILE DROPDOWN
+           ========================================================================== */
+        .profile-btn {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.4rem 0.75rem 0.4rem 0.4rem;
+            background: var(--bg-surface); border: 1px solid var(--border-light);
+            border-radius: var(--radius-full); cursor: pointer;
+            box-shadow: var(--shadow-sm); transition: all var(--transition-normal);
+            position: relative;
+        }
+        .profile-btn:hover { box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .profile-btn-info { display: flex; flex-direction: column; text-align: left; }
+        @media (max-width: 640px) { .profile-btn-info { display: none; } }
+
+        .profile-dropdown {
+            position: absolute; top: calc(100% + 10px); right: 0;
+            width: 260px; background: var(--bg-surface);
+            border: 1px solid var(--border-light); border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-float); z-index: 500; overflow: hidden;
+            opacity: 0; transform: translateY(-8px) scale(0.97);
+            pointer-events: none; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .profile-dropdown.open {
+            opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
+        }
+        .pd-header {
+            padding: 1.25rem; background: var(--primary-gradient);
+            display: flex; align-items: center; gap: 1rem;
+        }
+        .pd-avatar {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: rgba(255,255,255,0.25); border: 2px solid rgba(255,255,255,0.5);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.25rem; font-weight: 700; color: white; flex-shrink: 0;
+            overflow: hidden;
+        }
+        .pd-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .pd-name { color: white; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.15rem; }
+        .pd-role { color: rgba(255,255,255,0.8); font-size: 0.75rem; font-weight: 500; }
+        .pd-body { padding: 0.75rem; }
+        .pd-stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
+        .pd-stat { background: var(--bg-body); border-radius: var(--radius-md); padding: 0.6rem 0.75rem; text-align: center; border: 1px solid var(--border-light); }
+        .pd-stat-val { font-weight: 700; font-size: 1rem; color: var(--text-main); }
+        .pd-stat-lbl { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; margin-top: 0.1rem; }
+        .pd-menu-item {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.65rem 0.75rem; border-radius: var(--radius-md);
+            cursor: pointer; transition: background var(--transition-fast);
+            font-size: 0.875rem; font-weight: 500; color: var(--text-main);
+            border: none; background: none; width: 100%; text-align: left; font-family: inherit;
+        }
+        .pd-menu-item:hover { background: var(--bg-body); }
+        .pd-menu-item.danger { color: var(--danger); }
+        .pd-menu-item.danger:hover { background: var(--danger-light); }
+        .pd-menu-sep { height: 1px; background: var(--border-light); margin: 0.4rem 0; }
+        .pd-menu-icon { width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+
+        /* ==========================================================================
+           LOGOUT MODAL
+           ========================================================================== */
+        .logout-modal-content {
+            text-align: center; padding: 2.5rem 2rem;
+        }
+        .logout-modal-avatar {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: var(--primary-light); margin: 0 auto 1.25rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: 700; color: var(--primary);
+            border: 3px solid var(--primary);
+        }
+
+        /* ==========================================================================
+           ADMIN PANEL REDESIGN
+           ========================================================================== */
+        .admin-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+        .admin-stat-card {
+            background: var(--bg-body); border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg); padding: 1.25rem; text-align: center;
+            transition: var(--transition-normal);
+        }
+        .admin-stat-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .admin-stat-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .admin-stat-val { font-size: 1.5rem; font-weight: 800; color: var(--text-main); line-height: 1; }
+        .admin-stat-lbl { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 0.35rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
         .admin-table-container { width: 100%; overflow-x: auto; margin-top: 1rem; }
         .admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
-        .admin-table th { background: var(--border-light); padding: 0.75rem 1rem; font-weight: 600; color: var(--text-muted); }
-        .admin-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-light); }
-        .admin-table tr:hover { background: var(--bg-surface-hover); }
+        .admin-table thead tr { background: var(--bg-body); }
+        .admin-table th { padding: 0.75rem 1rem; font-weight: 700; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-light); }
+        .admin-table td { padding: 0.875rem 1rem; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
+        .admin-table tbody tr:hover { background: var(--bg-surface-hover); }
+        .admin-table tbody tr:last-child td { border-bottom: none; }
+
+        .admin-user-card { display: flex; align-items: center; gap: 0.75rem; }
+        .admin-user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; }
+        .badge-active { background: var(--success-light); color: var(--success-dark); }
+        .badge-paused { background: var(--bg-body); color: var(--text-muted); border: 1px solid var(--border-medium); }
+        .badge-admin { background: var(--primary-light); color: var(--primary-dark); }
+
+        .admin-action-btn { width: 30px; height: 30px; border-radius: var(--radius-sm); border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: all var(--transition-fast); }
+        .admin-action-btn:hover { transform: scale(1.1); }
+        .aab-premium { background: var(--warning-light); color: var(--warning-dark); }
+        .aab-delete { background: var(--danger-light); color: var(--danger-dark); }
+        .aab-view { background: var(--primary-light); color: var(--primary-dark); }
+
+        .admin-mode-banner { display: flex; align-items: center; gap: 0.75rem; background: var(--warning-light); border: 1px solid var(--warning); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--warning-dark); font-weight: 600; }
+
+        /* Admin modal detail */
+        .admin-detail-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border-light); font-size: 0.875rem; }
+        .admin-detail-row:last-child { border-bottom: none; }
 
         /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-glass); backdrop-filter: blur(20px); border-top: 1px solid var(--border-light); z-index: 100; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0,0,0,0.05); }
@@ -249,30 +470,87 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- =======================================================================
-         AUTH VIEW (LOGIN / REGISTER)
+         AUTH VIEW (LOGIN / REGISTER) — PREMIUM REDESIGN
          ======================================================================= -->
     <div class="auth-view" id="authView">
-        <div class="auth-card">
-            <div class="brand-icon" style="margin: 0 auto 1rem; width: 64px; height: 64px; font-size: 2rem;">💎</div>
-            <h1 class="auth-brand">Keuangan Pro</h1>
-            <p class="text-sm text-muted" style="margin-bottom: 2rem;" id="authSubtitle">Kelola keuangan Anda dengan cerdas dan aman.</p>
-            
-            <!-- Login Form -->
-            <form id="loginForm" onsubmit="App.Auth.handleLogin(event)">
-                <div class="form-group"><input type="text" id="loginUsername" placeholder="Username" required pattern="[a-zA-Z0-9_]+"></div>
-                <div class="form-group"><input type="password" id="loginPassword" placeholder="Password" required></div>
-                <button type="submit" class="btn btn-primary btn-block" id="btnLogin">Masuk</button>
-                <p class="text-sm" style="margin-top: 1.5rem;">Belum punya akun? <span class="auth-switch" onclick="App.UI.toggleAuth('register')">Daftar Baru</span></p>
-            </form>
+        <!-- Animated background -->
+        <div class="auth-bg">
+            <div class="auth-orb auth-orb-1"></div>
+            <div class="auth-orb auth-orb-2"></div>
+            <div class="auth-orb auth-orb-3"></div>
+        </div>
 
-            <!-- Register Form -->
-            <form id="registerForm" onsubmit="App.Auth.handleRegister(event)" style="display: none;">
-                <div class="form-group"><input type="text" id="regName" placeholder="Nama Lengkap" required></div>
-                <div class="form-group"><input type="text" id="regUsername" placeholder="Username (tanpa spasi)" required pattern="[a-zA-Z0-9_]+"></div>
-                <div class="form-group"><input type="password" id="regPassword" placeholder="Password (Min. 6 karakter)" minlength="6" required></div>
-                <button type="submit" class="btn btn-primary btn-block" id="btnRegister" style="margin-top: 1rem;">Daftar Sekarang</button>
-                <p class="text-sm" style="margin-top: 1.5rem;">Sudah punya akun? <span class="auth-switch" onclick="App.UI.toggleAuth('login')">Masuk</span></p>
-            </form>
+        <div class="auth-wrapper">
+            <!-- LEFT: Hero Panel -->
+            <div class="auth-hero">
+                <div class="auth-hero-brand">
+                    <div class="auth-hero-icon">💎</div>
+                    <h2>Kelola Keuangan<br>Lebih Cerdas</h2>
+                    <p id="authSubtitle">Catat pemasukan, pengeluaran, dan raih target finansialmu.</p>
+                </div>
+                <div class="auth-hero-features">
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-dot">📊</div>
+                        <span>Dashboard & Analitik Real-Time</span>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-dot">🎯</div>
+                        <span>Target & Budget Cerdas</span>
+                    </div>
+                    <div class="auth-feature-item">
+                        <div class="auth-feature-dot">🔒</div>
+                        <span>Data Aman & Tersinkronisasi</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Form Panel -->
+            <div class="auth-panel">
+                <div class="auth-panel-header">
+                    <h1>Keuangan <span style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Pro</span></h1>
+                    <p>Masuk atau buat akun baru untuk mulai.</p>
+                </div>
+
+                <!-- Tab Switcher -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tabLogin" type="button" onclick="App.UI.toggleAuth('login')">Masuk</button>
+                    <button class="auth-tab" id="tabRegister" type="button" onclick="App.UI.toggleAuth('register')">Daftar</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" onsubmit="App.Auth.handleLogin(event)" class="auth-form-slide">
+                    <div class="auth-input-group">
+                        <span class="auth-input-icon">👤</span>
+                        <input type="text" id="loginUsername" placeholder="Username" required pattern="[a-zA-Z0-9_]+" autocomplete="username">
+                    </div>
+                    <div class="auth-input-group has-toggle">
+                        <span class="auth-input-icon">🔑</span>
+                        <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
+                        <button type="button" class="auth-pwd-toggle" onclick="App.UI.togglePwd('loginPassword', this)" title="Tampilkan password">👁</button>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="btnLogin" style="margin-top: 0.5rem; padding: 1rem; font-size: 1rem;">Masuk</button>
+                    <p class="auth-footer-note">Belum punya akun? <a onclick="App.UI.toggleAuth('register')">Daftar sekarang</a></p>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" onsubmit="App.Auth.handleRegister(event)" style="display: none;" class="auth-form-slide">
+                    <div class="auth-input-group">
+                        <span class="auth-input-icon">✏️</span>
+                        <input type="text" id="regName" placeholder="Nama Lengkap" required autocomplete="name">
+                    </div>
+                    <div class="auth-input-group">
+                        <span class="auth-input-icon">👤</span>
+                        <input type="text" id="regUsername" placeholder="Username (tanpa spasi)" required pattern="[a-zA-Z0-9_]+" autocomplete="username">
+                    </div>
+                    <div class="auth-input-group has-toggle">
+                        <span class="auth-input-icon">🔑</span>
+                        <input type="password" id="regPassword" placeholder="Password (min. 6 karakter)" minlength="6" required autocomplete="new-password">
+                        <button type="button" class="auth-pwd-toggle" onclick="App.UI.togglePwd('regPassword', this)" title="Tampilkan password">👁</button>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="btnRegister" style="margin-top: 0.5rem; padding: 1rem; font-size: 1rem;">Buat Akun</button>
+                    <p class="auth-footer-note">Sudah punya akun? <a onclick="App.UI.toggleAuth('login')">Masuk di sini</a></p>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -290,13 +568,47 @@
                 </div>
             </div>
             
-            <div class="user-profile">
-                <div class="user-info">
-                    <span class="font-bold text-sm" id="userDisplayName">User</span>
-                    <span class="text-xs text-muted" id="userRoleBadge">Reguler</span>
+            <div style="position: relative;">
+                <button class="profile-btn" id="profileBtn" onclick="App.UI.toggleProfileDropdown()" type="button">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="profile-btn-info">
+                        <span class="font-bold text-sm" id="userDisplayName">User</span>
+                        <span class="text-xs text-muted" id="userRoleBadge">Reguler</span>
+                    </div>
+                    <span style="color: var(--text-muted); font-size: 0.7rem; margin-left: 0.1rem;">▾</span>
+                </button>
+
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="pd-header">
+                        <div class="pd-avatar" id="pdAvatar">U</div>
+                        <div>
+                            <div class="pd-name" id="pdName">User</div>
+                            <div class="pd-role" id="pdRole">Pengguna Reguler</div>
+                        </div>
+                    </div>
+                    <div class="pd-body">
+                        <div class="pd-stat-row">
+                            <div class="pd-stat">
+                                <div class="pd-stat-val" id="pdTxCount">0</div>
+                                <div class="pd-stat-lbl">Transaksi</div>
+                            </div>
+                            <div class="pd-stat">
+                                <div class="pd-stat-val" id="pdGoalCount">0</div>
+                                <div class="pd-stat-lbl">Target Aktif</div>
+                            </div>
+                        </div>
+                        <button class="pd-menu-item" onclick="App.UI.closeProfileDropdown(); App.UI.switchTabByName('settings');">
+                            <div class="pd-menu-icon" style="background: var(--primary-light);">⚙️</div>
+                            Pengaturan Akun
+                        </button>
+                        <div class="pd-menu-sep"></div>
+                        <button class="pd-menu-item danger" onclick="App.UI.closeProfileDropdown(); App.UI.showLogoutModal();">
+                            <div class="pd-menu-icon" style="background: var(--danger-light);">🚪</div>
+                            Keluar dari Akun
+                        </button>
+                    </div>
                 </div>
-                <div class="user-avatar" id="userAvatar">U</div>
-                <button class="btn btn-icon" style="width: 32px; height:32px; background:var(--danger-light); color:var(--danger);" onclick="App.Auth.handleLogout()" title="Keluar">⏏</button>
             </div>
         </header>
 
@@ -304,36 +616,68 @@
 
         <!-- 0. TAB ADMIN PANEL -->
         <main class="app-section" id="view-admin">
-            <div class="card" style="background: var(--primary-gradient); color: white;">
-                <h2 style="color:white; margin-bottom: 0.5rem;">👑 Admin Dashboard</h2>
-                <p class="text-sm" style="opacity: 0.9;">Pantau aktivitas pengguna dan kelola status akun.</p>
-                <div class="grid-2" style="margin-top: 1.5rem;">
-                    <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 12px;">
-                        <div class="text-xs font-bold uppercase">Total Pengguna</div>
-                        <div class="font-bold" style="font-size: 1.5rem;" id="adminTotUsers">0</div>
+            <!-- Header card -->
+            <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); color: white; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                            <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">🛡️</div>
+                            <div>
+                                <h2 style="color: white; margin: 0; font-size: 1.25rem;">Admin Panel</h2>
+                                <p style="color: rgba(255,255,255,0.6); font-size: 0.75rem; margin: 0;">Keuangan Pro Control Center</p>
+                            </div>
+                        </div>
                     </div>
-                    <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 12px;">
-                        <div class="text-xs font-bold uppercase">Pengguna Premium</div>
-                        <div class="font-bold" style="font-size: 1.5rem;" id="adminTotPremium">0</div>
+                    <button class="btn btn-sm" style="background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25);" onclick="App.Admin.loadData()">🔄 Refresh</button>
+                </div>
+                <div class="admin-stat-grid" style="margin-top: 1.25rem; margin-bottom: 0;">
+                    <div class="admin-stat-card" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
+                        <div class="admin-stat-icon">👥</div>
+                        <div class="admin-stat-val" style="color: white;" id="adminTotUsers">0</div>
+                        <div class="admin-stat-lbl" style="color: rgba(255,255,255,0.6);">Total Akun</div>
+                    </div>
+                    <div class="admin-stat-card" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
+                        <div class="admin-stat-icon">👑</div>
+                        <div class="admin-stat-val" style="color: #fbbf24;" id="adminTotPremium">0</div>
+                        <div class="admin-stat-lbl" style="color: rgba(255,255,255,0.6);">Premium</div>
+                    </div>
+                    <div class="admin-stat-card" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
+                        <div class="admin-stat-icon">📝</div>
+                        <div class="admin-stat-val" style="color: #34d399;" id="adminTotTx">0</div>
+                        <div class="admin-stat-lbl" style="color: rgba(255,255,255,0.6);">Total Transaksi</div>
+                    </div>
+                    <div class="admin-stat-card" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
+                        <div class="admin-stat-icon">💾</div>
+                        <div class="admin-stat-val" style="color: #93c5fd;" id="adminMode">Lokal</div>
+                        <div class="admin-stat-lbl" style="color: rgba(255,255,255,0.6);">Mode DB</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Mode banner (shown in dummy mode) -->
+            <div class="admin-mode-banner" id="adminDummyBanner" style="display: none;">
+                ⚠️ Mode Lokal Aktif — Data diambil dari localStorage browser ini. Pengguna antar-perangkat tidak dapat terlihat.
+            </div>
+
+            <!-- User table -->
             <div class="card">
-                <div class="section-title"><span>👥 Daftar Pengguna</span> <button class="btn btn-outline btn-sm" onclick="App.Admin.loadUsers()">Refresh</button></div>
-                <input type="text" id="adminSearch" placeholder="Cari nama atau username..." oninput="App.Admin.renderUsers()" style="margin-bottom: 1rem;">
+                <div class="section-title" style="margin-bottom: 1rem;">
+                    <span style="font-size: 1rem;">👥 Daftar Pengguna Terdaftar</span>
+                </div>
+                <input type="text" id="adminSearch" placeholder="🔍 Cari nama atau username..." oninput="App.Admin.renderUsers()" style="margin-bottom: 1rem;">
                 <div class="admin-table-container">
                     <table class="admin-table">
                         <thead>
                             <tr>
                                 <th>Pengguna</th>
                                 <th>Username</th>
+                                <th>Transaksi</th>
                                 <th>Status</th>
-                                <th>Tindakan</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="adminUserTable">
-                            <tr><td colspan="4" class="text-center">Memuat data pengguna...</td></tr>
+                            <tr><td colspan="5" class="text-center" style="padding: 2rem; color: var(--text-muted);">Memuat data pengguna...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -603,6 +947,36 @@
     <div id="catModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('catModal')"><div class="modal-content" style="max-width: 400px;"><div class="modal-header"><h2>Kategori Baru</h2><button class="modal-close" onclick="App.UI.closeModal('catModal')">&times;</button></div><div class="form-group"><label>Nama</label><input type="text" id="catName" required></div><div class="form-group"><label>Ikon (Emoji)</label><input type="text" id="catIcon" required maxlength="2"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="App.UI.closeModal('catModal')">Batal</button><button class="btn btn-primary" onclick="App.Handlers.addCategory()">Simpan</button></div></div></div>
     <div id="paylaterModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('paylaterModal')"><div class="modal-content"><div class="modal-header"><h2>Tagihan Baru</h2><button class="modal-close" onclick="App.UI.closeModal('paylaterModal')">&times;</button></div><form onsubmit="App.Handlers.addPaylater(event)"><div class="form-group"><label>Nama Tagihan</label><input type="text" id="plName" required></div><div class="form-group"><label>Jumlah (Rp)</label><input type="text" id="plAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('paylaterModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
 
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('logoutModal')">
+        <div class="modal-content" style="max-width: 360px;">
+            <div class="logout-modal-content">
+                <div class="logout-modal-avatar" id="logoutAvatar">U</div>
+                <h3 style="margin-bottom: 0.4rem;">Keluar dari Akun?</h3>
+                <p class="text-sm text-muted" style="margin-bottom: 0.5rem;">Halo, <strong id="logoutName">User</strong>.</p>
+                <p class="text-sm text-muted" style="margin-bottom: 2rem;">Semua data lokal akan tetap aman. Kamu bisa masuk kembali kapan saja.</p>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <button class="btn btn-danger btn-block" style="padding: 0.875rem;" onclick="App.Auth.handleLogout()">🚪 Ya, Keluar Sekarang</button>
+                    <button class="btn btn-secondary btn-block" onclick="App.UI.closeModal('logoutModal')">Tidak, Tetap di Sini</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin User Detail Modal -->
+    <div id="adminDetailModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('adminDetailModal')">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">
+                <h2>👤 Detail Pengguna</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('adminDetailModal')">&times;</button>
+            </div>
+            <div id="adminDetailContent">
+                <p class="text-sm text-muted">Memuat...</p>
+            </div>
+            <div id="adminDetailActions" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;"></div>
+        </div>
+    </div>
+
     <div id="confirmModal" class="modal-overlay" style="z-index: 11000;"><div class="modal-content" style="max-width: 350px; text-align: center; padding: 2rem;"><div style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--warning);">⚠️</div><h3 style="margin-bottom: 0.5rem;" id="confirmTitle">Konfirmasi</h3><p class="text-sm text-muted" style="margin-bottom: 2rem;" id="confirmMsg">Apakah Anda yakin?</p><div class="grid-2"><button class="btn btn-secondary" onclick="App.UI.resolveConfirm(false)">Batal</button><button class="btn btn-danger" id="btnConfirmYes" onclick="App.UI.resolveConfirm(true)">Lanjutkan</button></div></div></div>
 
     <!-- =======================================================================
@@ -673,11 +1047,21 @@
                     if (user) {
                         App.State.user = user;
                         // Cek admin berdasarkan email konversi
-                        App.State.isAdmin = user.email === 'admin@keuangan.pro';
+                        App.State.isAdmin = user.email === 'admin@keuangan.pro' || user.uid === 'dummy_admin';
                         
-                        document.getElementById('userDisplayName').textContent = user.displayName || user.email.split('@')[0];
-                        document.getElementById('userAvatar').innerHTML = user.photoURL ? `<img src="${user.photoURL}">` : (user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U');
+                        const name = user.displayName || user.email.split('@')[0];
+                        document.getElementById('userDisplayName').textContent = name;
+                        document.getElementById('userAvatar').innerHTML = user.photoURL ? `<img src="${user.photoURL}">` : name.charAt(0).toUpperCase();
                         
+                        // Store displayName in dummy_db for admin panel visibility
+                        if (App.Auth.isDummy) {
+                            const key = 'dummy_db_' + user.uid;
+                            try {
+                                const existing = JSON.parse(localStorage.getItem(key) || '{}');
+                                if (!existing.displayName) { existing.displayName = name; localStorage.setItem(key, JSON.stringify(existing)); }
+                            } catch(e) {}
+                        }
+
                         App.UI.toggleAuthView(false);
                         App.DB.listen(user.uid);
                         
@@ -704,7 +1088,9 @@
                 },
                 async handleLogin(e) {
                     e.preventDefault();
-                    const btn = document.getElementById('btnLogin'); btn.disabled = true; btn.textContent = 'Memproses...';
+                    const btn = document.getElementById('btnLogin'); 
+                    btn.disabled = true; 
+                    btn.innerHTML = '<span class="btn-spinner"></span>Memproses...';
                     const username = document.getElementById('loginUsername').value.toLowerCase().replace(/\s/g, '');
                     const password = document.getElementById('loginPassword').value;
                     
@@ -732,7 +1118,7 @@
                 },
                 async handleRegister(e) {
                     e.preventDefault();
-                    const btn = document.getElementById('btnRegister'); btn.disabled = true; btn.textContent = 'Memproses...';
+                    const btn = document.getElementById('btnRegister'); btn.disabled = true; btn.innerHTML = '<span class="btn-spinner"></span>Memproses...';
                     const name = document.getElementById('regName').value;
                     const username = document.getElementById('regUsername').value.toLowerCase().replace(/\s/g, '');
                     const password = document.getElementById('regPassword').value;
@@ -745,7 +1131,7 @@
                             localStorage.setItem('dummy_user_v8', JSON.stringify(dummyUser));
                             this.handleUserChange(dummyUser);
                             App.UI.showToast('Registrasi Lokal Berhasil!', 'success');
-                            btn.disabled = false; btn.textContent = 'Daftar Sekarang';
+                            btn.disabled = false; btn.textContent = 'Buat Akun';
                         }, 800);
                         return;
                     }
@@ -758,21 +1144,22 @@
                     } catch (error) {
                         App.UI.showToast('Registrasi gagal. Username mungkin sudah terdaftar.', 'error');
                     }
-                    btn.disabled = false; btn.textContent = 'Daftar Sekarang';
+                    btn.disabled = false; btn.textContent = 'Buat Akun';
                 },
                 handleLogout() {
+                    App.UI.closeModal('logoutModal');
                     if (this.isDummy) {
                         localStorage.removeItem('dummy_user_v8');
-                        App.UI.showToast('Berhasil keluar.', 'info');
+                        App.UI.showToast('Berhasil keluar. Sampai jumpa! 👋', 'info');
                         App.State.transactions = []; App.State.recurring = []; App.State.goals = []; App.State.budgets = []; App.State.paylaters = [];
                         if(App.DB.listener) App.DB.listener();
                         this.handleUserChange(null);
                         return;
                     }
                     signOut(this.instance).then(() => {
-                        App.UI.showToast('Berhasil keluar.', 'info');
+                        App.UI.showToast('Berhasil keluar. Sampai jumpa! 👋', 'info');
                         App.State.transactions = []; App.State.recurring = []; App.State.goals = []; App.State.budgets = []; App.State.paylaters = [];
-                        if(App.DB.listener) App.DB.listener(); // stop listening
+                        if(App.DB.listener) App.DB.listener();
                     });
                 }
             },
@@ -786,77 +1173,220 @@
                     this.loadData();
                 },
                 async loadData() {
-                    if(!App.State.isAdmin || !App.DB.dbInstance || App.Auth.isDummy) return;
-                    document.getElementById('adminUserTable').innerHTML = '<tr><td colspan="4" class="text-center">Memuat data pengguna...</td></tr>';
-                    
+                    if(!App.State.isAdmin) return;
+
+                    const table = document.getElementById('adminUserTable');
+                    if (table) table.innerHTML = '<tr><td colspan="5" class="text-center" style="padding:2rem; color:var(--text-muted);">⏳ Memuat data...</td></tr>';
+
+                    // --- DUMMY / LOCAL MODE ---
+                    if (App.Auth.isDummy) {
+                        const banner = document.getElementById('adminDummyBanner');
+                        if (banner) banner.style.display = 'flex';
+                        const modeEl = document.getElementById('adminMode');
+                        if (modeEl) modeEl.textContent = 'Lokal';
+
+                        // Scan all localStorage keys starting with dummy_db_
+                        const data = {};
+                        for (let i = 0; i < localStorage.length; i++) {
+                            const key = localStorage.key(i);
+                            if (key && key.startsWith('dummy_db_')) {
+                                const uid = key.replace('dummy_db_', '');
+                                try {
+                                    const db = JSON.parse(localStorage.getItem(key));
+                                    // Find matching profile from dummy_user_v8 or construct from uid
+                                    const profileEmail = uid.replace('dummy_', '') + '@keuangan.pro';
+                                    data[uid] = {
+                                        profile: { name: db.displayName || uid.replace('dummy_', ''), email: profileEmail },
+                                        appData: db
+                                    };
+                                } catch(e) {}
+                            }
+                        }
+                        // Also add current user if not already in
+                        const currentUser = App.State.user;
+                        if (currentUser && !data[currentUser.uid]) {
+                            data[currentUser.uid] = {
+                                profile: { name: currentUser.displayName || currentUser.email.split('@')[0], email: currentUser.email },
+                                appData: App.Auth.isDummy ? JSON.parse(localStorage.getItem('dummy_db_' + currentUser.uid) || '{}') : {}
+                            };
+                        }
+                        this.usersData = data;
+                        this.renderDashboard();
+                        this.renderUsers();
+                        return;
+                    }
+
+                    // --- FIREBASE MODE ---
+                    const modeEl = document.getElementById('adminMode');
+                    if (modeEl) modeEl.textContent = 'Firebase';
                     try {
                         const snap = await get(ref(App.DB.dbInstance, 'users'));
                         this.usersData = snap.val() || {};
                         this.renderDashboard();
                         this.renderUsers();
                     } catch (e) {
-                        document.getElementById('adminUserTable').innerHTML = '<tr><td colspan="4" class="text-center text-danger">Gagal mengambil data.</td></tr>';
+                        if (table) table.innerHTML = '<tr><td colspan="5" class="text-center text-danger" style="padding:2rem;">Gagal mengambil data Firebase.</td></tr>';
                     }
                 },
                 renderDashboard() {
-                    if(!this.usersData) return;
+                    if (!this.usersData) return;
                     const uids = Object.keys(this.usersData);
-                    let totPremium = 0;
+                    let totPremium = 0, totTx = 0;
                     uids.forEach(uid => {
                         const dataNode = this.usersData[uid].appData;
-                        if(dataNode && dataNode.isPremium) totPremium++;
+                        if (dataNode) {
+                            if (dataNode.isPremium) totPremium++;
+                            totTx += (dataNode.transactions || []).length;
+                        }
                     });
                     document.getElementById('adminTotUsers').textContent = uids.length;
                     document.getElementById('adminTotPremium').textContent = totPremium;
+                    const txEl = document.getElementById('adminTotTx');
+                    if (txEl) txEl.textContent = totTx;
                 },
                 renderUsers() {
-                    if(!this.usersData) return;
+                    if (!this.usersData) return;
                     const table = document.getElementById('adminUserTable');
-                    const query = document.getElementById('adminSearch').value.toLowerCase();
+                    const query = (document.getElementById('adminSearch').value || '').toLowerCase();
                     const uids = Object.keys(this.usersData);
-                    
                     let html = '';
+
                     uids.forEach(uid => {
                         const user = this.usersData[uid];
                         const profile = user.profile || {};
                         const appData = user.appData || {};
                         const isPrem = appData.isPremium || false;
-                        
-                        // Extract real username from our trick email
+                        const txCount = (appData.transactions || []).length;
                         const realUsername = (profile.email || '').replace('@keuangan.pro', '');
-                        
-                        if(query && !(profile.name||'').toLowerCase().includes(query) && !(realUsername||'').toLowerCase().includes(query)) return;
+                        const displayName = profile.name || realUsername || 'Unknown';
+                        const initials = displayName.charAt(0).toUpperCase();
+                        const isCurrentUser = App.State.user && uid === App.State.user.uid;
+                        const isAdminUser = profile.email === 'admin@keuangan.pro';
+
+                        if (query && !displayName.toLowerCase().includes(query) && !realUsername.toLowerCase().includes(query)) return;
+
+                        const statusBadge = isAdminUser
+                            ? `<span class="badge badge-admin">Admin</span>`
+                            : isPrem
+                                ? `<span class="badge badge-active">Premium 👑</span>`
+                                : `<span class="badge badge-paused">Reguler</span>`;
 
                         html += `
                             <tr>
-                                <td><div class="font-bold">${profile.name || 'Unknown'}</div><div class="text-xs text-muted">ID: ${uid.substring(0,8)}...</div></td>
-                                <td>@${realUsername || '-'}</td>
-                                <td><span class="badge ${isPrem ? 'badge-active' : 'badge-paused'}">${isPrem ? 'Premium' : 'Reguler'}</span></td>
                                 <td>
-                                    <div style="display:flex; gap:0.5rem;">
-                                        <button class="btn btn-sm btn-secondary" onclick="App.Admin.togglePremium('${uid}', ${!isPrem})">${isPrem ? 'Jadikan Reguler' : 'Jadikan Premium'}</button>
-                                        <button class="btn btn-sm btn-danger" onclick="App.Admin.deleteUser('${uid}')">Hapus Data</button>
+                                    <div class="admin-user-card">
+                                        <div class="admin-user-avatar" style="${isPrem ? 'background:var(--warning-light); color:var(--warning-dark);' : ''}">${initials}</div>
+                                        <div>
+                                            <div class="font-bold" style="font-size:0.875rem;">${displayName} ${isCurrentUser ? '<span style="font-size:0.65rem; background:var(--primary-light); color:var(--primary); padding:1px 5px; border-radius:4px; font-weight:700;">Kamu</span>' : ''}</div>
+                                            <div class="text-xs text-muted">UID: ${uid.substring(0, 10)}...</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="text-sm">@${realUsername || '-'}</span></td>
+                                <td><span class="font-bold text-sm">${txCount}</span><span class="text-xs text-muted"> transaksi</span></td>
+                                <td>${statusBadge}</td>
+                                <td>
+                                    <div style="display:flex; gap:0.4rem; align-items:center;">
+                                        <button class="admin-action-btn aab-view" onclick="App.Admin.showDetail('${uid}')" title="Lihat Detail">🔍</button>
+                                        ${!isAdminUser ? `<button class="admin-action-btn aab-premium" onclick="App.Admin.togglePremium('${uid}', ${!isPrem})" title="${isPrem ? 'Cabut Premium' : 'Beri Premium'}">${isPrem ? '⬇️' : '👑'}</button>` : ''}
+                                        ${!isCurrentUser && !isAdminUser ? `<button class="admin-action-btn aab-delete" onclick="App.Admin.deleteUser('${uid}')" title="Hapus Data">🗑️</button>` : ''}
                                     </div>
                                 </td>
                             </tr>
                         `;
                     });
 
-                    if(!html) html = '<tr><td colspan="4" class="text-center">Tidak ada pengguna ditemukan.</td></tr>';
+                    if (!html) html = '<tr><td colspan="5" class="text-center" style="padding:2rem; color:var(--text-muted);">Tidak ada pengguna ditemukan.</td></tr>';
                     table.innerHTML = html;
                 },
+                showDetail(uid) {
+                    if (!this.usersData || !this.usersData[uid]) return;
+                    const user = this.usersData[uid];
+                    const profile = user.profile || {};
+                    const appData = user.appData || {};
+                    const realUsername = (profile.email || '').replace('@keuangan.pro', '');
+                    const isPrem = appData.isPremium || false;
+                    const txCount = (appData.transactions || []).length;
+                    const goalCount = (appData.goals || []).length;
+                    const budgetCount = (appData.budgets || []).length;
+                    const isAdminUser = profile.email === 'admin@keuangan.pro';
+                    const isCurrentUser = App.State.user && uid === App.State.user.uid;
+
+                    let totIn = 0, totOut = 0;
+                    (appData.transactions || []).forEach(t => { totIn += (t.pemasukan||0); totOut += (t.pengeluaran||0); });
+
+                    document.getElementById('adminDetailContent').innerHTML = `
+                        <div style="text-align:center; padding: 1rem 0 1.25rem;">
+                            <div style="width:64px; height:64px; border-radius:50%; margin: 0 auto 0.75rem; background:${isPrem ? 'var(--warning-light)' : 'var(--primary-light)'}; color:${isPrem ? 'var(--warning-dark)' : 'var(--primary)'}; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:700; border:2px solid ${isPrem ? 'var(--warning)' : 'var(--primary)'};">
+                                ${(profile.name || realUsername || 'U').charAt(0).toUpperCase()}
+                            </div>
+                            <div class="font-bold" style="font-size:1.1rem;">${profile.name || '-'}</div>
+                            <div class="text-sm text-muted">@${realUsername}</div>
+                        </div>
+                        <div class="admin-detail-row"><span class="text-muted">Status</span><span>${isPrem ? '<span class="badge badge-active">Premium 👑</span>' : isAdminUser ? '<span class="badge badge-admin">Admin</span>' : '<span class="badge badge-paused">Reguler</span>'}</span></div>
+                        <div class="admin-detail-row"><span class="text-muted">Total Transaksi</span><span class="font-bold">${txCount}</span></div>
+                        <div class="admin-detail-row"><span class="text-muted">Total Pemasukan</span><span class="font-bold text-success">Rp ${App.Utils.formatNumber(totIn)}</span></div>
+                        <div class="admin-detail-row"><span class="text-muted">Total Pengeluaran</span><span class="font-bold text-danger">Rp ${App.Utils.formatNumber(totOut)}</span></div>
+                        <div class="admin-detail-row"><span class="text-muted">Target Aktif</span><span class="font-bold">${goalCount}</span></div>
+                        <div class="admin-detail-row"><span class="text-muted">Budget Aktif</span><span class="font-bold">${budgetCount}</span></div>
+                        <div class="admin-detail-row" style="border:none;"><span class="text-muted text-xs">UID</span><span class="text-xs" style="font-family:monospace; word-break:break-all;">${uid}</span></div>
+                    `;
+                    const actionsEl = document.getElementById('adminDetailActions');
+                    actionsEl.innerHTML = '';
+                    if (!isAdminUser) {
+                        const btn1 = document.createElement('button');
+                        btn1.className = 'btn btn-sm ' + (isPrem ? 'btn-secondary' : 'btn-premium');
+                        btn1.textContent = isPrem ? '⬇️ Cabut Premium' : '👑 Beri Premium';
+                        btn1.onclick = () => { App.Admin.togglePremium(uid, !isPrem); App.UI.closeModal('adminDetailModal'); };
+                        actionsEl.appendChild(btn1);
+                    }
+                    if (!isCurrentUser && !isAdminUser) {
+                        const btn2 = document.createElement('button');
+                        btn2.className = 'btn btn-sm btn-danger';
+                        btn2.textContent = '🗑️ Hapus Data';
+                        btn2.onclick = () => { App.UI.closeModal('adminDetailModal'); App.Admin.deleteUser(uid); };
+                        actionsEl.appendChild(btn2);
+                    }
+                    App.UI.showModal('adminDetailModal');
+                },
                 togglePremium(uid, newState) {
-                    if(!App.State.isAdmin) return;
+                    if (!App.State.isAdmin) return;
+
+                    if (App.Auth.isDummy) {
+                        const key = 'dummy_db_' + uid;
+                        try {
+                            const db = JSON.parse(localStorage.getItem(key) || '{}');
+                            db.isPremium = newState;
+                            localStorage.setItem(key, JSON.stringify(db));
+                            // If toggling for self, update live state
+                            if (App.State.user && uid === App.State.user.uid) {
+                                App.State.isPremium = newState;
+                                App.Premium.applyState();
+                                App.UI.renderAll();
+                            }
+                            App.UI.showToast(`Status Premium ${newState ? 'diberikan' : 'dicabut'}.`, 'success');
+                            this.loadData();
+                        } catch(e) { App.UI.showToast('Gagal memperbarui status.', 'error'); }
+                        return;
+                    }
+
                     set(ref(App.DB.dbInstance, `users/${uid}/appData/isPremium`), newState).then(() => {
-                        App.UI.showToast(`Status Premium diperbarui untuk pengguna.`, 'success');
+                        App.UI.showToast(`Status Premium diperbarui.`, 'success');
                         this.loadData();
                     });
                 },
                 async deleteUser(uid) {
-                    if(!App.State.isAdmin) return;
-                    const yes = await App.UI.confirm('Hapus SELURUH data pengguna ini dari Database?');
-                    if(!yes) return;
-                    
+                    if (!App.State.isAdmin) return;
+                    const yes = await App.UI.confirm('Hapus SELURUH data pengguna ini secara permanen?');
+                    if (!yes) return;
+
+                    if (App.Auth.isDummy) {
+                        localStorage.removeItem('dummy_db_' + uid);
+                        App.UI.showToast('Data pengguna berhasil dihapus.', 'success');
+                        this.loadData();
+                        return;
+                    }
+
                     remove(ref(App.DB.dbInstance, `users/${uid}`)).then(() => {
                         App.UI.showToast('Data pengguna berhasil dihapus.', 'success');
                         this.loadData();
@@ -1047,9 +1577,98 @@
                 },
 
                 toggleAuth(mode) {
-                    document.getElementById('loginForm').style.display = mode === 'login' ? 'block' : 'none';
-                    document.getElementById('registerForm').style.display = mode === 'register' ? 'block' : 'none';
-                    document.getElementById('authSubtitle').textContent = mode === 'login' ? 'Silakan masuk ke akun Anda.' : 'Buat akun baru untuk memulai.';
+                    const loginForm = document.getElementById('loginForm');
+                    const registerForm = document.getElementById('registerForm');
+                    const tabLogin = document.getElementById('tabLogin');
+                    const tabRegister = document.getElementById('tabRegister');
+                    
+                    if (mode === 'login') {
+                        loginForm.style.display = 'block';
+                        loginForm.classList.remove('auth-form-slide');
+                        void loginForm.offsetWidth;
+                        loginForm.classList.add('auth-form-slide');
+                        registerForm.style.display = 'none';
+                        if (tabLogin) tabLogin.classList.add('active');
+                        if (tabRegister) tabRegister.classList.remove('active');
+                    } else {
+                        registerForm.style.display = 'block';
+                        registerForm.classList.remove('auth-form-slide');
+                        void registerForm.offsetWidth;
+                        registerForm.classList.add('auth-form-slide');
+                        loginForm.style.display = 'none';
+                        if (tabRegister) tabRegister.classList.add('active');
+                        if (tabLogin) tabLogin.classList.remove('active');
+                    }
+                    const subtitle = document.getElementById('authSubtitle');
+                    if (subtitle) subtitle.textContent = mode === 'login' ? 'Catat pemasukan, pengeluaran, dan raih target finansialmu.' : 'Buat akun baru untuk mulai mengelola keuangan.';
+                },
+
+                togglePwd(inputId, btn) {
+                    const input = document.getElementById(inputId);
+                    if (!input) return;
+                    const isHidden = input.type === 'password';
+                    input.type = isHidden ? 'text' : 'password';
+                    btn.textContent = isHidden ? '🙈' : '👁';
+                },
+
+                toggleProfileDropdown() {
+                    const dd = document.getElementById('profileDropdown');
+                    if (!dd) return;
+                    const isOpen = dd.classList.contains('open');
+                    if (isOpen) { dd.classList.remove('open'); return; }
+
+                    // Update dropdown data
+                    const user = App.State.user;
+                    if (user) {
+                        const name = user.displayName || user.email.split('@')[0];
+                        const initials = name.charAt(0).toUpperCase();
+                        const pdAvatar = document.getElementById('pdAvatar');
+                        const pdName = document.getElementById('pdName');
+                        const pdRole = document.getElementById('pdRole');
+                        const pdTx = document.getElementById('pdTxCount');
+                        const pdGoal = document.getElementById('pdGoalCount');
+                        if (pdAvatar) pdAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}">` : initials;
+                        if (pdName) pdName.textContent = name;
+                        if (pdRole) pdRole.textContent = App.State.isPremium ? '👑 Pengguna Premium' : (App.State.isAdmin ? '🛡️ Administrator' : 'Pengguna Reguler');
+                        if (pdTx) pdTx.textContent = App.State.transactions.length;
+                        if (pdGoal) pdGoal.textContent = App.State.goals.length;
+                    }
+                    dd.classList.add('open');
+                    // Close on outside click
+                    setTimeout(() => {
+                        document.addEventListener('click', function handler(e) {
+                            if (!e.target.closest('#profileBtn') && !e.target.closest('#profileDropdown')) {
+                                dd.classList.remove('open');
+                                document.removeEventListener('click', handler);
+                            }
+                        });
+                    }, 10);
+                },
+
+                closeProfileDropdown() {
+                    const dd = document.getElementById('profileDropdown');
+                    if (dd) dd.classList.remove('open');
+                },
+
+                showLogoutModal() {
+                    const user = App.State.user;
+                    if (!user) return;
+                    const name = user.displayName || user.email.split('@')[0];
+                    const initials = name.charAt(0).toUpperCase();
+                    const avatarEl = document.getElementById('logoutAvatar');
+                    const nameEl = document.getElementById('logoutName');
+                    if (avatarEl) avatarEl.textContent = initials;
+                    if (nameEl) nameEl.textContent = name;
+                    this.showModal('logoutModal');
+                },
+
+                switchTabByName(tabName) {
+                    const navItems = document.querySelectorAll('.nav-item');
+                    navItems.forEach(item => {
+                        if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(`'${tabName}'`)) {
+                            item.click();
+                        }
+                    });
                 },
                 
                 updateSyncStatus(status) {
