@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keuangan Pro | Smart Finance Tracker</title>
+    <title>Smart Finance Trac</title>
     
     <!-- PWA & Meta -->
     <meta name="theme-color" content="#4f46e5">
@@ -27,253 +27,193 @@
            DESIGN SYSTEM & VARIABLES (LIGHT & DARK MODE)
            ========================================================================== */
         :root {
-            --hue-primary: 244; 
-            --sat-primary: 75%;
+            /* Core Brand Colors */
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #e0e7ff;
+            --primary-gradient: linear-gradient(135deg, #4f46e5, #3b82f6);
             
-            --primary: hsl(var(--hue-primary), var(--sat-primary), 59%);
-            --primary-dark: hsl(var(--hue-primary), var(--sat-primary), 45%);
-            --primary-light: hsl(var(--hue-primary), var(--sat-primary), 90%);
-            --primary-gradient: linear-gradient(135deg, hsl(var(--hue-primary), var(--sat-primary), 59%), hsl(var(--hue-primary), var(--sat-primary), 70%));
+            --success: #10b981;
+            --success-dark: #059669;
+            --success-light: #d1fae5;
             
-            --success: #10b981; --success-dark: #059669; --success-light: #d1fae5;
-            --danger: #ef4444; --danger-dark: #dc2626; --danger-light: #fee2e2;
-            --warning: #f59e0b; --warning-dark: #d97706; --warning-light: #fef3c7;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --danger-light: #fee2e2;
+            
+            --warning: #f59e0b;
+            --warning-dark: #d97706;
+            --warning-light: #fef3c7;
 
-            --premium-gold: #fbbf24;
-            --premium-gradient: linear-gradient(135deg, #f59e0b, #fbbf24, #fcd34d);
-
+            /* Light Theme Defaults */
             --bg-body: #f8fafc;
             --bg-surface: #ffffff;
             --bg-surface-hover: #f1f5f9;
             --bg-glass: rgba(255, 255, 255, 0.85);
             
-            --text-main: #0f172a; --text-muted: #64748b; --text-light: #94a3b8;
-            --border-light: #e2e8f0; --border-medium: #cbd5e1;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
             
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
             --shadow-float: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.04);
-            --shadow-premium: 0 10px 25px -5px rgba(245, 158, 11, 0.3);
             
-            --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px; --radius-full: 9999px;
-            --transition-fast: 150ms ease; --transition-normal: 250ms ease; --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Geometry */
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --radius-full: 9999px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
+        /* Dark Theme Overrides */
         [data-theme="dark"] {
-            --bg-body: #0f172a; --bg-surface: #1e293b; --bg-surface-hover: #334155; --bg-glass: rgba(30, 41, 59, 0.85);
-            --text-main: #f8fafc; --text-muted: #94a3b8; --text-light: #64748b;
-            --border-light: #334155; --border-medium: #475569;
-            --primary-light: hsla(var(--hue-primary), var(--sat-primary), 59%, 0.15);
-            --success-light: rgba(16, 185, 129, 0.15); --danger-light: rgba(239, 68, 68, 0.15); --warning-light: rgba(245, 158, 11, 0.15);
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5); --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4); --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+            --bg-body: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-surface-hover: #334155;
+            --bg-glass: rgba(30, 41, 59, 0.85);
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-light: #64748b;
+            
+            --border-light: #334155;
+            --border-medium: #475569;
+
+            --primary-light: #312e81;
+            --success-light: #064e3b;
+            --danger-light: #7f1d1d;
+            --warning-light: #78350f;
         }
 
+        /* ==========================================================================
+           BASE & LAYOUT
+           ========================================================================== */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-body); color: var(--text-main);
-            line-height: 1.6; -webkit-font-smoothing: antialiased;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding: 1.5rem 1.5rem 7rem 1.5rem;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            max-width: 900px;
+            margin: 0 auto;
             transition: background-color var(--transition-normal), color var(--transition-normal);
         }
 
-        /* Ambient Background */
-        .ambient-bg {
-            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle at 50% 0%, var(--primary-light) 0%, transparent 50%),
+        body::before {
+            content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 0%, rgba(79, 70, 229, 0.05) 0%, transparent 50%),
                         radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
-            z-index: -1; pointer-events: none; transition: background 0.5s ease;
+            z-index: -1; pointer-events: none;
         }
 
-        /* Container & Layout */
-        .app-container { max-width: 900px; margin: 0 auto; padding: 1.5rem 1.5rem 7rem 1.5rem; display: none; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        @media (max-width: 640px) { .app-container { padding: 1rem 1rem 6.5rem 1rem; } .grid-2 { grid-template-columns: 1fr; gap: 0.75rem; } }
+        @media (max-width: 640px) {
+            body { padding: 1rem 1rem 6.5rem 1rem; }
+            .grid-2 { grid-template-columns: 1fr; gap: 0.75rem; }
+        }
 
         h1, h2, h3, h4 { font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; margin-bottom: 0.5rem; }
         p { color: var(--text-muted); }
-        .text-sm { font-size: 0.875rem; } .text-xs { font-size: 0.75rem; }
-        .font-semibold { font-weight: 600; } .font-bold { font-weight: 700; }
-        .text-success { color: var(--success); } .text-danger { color: var(--danger); } .text-primary { color: var(--primary); }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-primary { color: var(--primary); }
         .text-center { text-align: center; }
 
         /* ==========================================================================
-           AUTH SCREEN (LOGIN / REGISTER) — PREMIUM REDESIGN
-           ========================================================================== */
-        .auth-view {
-            position: fixed; inset: 0; z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            overflow-y: auto; transition: opacity var(--transition-normal);
-            background: var(--bg-body);
-        }
-
-        /* Animated background orbs */
-        .auth-bg {
-            position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
-        }
-        .auth-orb {
-            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.25;
-            animation: orbFloat 8s ease-in-out infinite;
-        }
-        .auth-orb-1 { width: 500px; height: 500px; background: var(--primary); top: -150px; left: -150px; animation-delay: 0s; }
-        .auth-orb-2 { width: 350px; height: 350px; background: hsl(200, 80%, 60%); bottom: -100px; right: -100px; animation-delay: -3s; }
-        .auth-orb-3 { width: 200px; height: 200px; background: var(--premium-gold); top: 50%; right: 25%; animation-delay: -6s; }
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.05); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
-        }
-        [data-theme="dark"] .auth-orb { opacity: 0.12; }
-
-        /* Main card */
-        .auth-wrapper {
-            position: relative; z-index: 1;
-            display: grid; grid-template-columns: 1fr 1fr;
-            width: 100%; max-width: 900px;
-            background: var(--bg-surface);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-float);
-            border: 1px solid var(--border-light);
-            overflow: hidden;
-            margin: 1.5rem;
-        }
-        @media (max-width: 680px) {
-            .auth-wrapper { grid-template-columns: 1fr; margin: 1rem; }
-            .auth-hero { display: none; }
-        }
-
-        /* Left hero panel */
-        .auth-hero {
-            background: var(--primary-gradient);
-            padding: 3rem 2.5rem;
-            display: flex; flex-direction: column; justify-content: space-between;
-            position: relative; overflow: hidden;
-        }
-        .auth-hero::before {
-            content: '';
-            position: absolute; inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-        .auth-hero-brand { position: relative; z-index: 1; }
-        .auth-hero-icon { width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1.5rem; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); }
-        .auth-hero h2 { color: white; font-size: 1.75rem; margin-bottom: 0.75rem; line-height: 1.2; }
-        .auth-hero p { color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.6; }
-        .auth-hero-features { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem; }
-        .auth-feature-item { display: flex; align-items: center; gap: 0.75rem; }
-        .auth-feature-dot { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
-        .auth-feature-item span { color: rgba(255,255,255,0.9); font-size: 0.85rem; font-weight: 500; }
-
-        /* Right form panel */
-        .auth-panel { padding: 2.5rem 2.5rem; display: flex; flex-direction: column; }
-        @media (max-width: 680px) { .auth-panel { padding: 2rem 1.5rem; } }
-
-        .auth-panel-header { margin-bottom: 2rem; }
-        .auth-panel-header h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
-        .auth-panel-header p { font-size: 0.875rem; color: var(--text-muted); }
-
-        /* Tab switcher */
-        .auth-tabs {
-            display: flex; background: var(--bg-body); border-radius: var(--radius-md);
-            padding: 4px; gap: 4px; margin-bottom: 1.75rem; border: 1px solid var(--border-light);
-        }
-        .auth-tab {
-            flex: 1; padding: 0.6rem 1rem; border: none; background: transparent;
-            border-radius: calc(var(--radius-md) - 2px); font-family: inherit;
-            font-size: 0.875rem; font-weight: 600; cursor: pointer;
-            color: var(--text-muted); transition: all var(--transition-normal);
-        }
-        .auth-tab.active {
-            background: var(--bg-surface); color: var(--primary);
-            box-shadow: var(--shadow-sm); border: 1px solid var(--border-light);
-        }
-
-        /* Input with icon */
-        .auth-input-group { position: relative; margin-bottom: 1rem; }
-        .auth-input-icon {
-            position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
-            font-size: 1rem; pointer-events: none; z-index: 1; opacity: 0.5;
-            transition: opacity var(--transition-fast);
-        }
-        .auth-input-group:focus-within .auth-input-icon { opacity: 1; }
-        .auth-input-group input {
-            padding-left: 2.75rem; width: 100%; padding-top: 0.875rem; padding-bottom: 0.875rem;
-            padding-right: 1rem;
-        }
-        .auth-input-group.has-toggle input { padding-right: 2.75rem; }
-        .auth-pwd-toggle {
-            position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
-            background: none; border: none; cursor: pointer; color: var(--text-muted);
-            padding: 0.25rem; border-radius: 4px; font-size: 1rem;
-            transition: color var(--transition-fast); line-height: 1;
-        }
-        .auth-pwd-toggle:hover { color: var(--primary); }
-
-        /* Divider */
-        .auth-divider { display: flex; align-items: center; gap: 0.75rem; margin: 1.25rem 0; }
-        .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
-        .auth-divider span { font-size: 0.75rem; color: var(--text-light); font-weight: 600; }
-
-        /* Footer note */
-        .auth-footer-note { margin-top: auto; padding-top: 1.5rem; text-align: center; font-size: 0.8rem; color: var(--text-light); }
-        .auth-footer-note a { color: var(--primary); font-weight: 600; cursor: pointer; }
-
-        .auth-brand { font-size: 2rem; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
-        .auth-switch { color: var(--primary); cursor: pointer; font-weight: 600; text-decoration: underline; }
-
-        /* Slide animation for forms */
-        .auth-form-slide { animation: slideInForm 0.3s ease; }
-        @keyframes slideInForm { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }
-
-        /* Loading spinner inside button */
-        .btn-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
-        @keyframes btnSpin { to { transform: rotate(360deg); } }
-
-        /* ==========================================================================
-           APP COMPONENTS
+           COMPONENTS
            ========================================================================== */
         /* Header */
         .app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
         .brand { display: flex; align-items: center; gap: 1rem; }
-        .brand-icon { width: 48px; height: 48px; background: var(--primary-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); color: white; font-size: 1.5rem; transition: var(--transition-normal); }
-        .brand-title { font-size: 1.5rem; line-height: 1.2; display: flex; align-items: center; gap: 0.5rem;}
-        
-        .badge-premium { background: var(--premium-gradient); color: #78350f; font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 800; letter-spacing: 1px; box-shadow: var(--shadow-premium); display: none; }
-        body.is-premium .badge-premium { display: inline-block; }
-        body.is-premium .brand-icon { background: var(--premium-gradient); color: #78350f; }
+        .brand-icon { 
+            width: 48px; height: 48px; background: var(--primary-gradient); border-radius: var(--radius-md); 
+            display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); color: white; font-size: 1.5rem; 
+        }
+        .brand-title { font-size: 1.5rem; line-height: 1.2; }
 
-        /* User Profile Snippet */
-        .user-profile { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; background: var(--bg-surface); border-radius: var(--radius-full); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); }
-        .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; overflow: hidden; }
-        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .user-info { display: flex; flex-direction: column; display: none; } /* Hidden on mobile */
-        @media (min-width: 640px) { .user-info { display: flex; margin-right: 0.5rem;} }
+        /* Sync Indicator */
+        .sync-pill { display: inline-flex; flex-direction: column; align-items: flex-end; cursor: pointer; }
+        .sync-badge { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.75rem; background: var(--bg-surface); border-radius: var(--radius-full); box-shadow: var(--shadow-sm); font-size: 0.75rem; font-weight: 600; border: 1px solid var(--border-light); }
+        .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warning); }
+        .sync-dot.active { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .sync-dot.error { background: var(--danger); }
+        .sync-time { font-size: 0.65rem; color: var(--text-light); margin-top: 0.25rem; margin-right: 0.5rem; }
 
         /* Cards */
-        .card { background: var(--bg-surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 1.75rem; margin-bottom: 1.5rem; border: 1px solid var(--border-light); transition: var(--transition-normal); }
+        .card { 
+            background: var(--bg-surface); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); 
+            padding: 1.75rem; margin-bottom: 1.5rem; border: 1px solid var(--border-light); 
+            transition: var(--transition-normal); 
+        }
         .section-title { font-size: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 1.5rem;}
 
         /* Balances */
         .balance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-        .balance-card { padding: 1.5rem; border-radius: var(--radius-xl); color: white; position: relative; overflow: hidden; box-shadow: var(--shadow-md); display: flex; flex-direction: column; justify-content: center; min-height: 110px; transition: transform var(--transition-bounce); }
+        .balance-card { 
+            padding: 1.5rem; border-radius: var(--radius-xl); color: white; position: relative; overflow: hidden; 
+            box-shadow: var(--shadow-md); display: flex; flex-direction: column; justify-content: center; min-height: 110px; 
+            transition: transform var(--transition-bounce);
+        }
         .balance-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-float); }
         .balance-card::after { content: ''; position: absolute; right: -20px; bottom: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; pointer-events: none; }
         .bc-cash { background: linear-gradient(135deg, #10b981, #059669); }
-        .bc-saldo { background: var(--primary-gradient); }
+        .bc-saldo { background: linear-gradient(135deg, #4f46e5, #3730a3); }
         .bc-celengan { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .bc-label { font-size: 0.85rem; font-weight: 600; opacity: 0.9; margin-bottom: 0.5rem; z-index: 1; }
         .bc-value { font-size: 1.5rem; font-weight: 800; z-index: 1; word-break: break-word; }
 
         /* Paylater Custom Card */
-        .paylater-wrapper { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid #334155; border-radius: var(--radius-xl); padding: 1.5rem; margin-bottom: 2rem; color: white; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); position: relative; overflow: hidden; }
-        .paylater-wrapper::before { content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .paylater-wrapper {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 1px solid #334155;
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .paylater-wrapper::before {
+            content: ''; position: absolute; top: -50px; right: -50px;
+            width: 150px; height: 150px; background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
+        }
         .paylater-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; position: relative; z-index: 1; }
-        .paylater-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--danger); backdrop-filter: blur(10px); transition: transform 0.2s ease; margin-bottom: 0.75rem; }
+        .paylater-list { display: flex; flex-direction: column; gap: 0.75rem; position: relative; z-index: 1; }
+        .paylater-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.03); padding: 1rem;
+            border-radius: var(--radius-md); border-left: 4px solid var(--danger);
+            backdrop-filter: blur(10px); transition: transform 0.2s ease;
+        }
+        .paylater-item:hover { transform: translateX(4px); background: rgba(255,255,255,0.06); }
 
         /* Forms & Inputs */
-        .form-group { margin-bottom: 1.25rem; position: relative; text-align: left; }
+        .form-group { margin-bottom: 1.25rem; }
         label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted); }
-        input, select, textarea { width: 100%; padding: 0.875rem 1rem; background: var(--bg-body); border: 1px solid var(--border-medium); border-radius: var(--radius-md); font-family: inherit; font-size: 0.95rem; color: var(--text-main); transition: var(--transition-fast); appearance: none; }
+        input, select, textarea {
+            width: 100%; padding: 0.875rem 1rem; background: var(--bg-body); border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md); font-family: inherit; font-size: 0.95rem; color: var(--text-main);
+            transition: var(--transition-fast); appearance: none;
+        }
         input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); background: var(--bg-surface); }
         select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em; padding-right: 2.5rem; }
         .input-error { border-color: var(--danger) !important; background: var(--danger-light) !important; }
@@ -289,155 +229,68 @@
         input[type="checkbox"]:checked + .switch::after { transform: translateX(22px); }
 
         /* Buttons */
-        .btn { display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; padding: 0.875rem 1.5rem; border: none; border-radius: var(--radius-md); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all var(--transition-fast); font-family: inherit; }
+        .btn { 
+            display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; 
+            padding: 0.875rem 1.5rem; border: none; border-radius: var(--radius-md); 
+            font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all var(--transition-fast); 
+            font-family: inherit; 
+        }
         .btn:active { transform: scale(0.96); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .btn-primary { background: var(--primary-gradient); color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
         .btn-primary:hover:not(:disabled) { box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4); transform: translateY(-1px); }
-        .btn-premium { background: var(--premium-gradient); color: #78350f; box-shadow: var(--shadow-premium); }
-        .btn-premium:hover { filter: brightness(1.1); transform: translateY(-1px); }
         .btn-secondary { background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border-medium); }
         .btn-secondary:hover:not(:disabled) { background: var(--bg-surface-hover); }
         .btn-danger { background: var(--danger-light); color: var(--danger-dark); }
+        .btn-danger:hover:not(:disabled) { background: var(--danger); color: white; }
+        .btn-success { background: var(--success-light); color: var(--success-dark); }
+        .btn-success:hover:not(:disabled) { background: var(--success); color: white; }
         .btn-outline { background: transparent; border: 1px solid var(--border-medium); color: var(--text-main); }
         .btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
+        .btn-icon { width: 40px; height: 40px; padding: 0; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
         .btn-block { width: 100%; }
 
-        /* Lists & Progress Cards */
+        /* Lists & Compact History */
         .list-group { display: flex; flex-direction: column; gap: 0.75rem; }
-        .list-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--bg-body); border: 1px solid var(--border-light); border-radius: var(--radius-md); transition: var(--transition-fast); cursor: pointer; position: relative; overflow: hidden; }
+        .list-item { 
+            display: flex; align-items: center; justify-content: space-between; padding: 1rem; 
+            background: var(--bg-body); border: 1px solid var(--border-light); 
+            border-radius: var(--radius-md); transition: var(--transition-fast); cursor: pointer; 
+        }
         .list-item:hover { border-color: var(--primary-light); box-shadow: var(--shadow-md); transform: translateX(2px); }
         .item-left { display: flex; align-items: center; gap: 1rem; }
         .item-icon { width: 40px; height: 40px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; background: var(--bg-surface); font-size: 1.25rem; box-shadow: var(--shadow-sm); }
-        .badge { padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+        .item-details { display: flex; flex-direction: column; }
+        .item-title { font-weight: 700; color: var(--text-main); font-size: 0.95rem; }
+        .item-meta { font-size: 0.75rem; color: var(--text-muted); }
+        .item-right { text-align: right; }
+        .item-amount { font-weight: 800; font-size: 0.95rem; }
         
-        .progress-card { padding: 1.25rem; border-radius: var(--radius-md); background: var(--bg-body); border: 1px solid var(--border-light); margin-bottom: 1rem; position: relative;}
+        .badge { padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+        .badge-active { background: var(--success-light); color: var(--success-dark); }
+        .badge-paused { background: var(--warning-light); color: var(--warning-dark); }
+
+        /* Goals & Budget Progress */
+        .progress-card { padding: 1.25rem; border-radius: var(--radius-md); background: var(--bg-body); border: 1px solid var(--border-light); margin-bottom: 1rem; }
         .progress-header { display: flex; justify-content: space-between; margin-bottom: 0.75rem; }
         .progress-track { width: 100%; height: 8px; background: var(--border-medium); border-radius: var(--radius-full); overflow: hidden; }
         .progress-fill { height: 100%; border-radius: var(--radius-full); transition: width 1s ease; }
-
-        /* Premium Lock Overlay */
-        .premium-lock { position: absolute; inset: 0; background: var(--bg-glass); backdrop-filter: blur(4px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; border-radius: inherit; text-align: center; padding: 1rem; opacity: 0; pointer-events: none; transition: opacity var(--transition-normal); }
-        .premium-lock.show { opacity: 1; pointer-events: auto; }
-        .premium-lock-icon { font-size: 2rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(245,158,11,0.4)); }
-
-        /* ==========================================================================
-           PROFILE DROPDOWN
-           ========================================================================== */
-        .profile-btn {
-            display: flex; align-items: center; gap: 0.6rem;
-            padding: 0.4rem 0.75rem 0.4rem 0.4rem;
-            background: var(--bg-surface); border: 1px solid var(--border-light);
-            border-radius: var(--radius-full); cursor: pointer;
-            box-shadow: var(--shadow-sm); transition: all var(--transition-normal);
-            position: relative;
-        }
-        .profile-btn:hover { box-shadow: var(--shadow-md); border-color: var(--primary); }
-        .profile-btn-info { display: flex; flex-direction: column; text-align: left; }
-        @media (max-width: 640px) { .profile-btn-info { display: none; } }
-
-        .profile-dropdown {
-            position: absolute; top: calc(100% + 10px); right: 0;
-            width: 260px; background: var(--bg-surface);
-            border: 1px solid var(--border-light); border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-float); z-index: 500; overflow: hidden;
-            opacity: 0; transform: translateY(-8px) scale(0.97);
-            pointer-events: none; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .profile-dropdown.open {
-            opacity: 1; transform: translateY(0) scale(1); pointer-events: auto;
-        }
-        .pd-header {
-            padding: 1.25rem; background: var(--primary-gradient);
-            display: flex; align-items: center; gap: 1rem;
-        }
-        .pd-avatar {
-            width: 48px; height: 48px; border-radius: 50%;
-            background: rgba(255,255,255,0.25); border: 2px solid rgba(255,255,255,0.5);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem; font-weight: 700; color: white; flex-shrink: 0;
-            overflow: hidden;
-        }
-        .pd-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .pd-name { color: white; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.15rem; }
-        .pd-role { color: rgba(255,255,255,0.8); font-size: 0.75rem; font-weight: 500; }
-        .pd-body { padding: 0.75rem; }
-        .pd-stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
-        .pd-stat { background: var(--bg-body); border-radius: var(--radius-md); padding: 0.6rem 0.75rem; text-align: center; border: 1px solid var(--border-light); }
-        .pd-stat-val { font-weight: 700; font-size: 1rem; color: var(--text-main); }
-        .pd-stat-lbl { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; margin-top: 0.1rem; }
-        .pd-menu-item {
-            display: flex; align-items: center; gap: 0.75rem;
-            padding: 0.65rem 0.75rem; border-radius: var(--radius-md);
-            cursor: pointer; transition: background var(--transition-fast);
-            font-size: 0.875rem; font-weight: 500; color: var(--text-main);
-            border: none; background: none; width: 100%; text-align: left; font-family: inherit;
-        }
-        .pd-menu-item:hover { background: var(--bg-body); }
-        .pd-menu-item.danger { color: var(--danger); }
-        .pd-menu-item.danger:hover { background: var(--danger-light); }
-        .pd-menu-sep { height: 1px; background: var(--border-light); margin: 0.4rem 0; }
-        .pd-menu-icon { width: 28px; height: 28px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
-
-        /* ==========================================================================
-           LOGOUT MODAL
-           ========================================================================== */
-        .logout-modal-content {
-            text-align: center; padding: 2.5rem 2rem;
-        }
-        .logout-modal-avatar {
-            width: 72px; height: 72px; border-radius: 50%;
-            background: var(--primary-light); margin: 0 auto 1.25rem;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; font-weight: 700; color: var(--primary);
-            border: 3px solid var(--primary);
-        }
-
-        /* ==========================================================================
-           ADMIN PANEL REDESIGN
-           ========================================================================== */
-        .admin-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
-        .admin-stat-card {
-            background: var(--bg-body); border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg); padding: 1.25rem; text-align: center;
-            transition: var(--transition-normal);
-        }
-        .admin-stat-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .admin-stat-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
-        .admin-stat-val { font-size: 1.5rem; font-weight: 800; color: var(--text-main); line-height: 1; }
-        .admin-stat-lbl { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 0.35rem; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .admin-table-container { width: 100%; overflow-x: auto; margin-top: 1rem; }
-        .admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.875rem; }
-        .admin-table thead tr { background: var(--bg-body); }
-        .admin-table th { padding: 0.75rem 1rem; font-weight: 700; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid var(--border-light); }
-        .admin-table td { padding: 0.875rem 1rem; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
-        .admin-table tbody tr:hover { background: var(--bg-surface-hover); }
-        .admin-table tbody tr:last-child td { border-bottom: none; }
-
-        .admin-user-card { display: flex; align-items: center; gap: 0.75rem; }
-        .admin-user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; }
-        .badge-active { background: var(--success-light); color: var(--success-dark); }
-        .badge-paused { background: var(--bg-body); color: var(--text-muted); border: 1px solid var(--border-medium); }
-        .badge-admin { background: var(--primary-light); color: var(--primary-dark); }
-
-        .admin-action-btn { width: 30px; height: 30px; border-radius: var(--radius-sm); border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: all var(--transition-fast); }
-        .admin-action-btn:hover { transform: scale(1.1); }
-        .aab-premium { background: var(--warning-light); color: var(--warning-dark); }
-        .aab-delete { background: var(--danger-light); color: var(--danger-dark); }
-        .aab-view { background: var(--primary-light); color: var(--primary-dark); }
-
-        .admin-mode-banner { display: flex; align-items: center; gap: 0.75rem; background: var(--warning-light); border: 1px solid var(--warning); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--warning-dark); font-weight: 600; }
-
-        /* Admin modal detail */
-        .admin-detail-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid var(--border-light); font-size: 0.875rem; }
-        .admin-detail-row:last-child { border-bottom: none; }
+        
+        /* Insights */
+        .insight-card { display: flex; gap: 1rem; padding: 1rem; background: var(--bg-body); border-left: 4px solid var(--primary); border-radius: var(--radius-md); margin-bottom: 1rem; }
 
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-glass); backdrop-filter: blur(20px); border-top: 1px solid var(--border-light); z-index: 100; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0,0,0,0.05); }
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+            border-top: 1px solid var(--border-light); z-index: 100; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0,0,0,0.05); 
+        }
         .nav-container { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0.5rem 1rem; overflow-x: auto; scrollbar-width: none; }
         .nav-container::-webkit-scrollbar { display: none; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem; border: none; background: none; cursor: pointer; color: var(--text-muted); border-radius: var(--radius-md); flex: 1; min-width: 60px; transition: var(--transition-fast); }
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem; 
+            border: none; background: none; cursor: pointer; color: var(--text-muted); 
+            border-radius: var(--radius-md); flex: 1; min-width: 60px; transition: var(--transition-fast);
+        }
         .nav-item:hover { color: var(--primary); background: var(--bg-surface-hover); }
         .nav-item.active { color: var(--primary); }
         .nav-icon { font-size: 1.25rem; transition: transform var(--transition-bounce); filter: grayscale(1) opacity(0.7); }
@@ -450,482 +303,395 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Modals */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; opacity: 0; transition: opacity var(--transition-normal); }
+        .modal-overlay { 
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); 
+            display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; 
+            opacity: 0; transition: opacity var(--transition-normal); 
+        }
         .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content { background: var(--bg-surface); width: 100%; max-width: 500px; border-radius: var(--radius-xl); padding: 1.75rem; box-shadow: var(--shadow-float); transform: scale(0.95); transition: transform var(--transition-bounce); max-height: 90vh; overflow-y: auto; position: relative;}
+        .modal-content { 
+            background: var(--bg-surface); width: 100%; max-width: 500px; border-radius: var(--radius-xl); 
+            padding: 1.75rem; box-shadow: var(--shadow-float); transform: scale(0.95); 
+            transition: transform var(--transition-bounce); max-height: 90vh; overflow-y: auto; position: relative; 
+        }
         .modal-overlay.show .modal-content { transform: scale(1); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .modal-close { background: var(--bg-body); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: var(--text-muted); font-size: 1.25rem; transition: background 0.2s;}
+        .modal-close { background: var(--bg-body); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: var(--text-muted); font-size: 1.25rem; }
         .modal-close:hover { background: var(--danger-light); color: var(--danger); }
-        
+        .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+
+        /* Toasts */
         .toast-container { position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 0.5rem; pointer-events: none; width: 90%; max-width: 400px; }
-        .toast { background: var(--bg-glass); backdrop-filter: blur(12px); padding: 1rem; border-radius: var(--radius-full); box-shadow: var(--shadow-lg); display: flex; gap: 0.75rem; align-items: center; border: 1px solid var(--border-light); transform: translateY(-20px) scale(0.9); opacity: 0; transition: all var(--transition-bounce); pointer-events: auto; }
+        .toast { 
+            background: var(--bg-glass); backdrop-filter: blur(12px); padding: 1rem; border-radius: var(--radius-full); 
+            box-shadow: var(--shadow-lg); display: flex; gap: 0.75rem; align-items: center; 
+            border: 1px solid var(--border-light); transform: translateY(-20px) scale(0.9); opacity: 0; 
+            transition: all var(--transition-bounce); pointer-events: auto; 
+        }
         .toast.show { transform: translateY(0) scale(1); opacity: 1; }
-        .loader { border: 3px solid var(--border-light); border-top: 3px solid var(--primary); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 0 auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .toast-icon { font-size: 1.25rem; }
+        .toast-body { flex: 1; font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
     </style>
 </head>
 <body>
-    <div class="ambient-bg"></div>
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- =======================================================================
-         AUTH VIEW (LOGIN / REGISTER) — PREMIUM REDESIGN
-         ======================================================================= -->
-    <div class="auth-view" id="authView">
-        <!-- Animated background -->
-        <div class="auth-bg">
-            <div class="auth-orb auth-orb-1"></div>
-            <div class="auth-orb auth-orb-2"></div>
-            <div class="auth-orb auth-orb-3"></div>
-        </div>
-
-        <div class="auth-wrapper">
-            <!-- LEFT: Hero Panel -->
-            <div class="auth-hero">
-                <div class="auth-hero-brand">
-                    <div class="auth-hero-icon">💎</div>
-                    <h2>Kelola Keuangan<br>Lebih Cerdas</h2>
-                    <p id="authSubtitle">Catat pemasukan, pengeluaran, dan raih target finansialmu.</p>
-                </div>
-                <div class="auth-hero-features">
-                    <div class="auth-feature-item">
-                        <div class="auth-feature-dot">📊</div>
-                        <span>Dashboard & Analitik Real-Time</span>
-                    </div>
-                    <div class="auth-feature-item">
-                        <div class="auth-feature-dot">🎯</div>
-                        <span>Target & Budget Cerdas</span>
-                    </div>
-                    <div class="auth-feature-item">
-                        <div class="auth-feature-dot">🔒</div>
-                        <span>Data Aman & Tersinkronisasi</span>
-                    </div>
-                </div>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 15h0M2 9.5h20"/></svg>
             </div>
-
-            <!-- RIGHT: Form Panel -->
-            <div class="auth-panel">
-                <div class="auth-panel-header">
-                    <h1>Keuangan <span style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Pro</span></h1>
-                    <p>Masuk atau buat akun baru untuk mulai.</p>
-                </div>
-
-                <!-- Tab Switcher -->
-                <div class="auth-tabs">
-                    <button class="auth-tab active" id="tabLogin" type="button" onclick="App.UI.toggleAuth('login')">Masuk</button>
-                    <button class="auth-tab" id="tabRegister" type="button" onclick="App.UI.toggleAuth('register')">Daftar</button>
-                </div>
-
-                <!-- Login Form -->
-                <form id="loginForm" onsubmit="App.Auth.handleLogin(event)" class="auth-form-slide">
-                    <div class="auth-input-group">
-                        <span class="auth-input-icon">👤</span>
-                        <input type="text" id="loginUsername" placeholder="Username" required pattern="[a-zA-Z0-9_]+" autocomplete="username">
-                    </div>
-                    <div class="auth-input-group has-toggle">
-                        <span class="auth-input-icon">🔑</span>
-                        <input type="password" id="loginPassword" placeholder="Password" required autocomplete="current-password">
-                        <button type="button" class="auth-pwd-toggle" onclick="App.UI.togglePwd('loginPassword', this)" title="Tampilkan password">👁</button>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="btnLogin" style="margin-top: 0.5rem; padding: 1rem; font-size: 1rem;">Masuk</button>
-                    <p class="auth-footer-note">Belum punya akun? <a onclick="App.UI.toggleAuth('register')">Daftar sekarang</a></p>
-                </form>
-
-                <!-- Register Form -->
-                <form id="registerForm" onsubmit="App.Auth.handleRegister(event)" style="display: none;" class="auth-form-slide">
-                    <div class="auth-input-group">
-                        <span class="auth-input-icon">✏️</span>
-                        <input type="text" id="regName" placeholder="Nama Lengkap" required autocomplete="name">
-                    </div>
-                    <div class="auth-input-group">
-                        <span class="auth-input-icon">👤</span>
-                        <input type="text" id="regUsername" placeholder="Username (tanpa spasi)" required pattern="[a-zA-Z0-9_]+" autocomplete="username">
-                    </div>
-                    <div class="auth-input-group has-toggle">
-                        <span class="auth-input-icon">🔑</span>
-                        <input type="password" id="regPassword" placeholder="Password (min. 6 karakter)" minlength="6" required autocomplete="new-password">
-                        <button type="button" class="auth-pwd-toggle" onclick="App.UI.togglePwd('regPassword', this)" title="Tampilkan password">👁</button>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="btnRegister" style="margin-top: 0.5rem; padding: 1rem; font-size: 1rem;">Buat Akun</button>
-                    <p class="auth-footer-note">Sudah punya akun? <a onclick="App.UI.toggleAuth('login')">Masuk di sini</a></p>
-                </form>
+            <div>
+                <h1 class="brand-title">pencatatan keuangan</h1>
+                <p class="text-xs font-medium text-muted" id="currentDateStr">Memuat...</p>
             </div>
         </div>
-    </div>
+        <div class="sync-pill" onclick="App.UI.showModal('syncModal')">
+            <div class="sync-badge">
+                <div class="sync-dot" id="syncStatusDot"></div>
+                <span id="syncStatusText">Menghubungkan</span>
+            </div>
+            <div class="sync-time" id="syncTimeText">Updated: -</div>
+        </div>
+    </header>
+
+    <!-- Balances -->
+    <section class="balance-grid" id="balanceCards">
+        <div class="balance-card bc-cash skeleton"></div>
+        <div class="balance-card bc-saldo skeleton"></div>
+        <div class="balance-card bc-celengan skeleton"></div>
+    </section>
+
+    <!-- Paylater Section Khusus -->
+    <section class="paylater-wrapper" id="paylaterSection">
+        <div class="paylater-header">
+            <h3 class="text-sm font-bold" style="color: white; margin: 0; display:flex; align-items:center; gap:0.5rem;">💳 Daftar Tagihan & Paylater</h3>
+            <button class="btn btn-sm btn-outline" style="border-color: #475569; color: white;" onclick="App.UI.showModal('paylaterModal')">+ Tambah</button>
+        </div>
+        <div class="paylater-list" id="paylaterList">
+            <div class="skeleton" style="height: 60px; background: rgba(255,255,255,0.1);"></div>
+        </div>
+    </section>
 
     <!-- =======================================================================
-         MAIN APP CONTAINER
+         TABS / VIEWS
          ======================================================================= -->
-    <div class="app-container" id="appContainer">
-        <!-- Header -->
-        <header class="app-header">
-            <div class="brand">
-                <div class="brand-icon" style="width: 40px; height: 40px; font-size: 1.25rem;">💎</div>
-                <div>
-                    <h1 class="brand-title" style="font-size: 1.25rem;">Keuangan Pro <span class="badge-premium">PRO</span></h1>
-                    <p class="text-xs font-medium text-muted" id="currentDateStr">Memuat...</p>
-                </div>
+    
+    <!-- 1. TAB INPUT -->
+    <main class="app-section active" id="view-input">
+        <div class="card">
+            <div class="section-title">
+                <span>📝 Catat Transaksi</span>
             </div>
             
-            <div style="position: relative;">
-                <button class="profile-btn" id="profileBtn" onclick="App.UI.toggleProfileDropdown()" type="button">
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <div class="profile-btn-info">
-                        <span class="font-bold text-sm" id="userDisplayName">User</span>
-                        <span class="text-xs text-muted" id="userRoleBadge">Reguler</span>
+            <form id="txForm" onsubmit="App.Handlers.addTransaction(event)">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>📅 Tanggal</label>
+                        <input type="date" id="txDate" required>
                     </div>
-                    <span style="color: var(--text-muted); font-size: 0.7rem; margin-left: 0.1rem;">▾</span>
-                </button>
-
-                <!-- Profile Dropdown -->
-                <div class="profile-dropdown" id="profileDropdown">
-                    <div class="pd-header">
-                        <div class="pd-avatar" id="pdAvatar">U</div>
-                        <div>
-                            <div class="pd-name" id="pdName">User</div>
-                            <div class="pd-role" id="pdRole">Pengguna Reguler</div>
-                        </div>
-                    </div>
-                    <div class="pd-body">
-                        <div class="pd-stat-row">
-                            <div class="pd-stat">
-                                <div class="pd-stat-val" id="pdTxCount">0</div>
-                                <div class="pd-stat-lbl">Transaksi</div>
-                            </div>
-                            <div class="pd-stat">
-                                <div class="pd-stat-val" id="pdGoalCount">0</div>
-                                <div class="pd-stat-lbl">Target Aktif</div>
-                            </div>
-                        </div>
-                        <button class="pd-menu-item" onclick="App.UI.closeProfileDropdown(); App.UI.switchTabByName('settings');">
-                            <div class="pd-menu-icon" style="background: var(--primary-light);">⚙️</div>
-                            Pengaturan Akun
-                        </button>
-                        <div class="pd-menu-sep"></div>
-                        <button class="pd-menu-item danger" onclick="App.UI.closeProfileDropdown(); App.UI.showLogoutModal();">
-                            <div class="pd-menu-icon" style="background: var(--danger-light);">🚪</div>
-                            Keluar dari Akun
-                        </button>
+                    <div class="form-group">
+                        <label>🏦 Akun / Sumber</label>
+                        <select id="txAccount" required>
+                            <option value="cash">💵 Cash / Tunai</option>
+                            <option value="saldo">🪪 Saldo Total (Bank/E-Wallet)</option>
+                            <option value="celengan">🐷 Celengan</option>
+                        </select>
                     </div>
                 </div>
-            </div>
-        </header>
-
-        <!-- TABS / VIEWS -->
-
-        <!-- 0. TAB ADMIN PANEL -->
-        <main class="app-section" id="view-admin">
-            <!-- Header card -->
-            <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); color: white; margin-bottom: 1rem;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-                    <div>
-                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                            <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">🛡️</div>
-                            <div>
-                                <h2 style="color: white; margin: 0; font-size: 1.25rem;">Admin Panel</h2>
-                                <p style="color: rgba(255,255,255,0.6); font-size: 0.75rem; margin: 0;">Keuangan Pro Control Center</p>
-                            </div>
-                        </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>💰 Pemasukan (+)</label>
+                        <input type="text" id="txIn" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this)">
+                        <div class="error-text" id="err-tx">Nominal wajib diisi</div>
                     </div>
-                    <button class="btn btn-sm" style="background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.25);" onclick="App.Admin.loadData()">🔄 Refresh</button>
-                </div>
-                <div class="admin-stat-grid" style="margin-top: 1.25rem; margin-bottom: 0;">
-                    <div class="admin-stat-card" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
-                        <div class="admin-stat-icon">👥</div>
-                        <div class="admin-stat-val" style="color: white;" id="adminTotUsers">0</div>
-                        <div class="admin-stat-lbl" style="color: rgba(255,255,255,0.6);">Total Akun</div>
-                    </div>
-                    <div class="admin-stat-card" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
-                        <div class="admin-stat-icon">👑</div>
-                        <div class="admin-stat-val" style="color: #fbbf24;" id="adminTotPremium">0</div>
-                        <div class="admin-stat-lbl" style="color: rgba(255,255,255,0.6);">Premium</div>
-                    </div>
-                    <div class="admin-stat-card" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
-                        <div class="admin-stat-icon">📝</div>
-                        <div class="admin-stat-val" style="color: #34d399;" id="adminTotTx">0</div>
-                        <div class="admin-stat-lbl" style="color: rgba(255,255,255,0.6);">Total Transaksi</div>
-                    </div>
-                    <div class="admin-stat-card" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
-                        <div class="admin-stat-icon">💾</div>
-                        <div class="admin-stat-val" style="color: #93c5fd;" id="adminMode">Lokal</div>
-                        <div class="admin-stat-lbl" style="color: rgba(255,255,255,0.6);">Mode DB</div>
+                    <div class="form-group">
+                        <label>💸 Pengeluaran (-)</label>
+                        <input type="text" id="txOut" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this)">
                     </div>
                 </div>
-            </div>
-
-            <!-- Mode banner (shown in dummy mode) -->
-            <div class="admin-mode-banner" id="adminDummyBanner" style="display: none;">
-                ⚠️ Mode Lokal Aktif — Data diambil dari localStorage browser ini. Pengguna antar-perangkat tidak dapat terlihat.
-            </div>
-
-            <!-- User table -->
-            <div class="card">
-                <div class="section-title" style="margin-bottom: 1rem;">
-                    <span style="font-size: 1rem;">👥 Daftar Pengguna Terdaftar</span>
-                </div>
-                <input type="text" id="adminSearch" placeholder="🔍 Cari nama atau username..." oninput="App.Admin.renderUsers()" style="margin-bottom: 1rem;">
-                <div class="admin-table-container">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Pengguna</th>
-                                <th>Username</th>
-                                <th>Transaksi</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="adminUserTable">
-                            <tr><td colspan="5" class="text-center" style="padding: 2rem; color: var(--text-muted);">Memuat data pengguna...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-
-        <!-- 1. TAB INPUT -->
-        <main class="app-section active" id="view-input">
-            <!-- Balances -->
-            <section class="balance-grid" id="balanceCards">
-                <div class="balance-card bc-cash skeleton"></div><div class="balance-card bc-saldo skeleton"></div><div class="balance-card bc-celengan skeleton"></div>
-            </section>
-
-            <div class="card">
-                <div class="section-title"><span>📝 Catat Transaksi</span></div>
-                <form id="txForm" onsubmit="App.Handlers.addTransaction(event)">
-                    <div class="grid-2">
-                        <div class="form-group"><label>📅 Tanggal</label><input type="date" id="txDate" required></div>
-                        <div class="form-group"><label>🏦 Akun / Sumber</label>
-                            <select id="txAccount" required>
-                                <option value="cash">💵 Cash / Tunai</option>
-                                <option value="saldo">🪪 Saldo Total (Bank/E-Wallet)</option>
-                                <option value="celengan">🐷 Celengan</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="grid-2">
-                        <div class="form-group"><label>💰 Pemasukan (+)</label><input type="text" id="txIn" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this)"><div class="error-text" id="err-tx">Nominal wajib diisi</div></div>
-                        <div class="form-group"><label>💸 Pengeluaran (-)</label><input type="text" id="txOut" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
-                    </div>
-                    <div class="form-group"><label>📂 Kategori</label><select id="txCategory" required></select></div>
-                    <div class="form-group"><label>📝 Keterangan Singkat</label><input type="text" id="txNote" placeholder="Cth: Gaji bulanan, Bensin, dll"></div>
-
-                    <div class="form-group" style="background: var(--bg-body); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
-                        <label class="switch-wrapper" style="margin: 0;">
-                            <div><span class="font-bold text-sm">Otomatisasi Rutin</span><p class="text-xs text-muted" style="margin-top:0.25rem;">Jadikan transaksi berulang otomatis.</p></div>
-                            <input type="checkbox" id="txRecurring" onchange="document.getElementById('recurringOpts').style.display = this.checked ? 'block' : 'none'">
-                            <div class="switch"></div>
-                        </label>
-                        <div id="recurringOpts" style="display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--border-medium);">
-                            <label>Periode Pengulangan</label>
-                            <select id="txRecurringType"><option value="daily">Setiap Hari</option><option value="weekly">Setiap Minggu</option><option value="monthly">Setiap Bulan</option></select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem;">Simpan Transaksi</button>
-                </form>
-            </div>
-        </main>
-
-        <!-- 2. TAB HISTORY -->
-        <main class="app-section" id="view-history">
-            <div class="card">
-                <div class="section-title"><span>🕰️ Riwayat Transaksi</span></div>
-                <div style="background: var(--bg-body); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; border: 1px solid var(--border-light);">
-                    <div class="grid-2" style="margin-bottom: 1rem;">
-                        <div><label class="text-xs">Dari</label><input type="date" id="filterStart" onchange="App.UI.renderHistory()"></div>
-                        <div><label class="text-xs">Sampai</label><input type="date" id="filterEnd" onchange="App.UI.renderHistory()"></div>
-                    </div>
-                    <div class="grid-2" style="margin-bottom: 1rem;">
-                        <input type="text" id="filterSearch" placeholder="🔍 Cari nama/kategori..." oninput="App.Handlers.debounceSearch()">
-                        <select id="filterType" onchange="App.UI.renderHistory()"><option value="all">Semua Tipe</option><option value="in">Pemasukan (+)</option><option value="out">Pengeluaran (-)</option></select>
-                    </div>
-                    <div class="grid-2">
-                        <select id="filterCategory" onchange="App.UI.renderHistory()"></select>
-                        <select id="filterAccount" onchange="App.UI.renderHistory()"><option value="">Semua Akun</option><option value="cash">Cash</option><option value="saldo">Saldo Bank/E-Wallet</option><option value="celengan">Celengan</option></select>
-                    </div>
-                    <div style="text-align: right; margin-top: 0.5rem;"><button class="btn btn-sm text-primary btn-outline" style="border:none;" onclick="App.Handlers.resetFilters()">Reset Filter</button></div>
-                </div>
-
-                <div id="historyList" style="position: relative;">
-                    <div class="skeleton sk-title"></div><div class="skeleton" style="height: 60px; margin-bottom: 10px;"></div><div class="skeleton" style="height: 60px;"></div>
-                </div>
-                
-                <div id="historyLock" class="premium-lock">
-                    <div class="premium-lock-icon">👑</div><h3 class="font-bold">Buka Riwayat Lengkap</h3>
-                    <p class="text-xs text-muted mb-2">Versi gratis hanya menampilkan 3 bulan terakhir.</p>
-                    <button class="btn btn-premium btn-sm mt-2" onclick="App.UI.showModal('premiumModal')">Upgrade Premium</button>
-                </div>
-            </div>
-        </main>
-
-        <!-- 3. TAB ANALYTICS -->
-        <main class="app-section" id="view-analytics">
-            <div class="card" style="background: var(--primary-light); border: 1px solid var(--primary); position: relative;">
-                <h2 class="section-title text-primary" style="margin-bottom: 0.5rem;">✨ Smart Insights</h2>
-                <p class="text-sm text-main" style="margin-bottom: 1.5rem;">Analisis AI-like berdasarkan polamu.</p>
-                <div id="insightsContainer" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <div class="skeleton" style="height: 60px;"></div><div class="skeleton" style="height: 60px;"></div>
-                </div>
-                <div id="insightLock" class="premium-lock">
-                    <div class="premium-lock-icon">👑</div><h3 class="font-bold">Advanced Insights</h3>
-                    <p class="text-xs text-muted mb-2">Buka analisis perbandingan bulan cerdas.</p>
-                    <button class="btn btn-premium btn-sm mt-2" onclick="App.UI.showModal('premiumModal')">Upgrade Premium</button>
-                </div>
-            </div>
-            <div class="card">
-                <h2 class="section-title">📊 Grafik Pengeluaran</h2>
-                <div class="form-group" style="margin-bottom: 2.5rem;"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Kategori Bulan Ini</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartCategory"></canvas></div></div>
-                <div class="form-group"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Trend Arus Kas (6 Bulan)</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartTrend"></canvas></div></div>
-            </div>
-        </main>
-
-        <!-- 4. TAB BUDGET -->
-        <main class="app-section" id="view-budget">
-            <div class="card">
-                <div class="section-title"><span>💸 Rencana Budget</span><button class="btn btn-primary btn-sm" onclick="App.Handlers.openBudgetModal()">+ Buat Budget</button></div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Batasi pengeluaranmu per kategori agar tidak boros.</p>
-                <div id="budgetList" class="list-group"><div class="skeleton" style="height: 100px;"></div></div>
-            </div>
-            
-            <section class="paylater-wrapper" id="paylaterSection">
-                <div class="paylater-header"><h3 class="text-sm font-bold" style="color: white; margin: 0;">💳 Tagihan & Cicilan</h3><button class="btn btn-sm btn-outline" style="border-color: #475569; color: white;" onclick="App.UI.showModal('paylaterModal')">+ Tambah</button></div>
-                <div class="paylater-list" id="paylaterList"><div class="skeleton" style="height: 60px; background: rgba(255,255,255,0.1);"></div></div>
-            </section>
-        </main>
-
-        <!-- 5. TAB GOALS -->
-        <main class="app-section" id="view-goals">
-            <div class="card">
-                <div class="section-title"><span>🎯 Target Impian</span><button class="btn btn-primary btn-sm" onclick="App.Handlers.openGoalModal()">+ Buat Target</button></div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Pisahkan dan pantau uang untuk impian finansialmu.</p>
-                <div id="goalsList" class="list-group"><div class="skeleton" style="height: 100px;"></div></div>
-            </div>
-        </main>
-
-        <!-- 6. TAB SETTINGS -->
-        <main class="app-section" id="view-settings">
-            <!-- Premium Upgrade Card -->
-            <div class="card" id="premiumPromoCard" style="background: var(--premium-gradient); border: none; color: #78350f;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><h2 class="font-bold" style="color:#78350f; font-size:1.25rem;">👑 Upgrade Premium</h2><p class="text-sm" style="opacity: 0.9;">Buka semua batasan eksklusif.</p></div>
-                    <button class="btn" style="background: white; color: #f59e0b;" onclick="App.UI.showModal('premiumModal')">Lihat</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2 class="section-title">⚙️ Konfigurasi Utama</h2>
-                
-                <div class="form-group" style="padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
-                    <label class="switch-wrapper">
-                        <div><span class="font-bold">Mode Gelap (Dark Mode)</span></div>
-                        <input type="checkbox" id="setTheme" onchange="App.Theme.toggle(this.checked)">
-                        <div class="switch"></div>
-                    </label>
-                </div>
-
-                <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
-                    <h3 class="font-bold" style="margin-bottom: 0.5rem;">🎨 Warna Tema Utama</h3>
-                    <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-                        <button style="width:30px;height:30px;border-radius:50%;background:#4f46e5;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(244)"></button>
-                        <button style="width:30px;height:30px;border-radius:50%;background:#10b981;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(160)"></button>
-                        <button style="width:30px;height:30px;border-radius:50%;background:#f59e0b;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(38)"></button>
-                        <button style="width:30px;height:30px;border-radius:50%;background:#e11d48;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(347)"></button>
-                        <button style="width:30px;height:30px;border-radius:50%;background:#8b5cf6;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(258)"></button>
-                    </div>
-                    <p class="text-xs text-muted" style="margin-top:0.5rem;" id="themeLockText">Eksklusif untuk pengguna Premium 👑</p>
-                </div>
-
-                <div class="form-group" style="padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
-                    <label class="switch-wrapper">
-                        <div><span class="font-bold">Notifikasi Harian</span></div>
-                        <input type="checkbox" id="setReminder" onchange="document.getElementById('setReminderTimeWrap').style.display = this.checked ? 'block' : 'none'; App.Handlers.saveReminder();">
-                        <div class="switch"></div>
-                    </label>
-                    <div id="setReminderTimeWrap" style="display: none; margin-top: 1rem; background: var(--bg-body); padding: 1rem; border-radius: var(--radius-md);">
-                        <div style="display: flex; gap: 0.5rem; align-items: center;"><label class="text-xs" style="margin:0;">Pukul (HH:MM)</label><input type="time" id="setReminderTime" value="20:00" style="width:auto; padding:0.5rem;" onchange="App.Handlers.saveReminder()"></div>
-                    </div>
-                </div>
-                
-                <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <div><h3 class="font-bold">Kategori Kustom</h3></div><button class="btn btn-outline btn-sm" onclick="App.UI.showModal('catModal')">+ Tambah</button>
-                    </div>
-                    <div class="list-group" id="settingsCatList"></div>
-                </div>
-
-                <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                        <div><h3 class="font-bold">🔄 Transaksi Otomatis</h3></div><button class="btn btn-outline btn-sm" onclick="App.UI.showModal('premiumModal')" id="btnUpgradeRec" style="display:none;">Upgrade</button>
-                    </div>
-                    <div class="list-group" id="settingsRecurringList"></div>
-                </div>
-
                 <div class="form-group">
-                    <h3 class="font-bold" style="margin-bottom: 1rem;">📦 Import & Export Data</h3>
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                        <div class="grid-2">
-                            <button class="btn btn-outline" onclick="App.Handlers.exportData('json')">Export JSON <span class="badge" style="background:var(--warning-light); color:var(--warning-dark); border-radius:4px; padding:2px 4px;">PRO</span></button>
-                            <button class="btn btn-outline" onclick="App.Handlers.exportData('csv')">Export CSV</button>
+                    <label>📂 Kategori</label>
+                    <select id="txCategory" required></select>
+                </div>
+                <div class="form-group">
+                    <label>📝 Keterangan Singkat</label>
+                    <input type="text" id="txNote" placeholder="Cth: Gaji bulanan, Bensin, dll">
+                </div>
+
+                <!-- Recurring -->
+                <div class="form-group" style="background: var(--bg-body); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+                    <label class="switch-wrapper" style="margin: 0;">
+                        <div>
+                            <span class="font-bold text-sm">Otomatisasi Rutin</span>
+                            <p class="text-xs text-muted" style="margin-top:0.25rem;">Jadikan transaksi berulang otomatis.</p>
                         </div>
-                        <label class="btn btn-outline" style="text-align: center; cursor:pointer;">
-                            📥 Import File Data Backup (JSON/CSV)
-                            <input type="file" accept=".csv, .json" onchange="App.Handlers.importFile(event)" style="display:none;">
-                        </label>
-                        <button class="btn btn-danger btn-block" onclick="App.Handlers.exportPDF()">📄 Unduh Laporan PDF <span class="badge" style="background:white; color:var(--danger); border-radius:4px; padding:2px 4px;">PRO</span></button>
+                        <input type="checkbox" id="txRecurring" onchange="document.getElementById('recurringOpts').style.display = this.checked ? 'block' : 'none'">
+                        <div class="switch"></div>
+                    </label>
+                    <div id="recurringOpts" style="display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--border-medium);">
+                        <label>Periode Pengulangan</label>
+                        <select id="txRecurringType">
+                            <option value="daily">Setiap Hari</option>
+                            <option value="weekly">Setiap Minggu</option>
+                            <option value="monthly">Setiap Bulan</option>
+                        </select>
                     </div>
                 </div>
-                
-                <div style="text-align: center; margin-top: 2rem; opacity: 0.5;"><p class="text-xs font-bold">Keuangan Pro v8.0 | Secured by Local DB</p></div>
-            </div>
-        </main>
 
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav">
-            <div class="nav-container">
-                <button class="nav-item active" onclick="App.UI.switchTab('input', this)"><div class="nav-icon">✍️</div><span class="nav-label">Input</span></button>
-                <button class="nav-item" onclick="App.UI.switchTab('history', this)"><div class="nav-icon">🕰️</div><span class="nav-label">Riwayat</span></button>
-                <button class="nav-item" onclick="App.UI.switchTab('analytics', this)"><div class="nav-icon">📈</div><span class="nav-label">Analisis</span></button>
-                <button class="nav-item" onclick="App.UI.switchTab('budget', this)"><div class="nav-icon">💸</div><span class="nav-label">Budget</span></button>
-                <button class="nav-item" onclick="App.UI.switchTab('goals', this)"><div class="nav-icon">🎯</div><span class="nav-label">Target</span></button>
-                <button class="nav-item" onclick="App.UI.switchTab('settings', this)"><div class="nav-icon">⚙️</div><span class="nav-label">Setelan</span></button>
-                <button class="nav-item" id="navAdminTab" style="display: none;" onclick="App.UI.switchTab('admin', this)"><div class="nav-icon">🛡️</div><span class="nav-label">Admin</span></button>
+                <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem;">Simpan Transaksi</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- 2. TAB HISTORY -->
+    <main class="app-section" id="view-history">
+        <div class="card">
+            <div class="section-title">
+                <span>🕰️ Riwayat Transaksi</span>
             </div>
-        </nav>
-    </div> <!-- End App Container -->
+            
+            <div style="background: var(--bg-body); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; border: 1px solid var(--border-light);">
+                <div class="grid-2" style="margin-bottom: 1rem;">
+                    <div><label class="text-xs">Dari</label><input type="date" id="filterStart" onchange="App.UI.renderHistory()"></div>
+                    <div><label class="text-xs">Sampai</label><input type="date" id="filterEnd" onchange="App.UI.renderHistory()"></div>
+                </div>
+                <div class="grid-2" style="margin-bottom: 1rem;">
+                    <input type="text" id="filterSearch" placeholder="🔍 Cari nama/kategori..." oninput="App.Handlers.debounceSearch()">
+                    <select id="filterType" onchange="App.UI.renderHistory()">
+                        <option value="all">Semua Tipe</option>
+                        <option value="in">Pemasukan (+)</option>
+                        <option value="out">Pengeluaran (-)</option>
+                    </select>
+                </div>
+                <div class="grid-2">
+                    <select id="filterCategory" onchange="App.UI.renderHistory()"></select>
+                    <select id="filterAccount" onchange="App.UI.renderHistory()">
+                        <option value="">Semua Akun</option>
+                        <option value="cash">Cash</option>
+                        <option value="saldo">Saldo Bank/E-Wallet</option>
+                        <option value="celengan">Celengan</option>
+                    </select>
+                </div>
+                <div style="text-align: right; margin-top: 0.5rem;">
+                    <button class="btn btn-sm text-primary btn-outline" style="border:none;" onclick="App.Handlers.resetFilters()">Reset Filter</button>
+                </div>
+            </div>
+
+            <div id="historyList">
+                <div class="skeleton sk-title"></div>
+                <div class="skeleton" style="height: 60px; margin-bottom: 10px;"></div>
+                <div class="skeleton" style="height: 60px;"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 3. TAB ANALYTICS -->
+    <main class="app-section" id="view-analytics">
+        <div class="card" style="background: var(--primary-light); border: 1px solid var(--primary);">
+            <h2 class="section-title text-primary" style="margin-bottom: 0.5rem;">✨ Smart Insights</h2>
+            <p class="text-sm text-main" style="margin-bottom: 1.5rem;">Analisis AI-like berdasarkan polamu.</p>
+            <div id="insightsContainer" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                <div class="skeleton" style="height: 60px;"></div>
+                <div class="skeleton" style="height: 60px;"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">📊 Grafik Pengeluaran</h2>
+            <div class="form-group" style="margin-bottom: 2.5rem;">
+                <h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Kategori Bulan Ini</h3>
+                <div style="position: relative; height: 250px; width: 100%;"><canvas id="chartCategory"></canvas></div>
+            </div>
+            <div class="form-group">
+                <h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Trend Arus Kas (6 Bulan)</h3>
+                <div style="position: relative; height: 250px; width: 100%;"><canvas id="chartTrend"></canvas></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 4. TAB BUDGET -->
+    <main class="app-section" id="view-budget">
+        <div class="card">
+            <div class="section-title">
+                <span>💸 Rencana Budget</span>
+                <button class="btn btn-primary btn-sm" onclick="App.UI.showModal('budgetModal')">+ Buat Budget</button>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Batasi pengeluaranmu per kategori agar tidak boros.</p>
+            
+            <div id="budgetList" class="list-group">
+                <div class="skeleton" style="height: 100px;"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 5. TAB GOALS -->
+    <main class="app-section" id="view-goals">
+        <div class="card">
+            <div class="section-title">
+                <span>🎯 Target Impian</span>
+                <button class="btn btn-primary btn-sm" onclick="App.UI.showModal('goalModal')">+ Buat Target</button>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Pisahkan dan pantau uang untuk impian finansialmu.</p>
+            
+            <div id="goalsList" class="list-group">
+                <div class="skeleton" style="height: 100px;"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 6. TAB SETTINGS -->
+    <main class="app-section" id="view-settings">
+        <div class="card">
+            <h2 class="section-title">⚙️ Konfigurasi Utama</h2>
+            
+            <!-- Tampilan & Tema -->
+            <div class="form-group" style="padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
+                <label class="switch-wrapper">
+                    <div>
+                        <span class="font-bold">Mode Gelap (Dark Mode)</span>
+                        <p class="text-xs text-muted mt-1">Nyaman untuk mata di malam hari.</p>
+                    </div>
+                    <input type="checkbox" id="setTheme" onchange="App.Theme.toggle(this.checked)">
+                    <div class="switch"></div>
+                </label>
+            </div>
+
+            <!-- Reminders -->
+            <div class="form-group" style="padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
+                <label class="switch-wrapper">
+                    <div>
+                        <span class="font-bold">Notifikasi Harian</span>
+                        <p class="text-xs text-muted mt-1">Ingatkan mencatat transaksi.</p>
+                    </div>
+                    <input type="checkbox" id="setReminder" onchange="document.getElementById('setReminderTimeWrap').style.display = this.checked ? 'block' : 'none'; App.Handlers.saveReminder();">
+                    <div class="switch"></div>
+                </label>
+                <div id="setReminderTimeWrap" style="display: none; margin-top: 1rem; background: var(--bg-body); padding: 1rem; border-radius: var(--radius-md);">
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <label class="text-xs" style="margin:0;">Pukul (HH:MM)</label>
+                        <input type="time" id="setReminderTime" value="20:00" style="width:auto; padding:0.5rem;" onchange="App.Handlers.saveReminder()">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kategori -->
+            <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <h3 class="font-bold">Kategori Kustom</h3>
+                        <p class="text-xs text-muted">Sesuaikan kategori transaksi.</p>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="App.UI.showModal('catModal')">+ Tambah</button>
+                </div>
+                <div class="list-group" id="settingsCatList"></div>
+            </div>
+
+            <!-- Recurring List -->
+            <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
+                <h3 class="font-bold" style="margin-bottom: 0.5rem;">🔄 Transaksi Otomatis</h3>
+                <p class="text-xs text-muted" style="margin-bottom: 1rem;">Kelola transaksi rutin yang aktif.</p>
+                <div class="list-group" id="settingsRecurringList"></div>
+            </div>
+            
+            <!-- Sync -->
+            <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
+                <h3 class="font-bold text-primary" style="margin-bottom: 0.5rem;">☁️ Sinkronisasi Data (Cloud)</h3>
+                <p class="text-xs text-muted" style="margin-bottom: 1rem;">Kode sinkronisasi untuk diakses di HP/PC lain.</p>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="txtSyncCode" readonly style="font-weight: 800; letter-spacing: 2px; text-align: center; border-color: var(--primary);">
+                    <button class="btn btn-primary" onclick="App.Utils.copyText(document.getElementById('txtSyncCode').value)">Salin</button>
+                </div>
+                <button class="btn btn-outline btn-block" style="margin-top: 0.75rem;" onclick="App.UI.showModal('syncModal')">Gunakan Kode Perangkat Lain</button>
+            </div>
+
+            <!-- Data & Backup -->
+            <div class="form-group">
+                <h3 class="font-bold" style="margin-bottom: 1rem;">📦 Import & Export Data</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div class="grid-2">
+                        <button class="btn btn-outline" onclick="App.Handlers.exportData('json')">Export JSON</button>
+                        <button class="btn btn-outline" onclick="App.Handlers.exportData('csv')">Export CSV</button>
+                    </div>
+                    <label class="btn btn-outline" style="text-align: center; cursor:pointer;">
+                        📥 Import File Data Backup (JSON/CSV)
+                        <input type="file" accept=".csv, .json" onchange="App.Handlers.importFile(event)" style="display:none;">
+                    </label>
+                    <button class="btn btn-danger btn-block" onclick="App.Handlers.exportPDF()">📄 Unduh Laporan PDF</button>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem; opacity: 0.5;">
+                <p class="text-xs font-bold">Keuangan Pro v5.1 | Premium Clean</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <button class="nav-item active" onclick="App.UI.switchTab('input', this)">
+                <div class="nav-icon">✍️</div><span class="nav-label">Input</span>
+            </button>
+            <button class="nav-item" onclick="App.UI.switchTab('history', this)">
+                <div class="nav-icon">🕰️</div><span class="nav-label">Riwayat</span>
+            </button>
+            <button class="nav-item" onclick="App.UI.switchTab('analytics', this)">
+                <div class="nav-icon">📈</div><span class="nav-label">Analisis</span>
+            </button>
+            <button class="nav-item" onclick="App.UI.switchTab('budget', this)">
+                <div class="nav-icon">💸</div><span class="nav-label">Budget</span>
+            </button>
+            <button class="nav-item" onclick="App.UI.switchTab('goals', this)">
+                <div class="nav-icon">🎯</div><span class="nav-label">Target</span>
+            </button>
+            <button class="nav-item" onclick="App.UI.switchTab('settings', this)">
+                <div class="nav-icon">⚙️</div><span class="nav-label">Pengaturan</span>
+            </button>
+        </div>
+    </nav>
 
     <!-- =======================================================================
          MODALS
          ======================================================================= -->
-    <!-- Premium Upgrade Modal -->
-    <div id="premiumModal" class="modal-overlay" style="z-index: 12000;" onclick="if(event.target===this) App.UI.closeModal('premiumModal')">
-        <div class="modal-content modal-premium">
-            <div class="modal-header"><h2>👑 Keuangan Pro Premium</h2><button class="modal-close" onclick="App.UI.closeModal('premiumModal')">&times;</button></div>
-            <p class="text-sm" style="color: #cbd5e1; margin-bottom: 1.5rem;">Tingkatkan pengalaman pengelolaan keuanganmu tanpa batas.</p>
-            <ul class="premium-features" style="list-style: none; padding: 0; margin-bottom: 2rem;">
-                <li>Unlimited Rencana Budget & Target</li>
-                <li>Unlimited Transaksi Otomatis (Recurring)</li>
-                <li>Riwayat Transaksi Tanpa Batas Waktu</li>
-                <li>Laporan PDF Cantik & Backup JSON</li>
-                <li>Advanced Smart Insights & AI Analysis</li>
-                <li>Kustomisasi Warna Tema Penuh</li>
-            </ul>
-            <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1rem; text-align: center; margin-bottom: 1.5rem;">
-                <div style="color: var(--premium-gold); font-size: 1.75rem; font-weight: 800;">Rp 99.000 <span style="font-size: 0.8rem; font-weight: normal; color: white;">/ Selamanya</span></div>
+
+    <!-- Paylater Modal -->
+    <div id="paylaterModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('paylaterModal')">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tagihan / Cicilan Baru</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('paylaterModal')">&times;</button>
             </div>
-            <button class="btn btn-premium btn-block" style="padding: 1rem; font-size: 1.1rem;" onclick="App.Premium.simulatePayment()">Bayar Sekarang (Demo)</button>
+            <form onsubmit="App.Handlers.addPaylater(event)">
+                <div class="form-group"><label>Nama Tagihan</label><input type="text" id="plName" placeholder="Cth: SPayLater / KPR" required></div>
+                <div class="form-group"><label>Jumlah Tagihan (Rp)</label><input type="text" id="plAmount" placeholder="0" inputmode="numeric" oninput="App.Utils.formatInput(this)" required></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('paylaterModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- Edit Transaction Modal -->
     <div id="editModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('editModal')">
         <div class="modal-content">
-            <div class="modal-header"><h2>Ubah Transaksi</h2><button class="modal-close" onclick="App.UI.closeModal('editModal')">&times;</button></div>
+            <div class="modal-header">
+                <h2>Ubah Transaksi</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('editModal')">&times;</button>
+            </div>
             <form onsubmit="App.Handlers.saveEdit(event)">
                 <input type="hidden" id="edit-id">
                 <div class="grid-2">
                     <div class="form-group"><label>Tanggal</label><input type="date" id="edit-tanggal" required></div>
-                    <div class="form-group"><label>Sumber Dana</label><select id="edit-jenis-akun" required><option value="cash">💵 Cash</option><option value="saldo">🪪 Saldo / Bank</option><option value="celengan">🐷 Celengan</option></select></div>
+                    <div class="form-group"><label>Sumber Dana</label>
+                        <select id="edit-jenis-akun" required>
+                            <option value="cash">💵 Cash</option>
+                            <option value="saldo">🪪 Saldo / Bank</option>
+                            <option value="celengan">🐷 Celengan</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="grid-2">
                     <div class="form-group"><label>Pemasukan (+)</label><input type="text" id="edit-pemasukan" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
@@ -935,515 +701,164 @@
                 <div class="form-group"><label>Keterangan</label><input type="text" id="edit-keterangan"></div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-danger" id="btnDeleteTx">Hapus</button>
-                    <div style="display:flex; gap:0.5rem;"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('editModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('editModal')">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modals for Budget, Goal, Category, Paylater are kept similar and compact -->
-    <div id="budgetModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('budgetModal')"><div class="modal-content"><div class="modal-header"><h2>Atur Limit Budget</h2><button class="modal-close" onclick="App.UI.closeModal('budgetModal')">&times;</button></div><form onsubmit="App.Handlers.addBudget(event)"><div class="form-group"><label>Kategori</label><select id="bCategory" required></select></div><div class="form-group"><label>Batas (Rp)</label><input type="text" id="bAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="form-group"><label>Periode</label><select id="bPeriod" required><option value="monthly">Bulanan</option><option value="weekly">Mingguan</option></select></div><div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('budgetModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
-    <div id="goalModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('goalModal')"><div class="modal-content"><div class="modal-header"><h2>Target Impian</h2><button class="modal-close" onclick="App.UI.closeModal('goalModal')">&times;</button></div><form onsubmit="App.Handlers.addGoal(event)"><div class="grid-2"><div class="form-group"><label>Nama</label><input type="text" id="gName" required></div><div class="form-group"><label>Ikon</label><input type="text" id="gIcon" placeholder="📱" required maxlength="2"></div></div><div class="form-group"><label>Target Dana (Rp)</label><input type="text" id="gTarget" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="form-group"><label>Terkumpul (Rp)</label><input type="text" id="gCurrent" placeholder="0" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="form-group"><label>Tenggat Waktu</label><input type="date" id="gDate" required></div><div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('goalModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
-    <div id="catModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('catModal')"><div class="modal-content" style="max-width: 400px;"><div class="modal-header"><h2>Kategori Baru</h2><button class="modal-close" onclick="App.UI.closeModal('catModal')">&times;</button></div><div class="form-group"><label>Nama</label><input type="text" id="catName" required></div><div class="form-group"><label>Ikon (Emoji)</label><input type="text" id="catIcon" required maxlength="2"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="App.UI.closeModal('catModal')">Batal</button><button class="btn btn-primary" onclick="App.Handlers.addCategory()">Simpan</button></div></div></div>
-    <div id="paylaterModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('paylaterModal')"><div class="modal-content"><div class="modal-header"><h2>Tagihan Baru</h2><button class="modal-close" onclick="App.UI.closeModal('paylaterModal')">&times;</button></div><form onsubmit="App.Handlers.addPaylater(event)"><div class="form-group"><label>Nama Tagihan</label><input type="text" id="plName" required></div><div class="form-group"><label>Jumlah (Rp)</label><input type="text" id="plAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('paylaterModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
-
-    <!-- Logout Confirmation Modal -->
-    <div id="logoutModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('logoutModal')">
-        <div class="modal-content" style="max-width: 360px;">
-            <div class="logout-modal-content">
-                <div class="logout-modal-avatar" id="logoutAvatar">U</div>
-                <h3 style="margin-bottom: 0.4rem;">Keluar dari Akun?</h3>
-                <p class="text-sm text-muted" style="margin-bottom: 0.5rem;">Halo, <strong id="logoutName">User</strong>.</p>
-                <p class="text-sm text-muted" style="margin-bottom: 2rem;">Semua data lokal akan tetap aman. Kamu bisa masuk kembali kapan saja.</p>
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <button class="btn btn-danger btn-block" style="padding: 0.875rem;" onclick="App.Auth.handleLogout()">🚪 Ya, Keluar Sekarang</button>
-                    <button class="btn btn-secondary btn-block" onclick="App.UI.closeModal('logoutModal')">Tidak, Tetap di Sini</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin User Detail Modal -->
-    <div id="adminDetailModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('adminDetailModal')">
-        <div class="modal-content" style="max-width: 440px;">
+    <!-- Budget Modal -->
+    <div id="budgetModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('budgetModal')">
+        <div class="modal-content">
             <div class="modal-header">
-                <h2>👤 Detail Pengguna</h2>
-                <button class="modal-close" onclick="App.UI.closeModal('adminDetailModal')">&times;</button>
+                <h2>Atur Limit Budget</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('budgetModal')">&times;</button>
             </div>
-            <div id="adminDetailContent">
-                <p class="text-sm text-muted">Memuat...</p>
-            </div>
-            <div id="adminDetailActions" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;"></div>
+            <form onsubmit="App.Handlers.addBudget(event)">
+                <div class="form-group"><label>Kategori Pengeluaran</label><select id="bCategory" required></select></div>
+                <div class="form-group"><label>Batas Maksimal (Rp)</label><input type="text" id="bAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
+                <div class="form-group"><label>Periode</label>
+                    <select id="bPeriod" required>
+                        <option value="monthly">Bulanan</option>
+                        <option value="weekly">Mingguan</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('budgetModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Budget</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div id="confirmModal" class="modal-overlay" style="z-index: 11000;"><div class="modal-content" style="max-width: 350px; text-align: center; padding: 2rem;"><div style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--warning);">⚠️</div><h3 style="margin-bottom: 0.5rem;" id="confirmTitle">Konfirmasi</h3><p class="text-sm text-muted" style="margin-bottom: 2rem;" id="confirmMsg">Apakah Anda yakin?</p><div class="grid-2"><button class="btn btn-secondary" onclick="App.UI.resolveConfirm(false)">Batal</button><button class="btn btn-danger" id="btnConfirmYes" onclick="App.UI.resolveConfirm(true)">Lanjutkan</button></div></div></div>
+    <!-- Goal Modal -->
+    <div id="goalModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('goalModal')">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Target Impian Baru</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('goalModal')">&times;</button>
+            </div>
+            <form onsubmit="App.Handlers.addGoal(event)">
+                <div class="grid-2">
+                    <div class="form-group"><label>Nama Target</label><input type="text" id="gName" required></div>
+                    <div class="form-group"><label>Ikon</label><input type="text" id="gIcon" placeholder="📱" required maxlength="2"></div>
+                </div>
+                <div class="form-group"><label>Kebutuhan Dana (Rp)</label><input type="text" id="gTarget" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
+                <div class="form-group"><label>Dana Terkumpul Saat Ini (Rp)</label><input type="text" id="gCurrent" placeholder="0" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
+                <div class="form-group"><label>Target Tercapai (Tanggal)</label><input type="date" id="gDate" required></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('goalModal')">Batal</button>
+                    <button type="submit" class="btn btn-primary">Mulai Nabung!</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div id="catModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('catModal')">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Kategori Baru</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('catModal')">&times;</button>
+            </div>
+            <div class="form-group"><label>Nama Kategori</label><input type="text" id="catName" required></div>
+            <div class="form-group"><label>Ikon (Emoji)</label><input type="text" id="catIcon" required maxlength="2"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="App.UI.closeModal('catModal')">Batal</button>
+                <button class="btn btn-primary" onclick="App.Handlers.addCategory()">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sync Modal -->
+    <div id="syncModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('syncModal')">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tautkan Perangkat</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('syncModal')">&times;</button>
+            </div>
+            <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Peringatan: Proses ini akan menimpa data di perangkat ini dengan data dari kode yang Anda masukkan.</p>
+            <div class="form-group"><input type="text" id="importCode" placeholder="GF-XXXXXX" style="text-transform: uppercase; text-align: center; font-weight: 700; font-size: 1.2rem; letter-spacing: 2px;"></div>
+            <button class="btn btn-primary btn-block" id="btnImport" onclick="App.Handlers.importSync()">Tarik Data Cloud</button>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="modal-overlay" style="z-index: 11000;">
+        <div class="modal-content" style="max-width: 350px; text-align: center; padding: 2rem;">
+            <div style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--warning);">⚠️</div>
+            <h3 style="margin-bottom: 0.5rem;" id="confirmTitle">Konfirmasi</h3>
+            <p class="text-sm text-muted" style="margin-bottom: 2rem;" id="confirmMsg">Apakah Anda yakin?</p>
+            <div class="grid-2">
+                <button class="btn btn-secondary" onclick="App.UI.resolveConfirm(false)">Batal</button>
+                <button class="btn btn-danger" id="btnConfirmYes" onclick="App.UI.resolveConfirm(true)">Lanjutkan</button>
+            </div>
+        </div>
+    </div>
 
     <!-- =======================================================================
          APPLICATION LOGIC (JS)
          ======================================================================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getDatabase, ref, set, get, onValue, remove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
         const App = {
             State: {
-                user: null,
-                isAdmin: false,
-                isPremium: false,
-                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [],
-                settings: { reminderEnabled: false, reminderTime: "20:00", theme: "light", accentHue: 244 },
-                isLoading: true, charts: {}, searchTimer: null
+                transactions: [],
+                recurring: [],
+                customCategories: [],
+                goals: [],
+                budgets: [],
+                paylaters: [], // New distinct state for Paylater/Cicilan
+                settings: { reminderEnabled: false, reminderTime: "20:00", theme: "light" },
+                syncCode: '',
+                isLoading: true,
+                charts: {},
+                lastSyncTime: null,
+                searchTimer: null
             },
 
             Config: {
-                Firebase: { 
-                    apiKey: "ISI_API_KEY_ANDA_DISINI",
-                    authDomain: "ISI_AUTH_DOMAIN_ANDA_DISINI",
-                    databaseURL: "https://bygf-6f77-default-rtdb.asia-southeast1.firebasedatabase.app/",
-                    projectId: "ISI_PROJECT_ID_ANDA_DISINI",
-                    storageBucket: "ISI_STORAGE_BUCKET_ANDA_DISINI",
-                    messagingSenderId: "ISI_MESSAGING_SENDER_ID_ANDA_DISINI",
-                    appId: "ISI_APP_ID_ANDA_DISINI"
-                },
+                Firebase: { databaseURL: "https://bygf-6f77-default-rtdb.asia-southeast1.firebasedatabase.app/" },
                 DefaultCategories: [
-                    { id: 'lainnya', name: 'Lainnya', icon: '📦' }, { id: 'makan', name: 'Makan/Jajan', icon: '🍿' },
-                    { id: 'transport', name: 'Transportasi', icon: '🚗' }, { id: 'belanja', name: 'Shopping', icon: '🛍️' },
-                    { id: 'gaji', name: 'Gaji/Income', icon: '💵' }, { id: 'tagihan', name: 'Tagihan/Cicilan', icon: '💳' },
-                    { id: 'hiburan', name: 'Hiburan', icon: '🎮' }, { id: 'kesehatan', name: 'Kesehatan', icon: '🏥' }
+                    { id: 'lainnya', name: 'Lainnya', icon: '📦' },
+                    { id: 'makan', name: 'Makan/Jajan', icon: '🍿' },
+                    { id: 'transport', name: 'Transportasi', icon: '🚗' },
+                    { id: 'belanja', name: 'Shopping', icon: '🛍️' },
+                    { id: 'gaji', name: 'Gaji/Income', icon: '💵' },
+                    { id: 'tagihan', name: 'Tagihan/Cicilan', icon: '💳' },
+                    { id: 'hiburan', name: 'Hiburan', icon: '🎮' },
+                    { id: 'kesehatan', name: 'Kesehatan', icon: '🏥' }
                 ],
-                AccountIcons: { cash: '💵', saldo: '🪪', celengan: '🐷' },
-                FreeLimits: { budget: 3, goal: 2, recurring: 3, historyMonths: 3 }
-            },
-
-            // ----------------------------------------------------------------------
-            // AUTHENTICATION MODULE (USERNAME & PASSWORD)
-            // ----------------------------------------------------------------------
-            Auth: {
-                instance: null,
-                isDummy: false,
-                init(app) {
-                    try {
-                        if (App.Config.Firebase.apiKey.includes("ISI_API_KEY") && typeof __firebase_config === 'undefined') {
-                            throw new Error("Invalid API Key");
-                        }
-                        this.instance = getAuth(app);
-                        onAuthStateChanged(this.instance, (user) => {
-                            this.handleUserChange(user);
-                        });
-                    } catch (e) {
-                        console.warn("Firebase Auth belum dikonfigurasi. Menggunakan Dummy Auth Lokal.");
-                        this.isDummy = true;
-                        const localUser = localStorage.getItem('dummy_user_v8');
-                        if (localUser) {
-                            this.handleUserChange(JSON.parse(localUser));
-                        } else {
-                            this.handleUserChange(null);
-                        }
-                    }
-                },
-                handleUserChange(user) {
-                    if (user) {
-                        App.State.user = user;
-                        // Cek admin berdasarkan email konversi
-                        App.State.isAdmin = user.email === 'admin@keuangan.pro' || user.uid === 'dummy_admin';
-                        
-                        const name = user.displayName || user.email.split('@')[0];
-                        document.getElementById('userDisplayName').textContent = name;
-                        document.getElementById('userAvatar').innerHTML = user.photoURL ? `<img src="${user.photoURL}">` : name.charAt(0).toUpperCase();
-                        
-                        // Store displayName in dummy_db for admin panel visibility
-                        if (App.Auth.isDummy) {
-                            const key = 'dummy_db_' + user.uid;
-                            try {
-                                const existing = JSON.parse(localStorage.getItem(key) || '{}');
-                                if (!existing.displayName) { existing.displayName = name; localStorage.setItem(key, JSON.stringify(existing)); }
-                            } catch(e) {}
-                        }
-
-                        App.UI.toggleAuthView(false);
-                        App.DB.listen(user.uid);
-                        
-                        if(App.DB.dbInstance && !this.isDummy) {
-                            set(ref(App.DB.dbInstance, `users/${user.uid}/profile`), {
-                                name: user.displayName || user.email.split('@')[0],
-                                email: user.email,
-                                photoURL: user.photoURL || '',
-                                lastLogin: new Date().toISOString()
-                            }).catch(err => console.log(err));
-                        }
-
-                        if(App.State.isAdmin) {
-                            document.getElementById('navAdminTab').style.display = 'flex';
-                            App.Admin.init();
-                        } else {
-                            document.getElementById('navAdminTab').style.display = 'none';
-                        }
-                    } else {
-                        App.State.user = null;
-                        App.State.isAdmin = false;
-                        App.UI.toggleAuthView(true);
-                    }
-                },
-                async handleLogin(e) {
-                    e.preventDefault();
-                    const btn = document.getElementById('btnLogin'); 
-                    btn.disabled = true; 
-                    btn.innerHTML = '<span class="btn-spinner"></span>Memproses...';
-                    const username = document.getElementById('loginUsername').value.toLowerCase().replace(/\s/g, '');
-                    const password = document.getElementById('loginPassword').value;
-                    
-                    // Format khusus agar tetap bisa menggunakan Firebase Auth
-                    const email = username + '@keuangan.pro'; 
-                    
-                    if (this.isDummy) {
-                        setTimeout(() => {
-                            const dummyUser = { uid: "dummy_" + username, email: email, displayName: username };
-                            localStorage.setItem('dummy_user_v8', JSON.stringify(dummyUser));
-                            this.handleUserChange(dummyUser);
-                            App.UI.showToast('Login Lokal Berhasil!', 'success');
-                            btn.disabled = false; btn.textContent = 'Masuk';
-                        }, 800);
-                        return;
-                    }
-
-                    try {
-                        await signInWithEmailAndPassword(this.instance, email, password);
-                        App.UI.showToast('Login berhasil!', 'success');
-                    } catch (error) {
-                        App.UI.showToast('Login gagal. Periksa kembali Username dan Password Anda.', 'error');
-                    }
-                    btn.disabled = false; btn.textContent = 'Masuk';
-                },
-                async handleRegister(e) {
-                    e.preventDefault();
-                    const btn = document.getElementById('btnRegister'); btn.disabled = true; btn.innerHTML = '<span class="btn-spinner"></span>Memproses...';
-                    const name = document.getElementById('regName').value;
-                    const username = document.getElementById('regUsername').value.toLowerCase().replace(/\s/g, '');
-                    const password = document.getElementById('regPassword').value;
-                    
-                    const email = username + '@keuangan.pro';
-
-                    if (this.isDummy) {
-                        setTimeout(() => {
-                            const dummyUser = { uid: "dummy_" + username, email: email, displayName: name };
-                            localStorage.setItem('dummy_user_v8', JSON.stringify(dummyUser));
-                            this.handleUserChange(dummyUser);
-                            App.UI.showToast('Registrasi Lokal Berhasil!', 'success');
-                            btn.disabled = false; btn.textContent = 'Buat Akun';
-                        }, 800);
-                        return;
-                    }
-
-                    try {
-                        const res = await createUserWithEmailAndPassword(this.instance, email, password);
-                        await updateProfile(res.user, { displayName: name });
-                        App.UI.showToast('Registrasi berhasil!', 'success');
-                        this.handleUserChange({...res.user, displayName: name});
-                    } catch (error) {
-                        App.UI.showToast('Registrasi gagal. Username mungkin sudah terdaftar.', 'error');
-                    }
-                    btn.disabled = false; btn.textContent = 'Buat Akun';
-                },
-                handleLogout() {
-                    App.UI.closeModal('logoutModal');
-                    if (this.isDummy) {
-                        localStorage.removeItem('dummy_user_v8');
-                        App.UI.showToast('Berhasil keluar. Sampai jumpa! 👋', 'info');
-                        App.State.transactions = []; App.State.recurring = []; App.State.goals = []; App.State.budgets = []; App.State.paylaters = [];
-                        if(App.DB.listener) App.DB.listener();
-                        this.handleUserChange(null);
-                        return;
-                    }
-                    signOut(this.instance).then(() => {
-                        App.UI.showToast('Berhasil keluar. Sampai jumpa! 👋', 'info');
-                        App.State.transactions = []; App.State.recurring = []; App.State.goals = []; App.State.budgets = []; App.State.paylaters = [];
-                        if(App.DB.listener) App.DB.listener();
-                    });
-                }
-            },
-
-            // ----------------------------------------------------------------------
-            // ADMIN MODULE
-            // ----------------------------------------------------------------------
-            Admin: {
-                usersData: null,
-                init() {
-                    this.loadData();
-                },
-                async loadData() {
-                    if(!App.State.isAdmin) return;
-
-                    const table = document.getElementById('adminUserTable');
-                    if (table) table.innerHTML = '<tr><td colspan="5" class="text-center" style="padding:2rem; color:var(--text-muted);">⏳ Memuat data...</td></tr>';
-
-                    // --- DUMMY / LOCAL MODE ---
-                    if (App.Auth.isDummy) {
-                        const banner = document.getElementById('adminDummyBanner');
-                        if (banner) banner.style.display = 'flex';
-                        const modeEl = document.getElementById('adminMode');
-                        if (modeEl) modeEl.textContent = 'Lokal';
-
-                        // Scan all localStorage keys starting with dummy_db_
-                        const data = {};
-                        for (let i = 0; i < localStorage.length; i++) {
-                            const key = localStorage.key(i);
-                            if (key && key.startsWith('dummy_db_')) {
-                                const uid = key.replace('dummy_db_', '');
-                                try {
-                                    const db = JSON.parse(localStorage.getItem(key));
-                                    // Find matching profile from dummy_user_v8 or construct from uid
-                                    const profileEmail = uid.replace('dummy_', '') + '@keuangan.pro';
-                                    data[uid] = {
-                                        profile: { name: db.displayName || uid.replace('dummy_', ''), email: profileEmail },
-                                        appData: db
-                                    };
-                                } catch(e) {}
-                            }
-                        }
-                        // Also add current user if not already in
-                        const currentUser = App.State.user;
-                        if (currentUser && !data[currentUser.uid]) {
-                            data[currentUser.uid] = {
-                                profile: { name: currentUser.displayName || currentUser.email.split('@')[0], email: currentUser.email },
-                                appData: App.Auth.isDummy ? JSON.parse(localStorage.getItem('dummy_db_' + currentUser.uid) || '{}') : {}
-                            };
-                        }
-                        this.usersData = data;
-                        this.renderDashboard();
-                        this.renderUsers();
-                        return;
-                    }
-
-                    // --- FIREBASE MODE ---
-                    const modeEl = document.getElementById('adminMode');
-                    if (modeEl) modeEl.textContent = 'Firebase';
-                    try {
-                        const snap = await get(ref(App.DB.dbInstance, 'users'));
-                        this.usersData = snap.val() || {};
-                        this.renderDashboard();
-                        this.renderUsers();
-                    } catch (e) {
-                        if (table) table.innerHTML = '<tr><td colspan="5" class="text-center text-danger" style="padding:2rem;">Gagal mengambil data Firebase.</td></tr>';
-                    }
-                },
-                renderDashboard() {
-                    if (!this.usersData) return;
-                    const uids = Object.keys(this.usersData);
-                    let totPremium = 0, totTx = 0;
-                    uids.forEach(uid => {
-                        const dataNode = this.usersData[uid].appData;
-                        if (dataNode) {
-                            if (dataNode.isPremium) totPremium++;
-                            totTx += (dataNode.transactions || []).length;
-                        }
-                    });
-                    document.getElementById('adminTotUsers').textContent = uids.length;
-                    document.getElementById('adminTotPremium').textContent = totPremium;
-                    const txEl = document.getElementById('adminTotTx');
-                    if (txEl) txEl.textContent = totTx;
-                },
-                renderUsers() {
-                    if (!this.usersData) return;
-                    const table = document.getElementById('adminUserTable');
-                    const query = (document.getElementById('adminSearch').value || '').toLowerCase();
-                    const uids = Object.keys(this.usersData);
-                    let html = '';
-
-                    uids.forEach(uid => {
-                        const user = this.usersData[uid];
-                        const profile = user.profile || {};
-                        const appData = user.appData || {};
-                        const isPrem = appData.isPremium || false;
-                        const txCount = (appData.transactions || []).length;
-                        const realUsername = (profile.email || '').replace('@keuangan.pro', '');
-                        const displayName = profile.name || realUsername || 'Unknown';
-                        const initials = displayName.charAt(0).toUpperCase();
-                        const isCurrentUser = App.State.user && uid === App.State.user.uid;
-                        const isAdminUser = profile.email === 'admin@keuangan.pro';
-
-                        if (query && !displayName.toLowerCase().includes(query) && !realUsername.toLowerCase().includes(query)) return;
-
-                        const statusBadge = isAdminUser
-                            ? `<span class="badge badge-admin">Admin</span>`
-                            : isPrem
-                                ? `<span class="badge badge-active">Premium 👑</span>`
-                                : `<span class="badge badge-paused">Reguler</span>`;
-
-                        html += `
-                            <tr>
-                                <td>
-                                    <div class="admin-user-card">
-                                        <div class="admin-user-avatar" style="${isPrem ? 'background:var(--warning-light); color:var(--warning-dark);' : ''}">${initials}</div>
-                                        <div>
-                                            <div class="font-bold" style="font-size:0.875rem;">${displayName} ${isCurrentUser ? '<span style="font-size:0.65rem; background:var(--primary-light); color:var(--primary); padding:1px 5px; border-radius:4px; font-weight:700;">Kamu</span>' : ''}</div>
-                                            <div class="text-xs text-muted">UID: ${uid.substring(0, 10)}...</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><span class="text-sm">@${realUsername || '-'}</span></td>
-                                <td><span class="font-bold text-sm">${txCount}</span><span class="text-xs text-muted"> transaksi</span></td>
-                                <td>${statusBadge}</td>
-                                <td>
-                                    <div style="display:flex; gap:0.4rem; align-items:center;">
-                                        <button class="admin-action-btn aab-view" onclick="App.Admin.showDetail('${uid}')" title="Lihat Detail">🔍</button>
-                                        ${!isAdminUser ? `<button class="admin-action-btn aab-premium" onclick="App.Admin.togglePremium('${uid}', ${!isPrem})" title="${isPrem ? 'Cabut Premium' : 'Beri Premium'}">${isPrem ? '⬇️' : '👑'}</button>` : ''}
-                                        ${!isCurrentUser && !isAdminUser ? `<button class="admin-action-btn aab-delete" onclick="App.Admin.deleteUser('${uid}')" title="Hapus Data">🗑️</button>` : ''}
-                                    </div>
-                                </td>
-                            </tr>
-                        `;
-                    });
-
-                    if (!html) html = '<tr><td colspan="5" class="text-center" style="padding:2rem; color:var(--text-muted);">Tidak ada pengguna ditemukan.</td></tr>';
-                    table.innerHTML = html;
-                },
-                showDetail(uid) {
-                    if (!this.usersData || !this.usersData[uid]) return;
-                    const user = this.usersData[uid];
-                    const profile = user.profile || {};
-                    const appData = user.appData || {};
-                    const realUsername = (profile.email || '').replace('@keuangan.pro', '');
-                    const isPrem = appData.isPremium || false;
-                    const txCount = (appData.transactions || []).length;
-                    const goalCount = (appData.goals || []).length;
-                    const budgetCount = (appData.budgets || []).length;
-                    const isAdminUser = profile.email === 'admin@keuangan.pro';
-                    const isCurrentUser = App.State.user && uid === App.State.user.uid;
-
-                    let totIn = 0, totOut = 0;
-                    (appData.transactions || []).forEach(t => { totIn += (t.pemasukan||0); totOut += (t.pengeluaran||0); });
-
-                    document.getElementById('adminDetailContent').innerHTML = `
-                        <div style="text-align:center; padding: 1rem 0 1.25rem;">
-                            <div style="width:64px; height:64px; border-radius:50%; margin: 0 auto 0.75rem; background:${isPrem ? 'var(--warning-light)' : 'var(--primary-light)'}; color:${isPrem ? 'var(--warning-dark)' : 'var(--primary)'}; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:700; border:2px solid ${isPrem ? 'var(--warning)' : 'var(--primary)'};">
-                                ${(profile.name || realUsername || 'U').charAt(0).toUpperCase()}
-                            </div>
-                            <div class="font-bold" style="font-size:1.1rem;">${profile.name || '-'}</div>
-                            <div class="text-sm text-muted">@${realUsername}</div>
-                        </div>
-                        <div class="admin-detail-row"><span class="text-muted">Status</span><span>${isPrem ? '<span class="badge badge-active">Premium 👑</span>' : isAdminUser ? '<span class="badge badge-admin">Admin</span>' : '<span class="badge badge-paused">Reguler</span>'}</span></div>
-                        <div class="admin-detail-row"><span class="text-muted">Total Transaksi</span><span class="font-bold">${txCount}</span></div>
-                        <div class="admin-detail-row"><span class="text-muted">Total Pemasukan</span><span class="font-bold text-success">Rp ${App.Utils.formatNumber(totIn)}</span></div>
-                        <div class="admin-detail-row"><span class="text-muted">Total Pengeluaran</span><span class="font-bold text-danger">Rp ${App.Utils.formatNumber(totOut)}</span></div>
-                        <div class="admin-detail-row"><span class="text-muted">Target Aktif</span><span class="font-bold">${goalCount}</span></div>
-                        <div class="admin-detail-row"><span class="text-muted">Budget Aktif</span><span class="font-bold">${budgetCount}</span></div>
-                        <div class="admin-detail-row" style="border:none;"><span class="text-muted text-xs">UID</span><span class="text-xs" style="font-family:monospace; word-break:break-all;">${uid}</span></div>
-                    `;
-                    const actionsEl = document.getElementById('adminDetailActions');
-                    actionsEl.innerHTML = '';
-                    if (!isAdminUser) {
-                        const btn1 = document.createElement('button');
-                        btn1.className = 'btn btn-sm ' + (isPrem ? 'btn-secondary' : 'btn-premium');
-                        btn1.textContent = isPrem ? '⬇️ Cabut Premium' : '👑 Beri Premium';
-                        btn1.onclick = () => { App.Admin.togglePremium(uid, !isPrem); App.UI.closeModal('adminDetailModal'); };
-                        actionsEl.appendChild(btn1);
-                    }
-                    if (!isCurrentUser && !isAdminUser) {
-                        const btn2 = document.createElement('button');
-                        btn2.className = 'btn btn-sm btn-danger';
-                        btn2.textContent = '🗑️ Hapus Data';
-                        btn2.onclick = () => { App.UI.closeModal('adminDetailModal'); App.Admin.deleteUser(uid); };
-                        actionsEl.appendChild(btn2);
-                    }
-                    App.UI.showModal('adminDetailModal');
-                },
-                togglePremium(uid, newState) {
-                    if (!App.State.isAdmin) return;
-
-                    if (App.Auth.isDummy) {
-                        const key = 'dummy_db_' + uid;
-                        try {
-                            const db = JSON.parse(localStorage.getItem(key) || '{}');
-                            db.isPremium = newState;
-                            localStorage.setItem(key, JSON.stringify(db));
-                            // If toggling for self, update live state
-                            if (App.State.user && uid === App.State.user.uid) {
-                                App.State.isPremium = newState;
-                                App.Premium.applyState();
-                                App.UI.renderAll();
-                            }
-                            App.UI.showToast(`Status Premium ${newState ? 'diberikan' : 'dicabut'}.`, 'success');
-                            this.loadData();
-                        } catch(e) { App.UI.showToast('Gagal memperbarui status.', 'error'); }
-                        return;
-                    }
-
-                    set(ref(App.DB.dbInstance, `users/${uid}/appData/isPremium`), newState).then(() => {
-                        App.UI.showToast(`Status Premium diperbarui.`, 'success');
-                        this.loadData();
-                    });
-                },
-                async deleteUser(uid) {
-                    if (!App.State.isAdmin) return;
-                    const yes = await App.UI.confirm('Hapus SELURUH data pengguna ini secara permanen?');
-                    if (!yes) return;
-
-                    if (App.Auth.isDummy) {
-                        localStorage.removeItem('dummy_db_' + uid);
-                        App.UI.showToast('Data pengguna berhasil dihapus.', 'success');
-                        this.loadData();
-                        return;
-                    }
-
-                    remove(ref(App.DB.dbInstance, `users/${uid}`)).then(() => {
-                        App.UI.showToast('Data pengguna berhasil dihapus.', 'success');
-                        this.loadData();
-                    });
-                }
-            },
-
-            // ----------------------------------------------------------------------
-            // DATABASE & PREMIUM LOGIC
-            // ----------------------------------------------------------------------
-            Premium: {
-                simulatePayment() {
-                    App.UI.showToast('Memproses Pembayaran...', 'info');
-                    setTimeout(() => {
-                        App.State.isPremium = true;
-                        App.DB.save();
-                        this.applyState();
-                        App.UI.closeModal('premiumModal');
-                        App.UI.showToast('🎉 Selamat! Akun Anda kini PREMIUM.', 'success');
-                        App.UI.renderAll();
-                    }, 1500);
-                },
-                applyState() {
-                    if(App.State.isPremium) {
-                        document.body.classList.add('is-premium');
-                        document.getElementById('premiumPromoCard').style.display = 'none';
-                        document.getElementById('themeLockText').style.display = 'none';
-                        document.getElementById('userRoleBadge').textContent = 'Premium';
-                        document.getElementById('userRoleBadge').style.color = 'var(--premium-gold)';
-                    } else {
-                        document.body.classList.remove('is-premium');
-                        if(document.getElementById('premiumPromoCard')) document.getElementById('premiumPromoCard').style.display = 'block';
-                        if(document.getElementById('themeLockText')) document.getElementById('themeLockText').style.display = 'block';
-                        document.getElementById('userRoleBadge').textContent = 'Reguler';
-                        document.getElementById('userRoleBadge').style.color = 'var(--text-muted)';
-                        if(App.State.settings.accentHue !== 244) App.Theme.changeAccent(244);
-                    }
-                }
+                AccountIcons: { cash: '💵', saldo: '🪪', celengan: '🐷', seabank: '🏦', dana: '💸', gopay: '📱' }
             },
 
             DB: {
-                dbInstance: null,
+                instance: null,
                 listener: null,
                 init() {
-                    // Deferred until Auth is ready
+                    const fApp = initializeApp(App.Config.Firebase);
+                    this.instance = getDatabase(fApp);
+                    App.State.syncCode = localStorage.getItem('active_sync_code_v5') || App.Utils.generateCode();
+                    localStorage.setItem('active_sync_code_v5', App.State.syncCode);
+                    document.getElementById('txtSyncCode').value = App.State.syncCode;
+                    this.listen(App.State.syncCode);
                 },
-                listen(uid) {
+                listen(code) {
                     App.UI.updateSyncStatus('connecting');
                     if (this.listener) this.listener();
                     
-                    // Offline / Dummy Mode
-                    if (App.Auth.isDummy) {
+                    const dbRef = ref(this.instance, 'sync_v5/' + code);
+                    this.listener = onValue(dbRef, (snapshot) => {
+                        App.State.lastSyncTime = new Date();
                         App.UI.updateSyncStatus('active');
-                        const localData = localStorage.getItem('dummy_db_' + uid);
-                        if (localData) {
-                            const data = JSON.parse(localData);
-                            App.State.isPremium = data.isPremium || false;
+                        
+                        if (snapshot.exists()) {
+                            const data = snapshot.val();
                             App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || [];
                             App.State.customCategories = data.customCategories || [];
@@ -1456,43 +871,15 @@
                         }
                         
                         App.State.isLoading = false;
-                        App.Premium.applyState();
-                        App.Theme.init();
-                        App.Handlers.processRecurring(); 
-                        App.UI.renderAll();
-                        return;
-                    }
-
-                    // Online Firebase Mode
-                    const dbRef = ref(this.dbInstance, `users/${uid}/appData`);
-                    this.listener = onValue(dbRef, (snapshot) => {
-                        App.UI.updateSyncStatus('active');
-                        
-                        if (snapshot.exists()) {
-                            const data = snapshot.val();
-                            App.State.isPremium = data.isPremium || false;
-                            App.State.transactions = data.transactions || [];
-                            App.State.recurring = data.recurring || [];
-                            App.State.customCategories = data.customCategories || [];
-                            App.State.goals = data.goals || [];
-                            App.State.budgets = data.budgets || [];
-                            App.State.paylaters = data.paylaters || [];
-                            if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
-                        } else {
-                            this.save(); // init data nodes
-                        }
-                        
-                        App.State.isLoading = false;
-                        App.Premium.applyState();
                         App.Theme.init();
                         App.Handlers.processRecurring(); 
                         App.UI.renderAll();
                     }, () => App.UI.updateSyncStatus('error'));
                 },
                 save() {
-                    if (!App.State.user) return;
+                    if (!App.State.syncCode || !this.instance) return;
+                    
                     const dataToSave = {
-                        isPremium: App.State.isPremium,
                         transactions: App.State.transactions,
                         recurring: App.State.recurring,
                         customCategories: App.State.customCategories,
@@ -1503,47 +890,68 @@
                         updatedAt: new Date().toISOString()
                     };
 
-                    if (App.Auth.isDummy) {
-                        localStorage.setItem('dummy_db_' + App.State.user.uid, JSON.stringify(dataToSave));
-                        return;
-                    }
-
-                    if (this.dbInstance) {
-                        set(ref(this.dbInstance, `users/${App.State.user.uid}/appData`), dataToSave);
-                    }
+                    set(ref(this.instance, 'sync_v5/' + App.State.syncCode), dataToSave);
+                    localStorage.setItem('backup_v5', JSON.stringify(dataToSave));
+                },
+                async manualImport(code) {
+                    try {
+                        const snap = await get(ref(this.instance, 'sync_v5/' + code));
+                        if (snap.exists()) {
+                            App.State.syncCode = code;
+                            localStorage.setItem('active_sync_code_v5', code);
+                            document.getElementById('txtSyncCode').value = code;
+                            this.listen(code);
+                            return true;
+                        }
+                        // Fallback v4
+                        const snap4 = await get(ref(this.instance, 'sync_v4/' + code));
+                        if(snap4.exists()) {
+                            App.State.syncCode = code;
+                            localStorage.setItem('active_sync_code_v5', code);
+                            document.getElementById('txtSyncCode').value = code;
+                            this.listen(code);
+                            return true;
+                        }
+                        return false;
+                    } catch(e) { return false; }
                 }
             },
 
-            // ----------------------------------------------------------------------
-            // UI & UTILITIES
-            // ----------------------------------------------------------------------
             Theme: {
                 init() {
                     const saved = App.State.settings.theme;
                     if(saved === 'dark') this.toggle(true, false);
                     else if(saved === 'light') this.toggle(false, false);
-                    else { const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; this.toggle(prefersDark, false); }
-                    this.changeAccent(App.State.settings.accentHue || 244, false);
+                    else {
+                        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        this.toggle(prefersDark, false);
+                    }
                 },
                 toggle(isDark, save = true) {
                     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-                    if(document.getElementById('setTheme')) document.getElementById('setTheme').checked = isDark;
-                    if(save) { App.State.settings.theme = isDark ? 'dark' : 'light'; App.DB.save(); }
-                    if(App.State.charts.cat) App.UI.renderAnalytics(); 
-                },
-                changeAccent(hue, save = true) {
-                    if(!App.State.isPremium && hue !== 244 && save) { App.UI.showModal('premiumModal'); return; }
-                    document.documentElement.style.setProperty('--hue-primary', hue);
-                    if(save) { App.State.settings.accentHue = hue; App.DB.save(); }
+                    document.getElementById('setTheme').checked = isDark;
+                    if(save) {
+                        App.State.settings.theme = isDark ? 'dark' : 'light';
+                        App.DB.save();
+                    }
+                    if(App.State.charts.cat) App.UI.renderAnalytics(); // Re-render charts for color sync
                 }
             },
 
             Utils: {
+                generateCode: () => 'GF-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
                 formatNumber: (num) => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(num || 0),
                 formatCurrency: (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num || 0),
                 parseCurrency: (str) => parseInt(str.toString().replace(/\D/g, '')) || 0,
-                formatInput(el) { let val = el.value.replace(/\D/g, ''); el.value = val ? parseInt(val).toLocaleString('id-ID') : ''; },
-                formatDateStr: (dStr) => { if(!dStr) return '-'; return new Date(dStr + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }); }
+                formatInput(el) {
+                    let val = el.value.replace(/\D/g, '');
+                    el.value = val ? parseInt(val).toLocaleString('id-ID') : '';
+                },
+                formatDateStr: (dStr) => {
+                    if(!dStr) return '-';
+                    return new Date(dStr + 'T00:00:00').toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                },
+                copyText: (text) => { navigator.clipboard.writeText(text); App.UI.showToast('Disalin ke clipboard!', 'info'); }
             },
 
             UI: {
@@ -1556,142 +964,49 @@
                     const d = new Date();
                     document.getElementById('filterStart').value = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().split('T')[0];
                     document.getElementById('filterEnd').value = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().split('T')[0];
-                    document.getElementById('currentDateStr').textContent = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
-                    this.renderCategoriesSelect();
-                },
-
-                toggleAuthView(showAuth) {
-                    const authView = document.getElementById('authView');
-                    const appView = document.getElementById('appContainer');
-                    if(showAuth) {
-                        authView.style.display = 'flex';
-                        setTimeout(() => authView.style.opacity = '1', 50);
-                        appView.style.display = 'none';
-                    } else {
-                        authView.style.opacity = '0';
-                        setTimeout(() => {
-                            authView.style.display = 'none';
-                            appView.style.display = 'block';
-                        }, 300);
-                    }
-                },
-
-                toggleAuth(mode) {
-                    const loginForm = document.getElementById('loginForm');
-                    const registerForm = document.getElementById('registerForm');
-                    const tabLogin = document.getElementById('tabLogin');
-                    const tabRegister = document.getElementById('tabRegister');
                     
-                    if (mode === 'login') {
-                        loginForm.style.display = 'block';
-                        loginForm.classList.remove('auth-form-slide');
-                        void loginForm.offsetWidth;
-                        loginForm.classList.add('auth-form-slide');
-                        registerForm.style.display = 'none';
-                        if (tabLogin) tabLogin.classList.add('active');
-                        if (tabRegister) tabRegister.classList.remove('active');
-                    } else {
-                        registerForm.style.display = 'block';
-                        registerForm.classList.remove('auth-form-slide');
-                        void registerForm.offsetWidth;
-                        registerForm.classList.add('auth-form-slide');
-                        loginForm.style.display = 'none';
-                        if (tabRegister) tabRegister.classList.add('active');
-                        if (tabLogin) tabLogin.classList.remove('active');
-                    }
-                    const subtitle = document.getElementById('authSubtitle');
-                    if (subtitle) subtitle.textContent = mode === 'login' ? 'Catat pemasukan, pengeluaran, dan raih target finansialmu.' : 'Buat akun baru untuk mulai mengelola keuangan.';
-                },
-
-                togglePwd(inputId, btn) {
-                    const input = document.getElementById(inputId);
-                    if (!input) return;
-                    const isHidden = input.type === 'password';
-                    input.type = isHidden ? 'text' : 'password';
-                    btn.textContent = isHidden ? '🙈' : '👁';
-                },
-
-                toggleProfileDropdown() {
-                    const dd = document.getElementById('profileDropdown');
-                    if (!dd) return;
-                    const isOpen = dd.classList.contains('open');
-                    if (isOpen) { dd.classList.remove('open'); return; }
-
-                    // Update dropdown data
-                    const user = App.State.user;
-                    if (user) {
-                        const name = user.displayName || user.email.split('@')[0];
-                        const initials = name.charAt(0).toUpperCase();
-                        const pdAvatar = document.getElementById('pdAvatar');
-                        const pdName = document.getElementById('pdName');
-                        const pdRole = document.getElementById('pdRole');
-                        const pdTx = document.getElementById('pdTxCount');
-                        const pdGoal = document.getElementById('pdGoalCount');
-                        if (pdAvatar) pdAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}">` : initials;
-                        if (pdName) pdName.textContent = name;
-                        if (pdRole) pdRole.textContent = App.State.isPremium ? '👑 Pengguna Premium' : (App.State.isAdmin ? '🛡️ Administrator' : 'Pengguna Reguler');
-                        if (pdTx) pdTx.textContent = App.State.transactions.length;
-                        if (pdGoal) pdGoal.textContent = App.State.goals.length;
-                    }
-                    dd.classList.add('open');
-                    // Close on outside click
-                    setTimeout(() => {
-                        document.addEventListener('click', function handler(e) {
-                            if (!e.target.closest('#profileBtn') && !e.target.closest('#profileDropdown')) {
-                                dd.classList.remove('open');
-                                document.removeEventListener('click', handler);
-                            }
-                        });
-                    }, 10);
-                },
-
-                closeProfileDropdown() {
-                    const dd = document.getElementById('profileDropdown');
-                    if (dd) dd.classList.remove('open');
-                },
-
-                showLogoutModal() {
-                    const user = App.State.user;
-                    if (!user) return;
-                    const name = user.displayName || user.email.split('@')[0];
-                    const initials = name.charAt(0).toUpperCase();
-                    const avatarEl = document.getElementById('logoutAvatar');
-                    const nameEl = document.getElementById('logoutName');
-                    if (avatarEl) avatarEl.textContent = initials;
-                    if (nameEl) nameEl.textContent = name;
-                    this.showModal('logoutModal');
-                },
-
-                switchTabByName(tabName) {
-                    const navItems = document.querySelectorAll('.nav-item');
-                    navItems.forEach(item => {
-                        if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(`'${tabName}'`)) {
-                            item.click();
-                        }
-                    });
+                    document.getElementById('currentDateStr').textContent = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    this.renderCategoriesSelect();
                 },
                 
                 updateSyncStatus(status) {
-                    const dot = document.getElementById('syncStatusDot'); const txt = document.getElementById('syncStatusText');
+                    const dot = document.getElementById('syncStatusDot');
+                    const txt = document.getElementById('syncStatusText');
+                    const timeTxt = document.getElementById('syncTimeText');
                     dot.className = 'sync-dot';
-                    if (status === 'active') { dot.classList.add('active'); txt.textContent = App.Auth.isDummy ? 'Offline Mode' : 'Tersinkronisasi'; } 
-                    else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
+                    
+                    if (status === 'active') { 
+                        dot.classList.add('active'); txt.textContent = 'Terhubung'; 
+                        if(App.State.lastSyncTime) {
+                            const t = App.State.lastSyncTime;
+                            timeTxt.textContent = `Updated: ${t.getHours().toString().padStart(2,'0')}:${t.getMinutes().toString().padStart(2,'0')}`;
+                        }
+                    }
+                    else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; }
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
 
                 renderAll() {
-                    this.renderBalances(); this.renderPaylaters(); this.renderHistory();
-                    this.renderBudgets(); this.renderGoals(); this.renderSettings();
+                    this.renderBalances();
+                    this.renderPaylaters();
+                    this.renderHistory();
+                    this.renderBudgets();
+                    this.renderGoals();
+                    this.renderSettings();
                     if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics();
                 },
 
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+                    
                     const ids = ['txCategory', 'filterCategory', 'edit-kategori', 'bCategory'];
                     ids.forEach(id => {
                         const el = document.getElementById(id);
-                        if(el) { if(id === 'filterCategory') el.innerHTML = '<option value="">Semua Kategori</option>' + options; else el.innerHTML = options; }
+                        if(el) {
+                            if(id === 'filterCategory') el.innerHTML = '<option value="">Semua Kategori</option>' + options;
+                            else el.innerHTML = options;
+                        }
                     });
                 },
 
@@ -1715,12 +1030,18 @@
                 renderPaylaters() {
                     const list = document.getElementById('paylaterList');
                     if (App.State.isLoading) return;
-                    if (!App.State.paylaters.length) { list.innerHTML = `<p class="text-xs" style="color: #94a3b8;">Belum ada tagihan / pinjaman tercatat.</p>`; return; }
+                    if (!App.State.paylaters.length) {
+                        list.innerHTML = `<p class="text-xs" style="color: #94a3b8;">Belum ada tagihan / pinjaman tercatat.</p>`;
+                        return;
+                    }
                     
                     list.innerHTML = App.State.paylaters.map(p => `
                         <div class="paylater-item">
-                            <div><div style="font-weight: 600; font-size: 0.875rem;">${p.name}</div><div style="color: #fecdd3; font-weight: 800; font-size: 1.1rem; margin-top: 0.25rem;">${App.Utils.formatCurrency(p.amount)}</div></div>
-                            <button class="btn btn-icon" style="background:rgba(239,68,68,0.2); color:#fca5a5; width:36px; height:36px; font-size:0.875rem;" onclick="App.Handlers.deletePaylater(${p.id})" title="Tandai Lunas">✔</button>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.875rem;">${p.name}</div>
+                                <div style="color: #fecdd3; font-weight: 800; font-size: 1.1rem; margin-top: 0.25rem;">${App.Utils.formatCurrency(p.amount)}</div>
+                            </div>
+                            <button class="btn btn-icon" style="background:rgba(239,68,68,0.2); color:#fca5a5; width:36px; height:36px; font-size:0.875rem;" onclick="App.Handlers.deletePaylater(${p.id})" title="Tandai Lunas / Hapus">✔</button>
                         </div>
                     `).join('');
                 },
@@ -1736,36 +1057,30 @@
                     const type = document.getElementById('filterType').value;
                     const acc = document.getElementById('filterAccount').value;
                     
-                    const lockDiv = document.getElementById('historyLock');
-                    let limitDateStr = '';
-                    if(!App.State.isPremium) {
-                        const limitDate = new Date(); limitDate.setMonth(limitDate.getMonth() - App.Config.FreeLimits.historyMonths);
-                        limitDateStr = limitDate.toISOString().split('T')[0];
-                    }
-
                     let filtered = App.State.transactions.filter(t => {
                         const isInc = (t.pemasukan || 0) > 0;
                         const matchDate = (!start || t.tanggal >= start) && (!end || t.tanggal <= end);
                         const matchQ = !q || (t.keterangan||'').toLowerCase().includes(q) || t.kategori.toLowerCase().includes(q);
                         const matchCat = !cat || t.kategori === cat;
-                        const matchType = type === 'all' || (type === 'in' && t.pemasukan > 0) || (type === 'out' && t.pengeluaran > 0);
+                        const matchType = type === 'all' || (type === 'in' && isInc) || (type === 'out' && !isInc);
                         const matchAcc = !acc || t.jenisAkun === acc;
                         return matchDate && matchQ && matchCat && matchType && matchAcc;
                     }).sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
 
-                    const hasLocked = !App.State.isPremium && filtered.some(t => t.tanggal < limitDateStr);
-                    if(hasLocked) { lockDiv.classList.add('show'); filtered = filtered.filter(t => t.tanggal >= limitDateStr); } 
-                    else { lockDiv.classList.remove('show'); }
+                    if (!filtered.length) {
+                        list.innerHTML = `<div class="text-center" style="padding:3rem 1rem;"><div style="font-size:3rem; opacity:0.5; margin-bottom:1rem;">📭</div><p class="text-muted">Tidak ada riwayat transaksi.</p></div>`;
+                        return;
+                    }
 
-                    if (!filtered.length) { list.innerHTML = `<div class="text-center" style="padding:3rem 1rem;"><div style="font-size:3rem; opacity:0.5; margin-bottom:1rem;">📭</div><p class="text-muted">Tidak ada riwayat.</p></div>`; return; }
-
+                    // Compact UI Grouped by Date
                     const grouped = {};
                     filtered.forEach(t => { if(!grouped[t.tanggal]) grouped[t.tanggal] = []; grouped[t.tanggal].push(t); });
 
                     let html = '';
                     Object.keys(grouped).sort().reverse().forEach(date => {
                         const txs = grouped[date];
-                        let dIn = 0, dOut = 0; txs.forEach(t => { dIn+=(t.pemasukan||0); dOut+=(t.pengeluaran||0); });
+                        let dIn = 0, dOut = 0;
+                        txs.forEach(t => { dIn+=(t.pemasukan||0); dOut+=(t.pengeluaran||0); });
 
                         html += `<div style="margin-bottom: 1.5rem;">
                             <div style="display:flex; justify-content:space-between; border-bottom: 1px solid var(--border-medium); padding-bottom:0.25rem; margin-bottom: 0.5rem;">
@@ -1778,16 +1093,23 @@
                             </div><div class="list-group" style="gap:0.5rem;">`;
 
                         txs.forEach(t => {
-                            const isInc = (t.pemasukan || 0) > 0; const amt = isInc ? t.pemasukan : t.pengeluaran;
+                            const isInc = (t.pemasukan || 0) > 0;
+                            const amt = isInc ? t.pemasukan : t.pengeluaran;
                             const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === t.kategori) || {icon:'📝', name:t.kategori};
                             const accIcon = App.Config.AccountIcons[t.jenisAkun] || '🏦';
                             
-                            html += `<div class="list-item" style="padding: 0.75rem 1rem;" onclick="App.Handlers.openEdit(${t.id})">
+                            html += `
+                                <div class="list-item" style="padding: 0.75rem 1rem;" onclick="App.Handlers.openEdit(${t.id})">
                                     <div class="item-left">
                                         <div class="item-icon" style="width:36px;height:36px;font-size:1.1rem; ${isInc ? 'background:var(--success-light);color:var(--success-dark);' : 'background:var(--danger-light);color:var(--danger-dark);'}">${catObj.icon}</div>
-                                        <div class="item-details"><span class="item-title">${catObj.name}</span><span class="item-meta">${t.keterangan || '-'} • ${accIcon}</span></div>
+                                        <div class="item-details">
+                                            <span class="item-title">${catObj.name}</span>
+                                            <span class="item-meta">${t.keterangan || '-'} • ${accIcon}</span>
+                                        </div>
                                     </div>
-                                    <div class="item-right"><span class="item-amount ${isInc ? 'text-success' : 'text-danger'}">${isInc ? '+' : '-'}${App.Utils.formatNumber(amt)}</span></div>
+                                    <div class="item-right">
+                                        <span class="item-amount ${isInc ? 'text-success' : 'text-danger'}">${isInc ? '+' : '-'}${App.Utils.formatNumber(amt)}</span>
+                                    </div>
                                 </div>`;
                         });
                         html += `</div></div>`;
@@ -1799,24 +1121,29 @@
                 renderBudgets() {
                     const list = document.getElementById('budgetList');
                     if (App.State.isLoading) return;
-                    if (!App.State.budgets.length) { list.innerHTML = `<div class="text-center" style="padding:2rem;"><p>Belum ada limit budget diatur.</p></div>`; return; }
+                    if (!App.State.budgets.length) return list.innerHTML = `<div class="text-center" style="padding:2rem;"><p>Belum ada limit budget diatur.</p></div>`;
 
                     list.innerHTML = App.State.budgets.map(b => {
-                        const now = new Date(); let filterDate;
-                        if(b.period === 'weekly') { const day = now.getDay(); filterDate = new Date(now); filterDate.setDate(now.getDate() - (day===0?6:day-1)); filterDate.setHours(0,0,0,0); } 
-                        else { filterDate = new Date(now.getFullYear(), now.getMonth(), 1); }
+                        const now = new Date();
+                        let filterDate;
+                        if(b.period === 'weekly') {
+                            const day = now.getDay();
+                            filterDate = new Date(now); filterDate.setDate(now.getDate() - (day===0?6:day-1)); filterDate.setHours(0,0,0,0);
+                        } else { filterDate = new Date(now.getFullYear(), now.getMonth(), 1); }
                         
                         const spent = App.State.transactions.filter(t => t.kategori === b.category && new Date(t.tanggal) >= filterDate).reduce((s,t) => s + (t.pengeluaran||0), 0);
                         const perc = Math.min((spent / b.amount) * 100, 100);
                         const isDanger = perc >= 90;
-                        const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === b.category) || {icon:'📊', name:b.category};
+                        const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === b.category) || {icon:'', name:b.category};
 
                         return `
                         <div class="progress-card">
                             <div class="progress-header">
-                                <div style="display:flex; align-items:center; gap:0.5rem;"><span style="font-size:1.2rem;">${catObj.icon}</span>
-                                <div><div class="font-bold text-sm">${catObj.name} <span class="badge ${b.period==='weekly'?'badge-active':'badge-paused'}">${b.period==='weekly'?'Mingguan':'Bulanan'}</span></div>
-                                <div class="text-xs text-muted">${App.Utils.formatCurrency(spent)} / ${App.Utils.formatCurrency(b.amount)}</div></div></div>
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <span style="font-size:1.2rem;">${catObj.icon}</span>
+                                    <div><div class="font-bold text-sm">${catObj.name} <span class="badge ${b.period==='weekly'?'badge-active':'badge-paused'}">${b.period==='weekly'?'Mingguan':'Bulanan'}</span></div>
+                                    <div class="text-xs text-muted">${App.Utils.formatCurrency(spent)} / ${App.Utils.formatCurrency(b.amount)}</div></div>
+                                </div>
                                 <button class="btn btn-icon text-danger" style="background:none;" onclick="App.Handlers.deleteBudget(${b.id})">🗑️</button>
                             </div>
                             <div class="progress-track"><div class="progress-fill" style="width:${perc}%; background:${isDanger?'var(--danger)':'var(--primary)'}"></div></div>
@@ -1828,19 +1155,16 @@
                 renderGoals() {
                     const list = document.getElementById('goalsList');
                     if (App.State.isLoading) return;
-                    if (!App.State.goals.length) { list.innerHTML = `<div class="text-center" style="padding:2rem;"><p>Belum ada target keuangan.</p></div>`; return; }
+                    if (!App.State.goals.length) return list.innerHTML = `<div class="text-center" style="padding:2rem;"><p>Belum ada target keuangan dibuat.</p></div>`;
 
                     list.innerHTML = App.State.goals.map(g => {
                         const perc = Math.min((g.current / g.target) * 100, 100);
                         const isDone = perc >= 100;
                         let statusText = `${perc.toFixed(1)}% Terkumpul`;
-                        
                         if(g.date && !isDone) {
-                            if(App.State.isPremium) {
-                                const daysLeft = Math.ceil((new Date(g.date) - new Date()) / (1000*60*60*24));
-                                if(daysLeft < 0) statusText = `⚠️ Terlambat ${Math.abs(daysLeft)} hari`;
-                                else statusText += ` • Sisa ${daysLeft} hari`;
-                            } else { statusText += ` • Estimasi 🔒PRO`; }
+                            const daysLeft = Math.ceil((new Date(g.date) - new Date()) / (1000*60*60*24));
+                            if(daysLeft < 0) statusText = `⚠️ Terlambat ${Math.abs(daysLeft)} hari`;
+                            else statusText += ` • ${daysLeft} hari lagi`;
                         }
 
                         return `
@@ -1892,9 +1216,6 @@
                                 </div>
                             </div>
                         </div>`}).join('') : '<p class="text-sm text-muted text-center" style="padding: 1rem;">Belum ada otomatisasi rutin.</p>';
-                        
-                    const btnUpgradeRec = document.getElementById('btnUpgradeRec');
-                    if(btnUpgradeRec) btnUpgradeRec.style.display = App.State.isPremium ? 'none' : 'block';
                 },
 
                 renderAnalytics() {
@@ -1907,6 +1228,7 @@
                     const textColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a';
                     const gridColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#334155' : '#e2e8f0';
                     
+                    // Chart 1: Category
                     let expMap = {};
                     tData.forEach(t => { 
                         if(t.pengeluaran > 0 && t.tanggal.substring(0,7) === currentMonth) {
@@ -1923,6 +1245,7 @@
                         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: {color: textColor, font: {family: 'Plus Jakarta Sans'}} } }, cutout: '70%', animation: { animateScale: true } }
                     });
 
+                    // Chart 2: Trend
                     let trendMap = {};
                     for(let i=5; i>=0; i--) {
                         let dt = new Date(d.getFullYear(), d.getMonth() - i, 1);
@@ -1962,9 +1285,7 @@
                     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
                     document.getElementById('view-'+id).classList.add('active');
                     btn.classList.add('active');
-                    
                     if(id === 'analytics') setTimeout(() => this.renderAnalytics(), 100);
-                    if(id === 'admin' && App.State.isAdmin) App.Admin.loadData();
                 },
 
                 showModal(id) { document.getElementById(id).classList.add('show'); },
@@ -1989,6 +1310,7 @@
                         const btnYes = document.getElementById('btnConfirmYes');
                         const newBtn = btnYes.cloneNode(true);
                         btnYes.parentNode.replaceChild(newBtn, btnYes);
+                        
                         newBtn.onclick = () => this.resolveConfirm(true);
                         this.confirmResolver = resolve;
                     });
@@ -2001,7 +1323,7 @@
             },
 
             // ----------------------------------------------------------------------
-            // EVENT HANDLERS
+            // 6. EVENT HANDLERS & LOGIC
             // ----------------------------------------------------------------------
             Handlers: {
                 addTransaction(e) {
@@ -2016,11 +1338,6 @@
                     }
                     document.getElementById('txIn').classList.remove('input-error');
                     errorEl.classList.remove('show');
-
-                    if (document.getElementById('txRecurring').checked && !App.State.isPremium && App.State.recurring.length >= App.Config.FreeLimits.recurring) {
-                        App.UI.showToast(`Batas otomatisasi (${App.Config.FreeLimits.recurring}) tercapai.`, 'error');
-                        App.UI.showModal('premiumModal'); return;
-                    }
 
                     const tx = {
                         id: Date.now(),
@@ -2051,10 +1368,12 @@
                     App.UI.showToast('Transaksi Berhasil Dicatat!', 'success');
                 },
 
+                // Paylater Logic
                 addPaylater(e) {
                     e.preventDefault();
                     const name = document.getElementById('plName').value.trim();
                     const amt = App.Utils.parseCurrency(document.getElementById('plAmount').value);
+                    
                     if(!name || amt <= 0) return App.UI.showToast('Form tidak valid', 'error');
                     
                     App.State.paylaters.push({id: Date.now(), name, amount: amt});
@@ -2130,10 +1449,7 @@
                     App.UI.renderHistory();
                 },
 
-                openBudgetModal() {
-                    if (!App.State.isPremium && App.State.budgets.length >= App.Config.FreeLimits.budget) { App.UI.showModal('premiumModal'); return; }
-                    App.UI.showModal('budgetModal');
-                },
+                // Budgets
                 addBudget(e) {
                     e.preventDefault();
                     const category = document.getElementById('bCategory').value;
@@ -2155,10 +1471,7 @@
                     App.DB.save(); App.UI.renderBudgets();
                 },
 
-                openGoalModal() {
-                    if (!App.State.isPremium && App.State.goals.length >= App.Config.FreeLimits.goal) { App.UI.showModal('premiumModal'); return; }
-                    App.UI.showModal('goalModal');
-                },
+                // Goals
                 addGoal(e) {
                     e.preventDefault();
                     const name = document.getElementById('gName').value.trim();
@@ -2179,6 +1492,7 @@
                     App.DB.save(); App.UI.renderGoals();
                 },
 
+                // Categories
                 addCategory() {
                     const name = document.getElementById('catName').value.trim();
                     const icon = document.getElementById('catIcon').value.trim();
@@ -2195,6 +1509,7 @@
                     App.DB.save(); App.UI.renderCategoriesSelect(); App.UI.renderSettings();
                 },
 
+                // Recurring 
                 toggleRecurring(id) {
                     const r = App.State.recurring.find(x => x.id === id);
                     if(r) { r.status = r.status === 'paused' ? 'active' : 'paused'; App.DB.save(); App.UI.renderSettings(); }
@@ -2206,7 +1521,8 @@
                     App.DB.save(); App.UI.renderSettings();
                 },
                 processRecurring() {
-                    const now = new Date(); now.setHours(0,0,0,0);
+                    const now = new Date();
+                    now.setHours(0,0,0,0);
                     let added = 0;
 
                     App.State.recurring.forEach(rt => {
@@ -2246,7 +1562,7 @@
                 saveReminder() {
                     App.State.settings.reminderEnabled = document.getElementById('setReminder').checked;
                     App.State.settings.reminderTime = document.getElementById('setReminderTime').value;
-                    if(App.DB.dbInstance) App.DB.save();
+                    App.DB.save();
                     
                     if(App.State.settings.reminderEnabled && 'Notification' in window) {
                         Notification.requestPermission().then(p => {
@@ -2261,12 +1577,9 @@
                 },
 
                 exportData(type) {
-                    if(type === 'json' && !App.State.isPremium) { App.UI.showModal('premiumModal'); return; }
-
                     let text = '', filename = '';
                     if(type === 'json') {
                         const dataToExport = {
-                            isPremium: App.State.isPremium,
                             transactions: App.State.transactions,
                             recurring: App.State.recurring,
                             customCategories: App.State.customCategories,
@@ -2297,7 +1610,6 @@
                                 if(data.transactions) {
                                     const yes = await App.UI.confirm('Menimpa data saat ini dengan data Backup?');
                                     if(!yes) return;
-                                    App.State.isPremium = data.isPremium || App.State.isPremium;
                                     App.State.transactions = data.transactions;
                                     if(data.customCategories) App.State.customCategories = data.customCategories;
                                     if(data.goals) App.State.goals = data.goals;
@@ -2333,7 +1645,6 @@
                 },
 
                 exportPDF() {
-                    if(!App.State.isPremium) { App.UI.showModal('premiumModal'); return; }
                     if(!window.jspdf || !window.jspdf.jsPDF) return App.UI.showToast('Library gagal dimuat.', 'error');
                     App.UI.showToast('Menyiapkan Laporan PDF...', 'info');
                     
@@ -2368,7 +1679,7 @@
             },
 
             // ----------------------------------------------------------------------
-            // SMART INSIGHTS AI
+            // 7. SMART INSIGHTS AI
             // ----------------------------------------------------------------------
             Insights: {
                 generate() {
@@ -2387,15 +1698,10 @@
                     });
 
                     let html = '';
-                    if(App.State.isPremium) {
-                        document.getElementById('insightLock').classList.remove('show');
-                        if (outLast > 0) {
-                            const diff = outThis - outLast; const perc = Math.abs((diff / outLast) * 100).toFixed(1);
-                            if(diff > 0) html += `<div class="insight-card" style="border-left-color: var(--danger);"><div class="font-bold text-sm mb-1">🚨 Pengeluaran Naik</div><p class="text-xs">Naik <b>${perc}%</b> dibanding bulan lalu.</p></div>`;
-                            else html += `<div class="insight-card" style="border-left-color: var(--success);"><div class="font-bold text-sm mb-1">🎉 Lebih Hemat</div><p class="text-xs">Turun <b>${perc}%</b> dibanding bulan lalu.</p></div>`;
-                        }
-                    } else {
-                        document.getElementById('insightLock').classList.add('show');
+                    if (outLast > 0) {
+                        const diff = outThis - outLast; const perc = Math.abs((diff / outLast) * 100).toFixed(1);
+                        if(diff > 0) html += `<div class="insight-card" style="border-left-color: var(--danger);"><div class="font-bold text-sm mb-1">🚨 Pengeluaran Naik</div><p class="text-xs">Naik <b>${perc}%</b> dibanding bulan lalu.</p></div>`;
+                        else html += `<div class="insight-card" style="border-left-color: var(--success);"><div class="font-bold text-sm mb-1">🎉 Lebih Hemat</div><p class="text-xs">Turun <b>${perc}%</b> dibanding bulan lalu.</p></div>`;
                     }
 
                     let maxCat = '', maxAmt = 0;
@@ -2416,34 +1722,19 @@
             },
 
             // ----------------------------------------------------------------------
-            // BOOTSTRAP
+            // 8. BOOTSTRAP
             // ----------------------------------------------------------------------
             Init() {
                 this.UI.init();
-                
-                // Cek konfigurasi Firebase (Support utk Execution Environment bawaan)
-                if (typeof __firebase_config !== 'undefined') {
-                    const canvasConfig = JSON.parse(__firebase_config);
-                    this.Config.Firebase.apiKey = canvasConfig.apiKey;
-                    this.Config.Firebase.authDomain = canvasConfig.authDomain;
-                    this.Config.Firebase.projectId = canvasConfig.projectId;
-                    this.Config.Firebase.storageBucket = canvasConfig.storageBucket;
-                    this.Config.Firebase.messagingSenderId = canvasConfig.messagingSenderId;
-                    this.Config.Firebase.appId = canvasConfig.appId;
-                }
-
-                // Inisialisasi Firebase & Auth
-                const fApp = initializeApp(this.Config.Firebase);
-                this.Auth.init(fApp);
-                this.DB.dbInstance = getDatabase(fApp);
-                
-                // Load UI Settings
-                const savedSet = localStorage.getItem('backup_v6');
+                const savedSet = localStorage.getItem('backup_v5');
                 if(savedSet) { try { const parsed = JSON.parse(savedSet); if(parsed.settings) this.State.settings = {...this.State.settings, ...parsed.settings}; } catch(e){} }
+                
                 document.getElementById('setReminder').checked = this.State.settings.reminderEnabled;
-                document.getElementById('setReminderTime').value = this.State.settings.reminderTime || "20:00";
+                document.getElementById('setReminderTime').value = this.State.settings.reminderTime || '20:00';
                 if(this.State.settings.reminderEnabled) document.getElementById('setReminderTimeWrap').style.display = 'block';
 
+                this.DB.init();
+                
                 if('serviceWorker' in navigator) navigator.serviceWorker.register('firebase-messaging-sw.js').catch(()=>{});
             }
         };
