@@ -195,6 +195,9 @@
         .paylater-wrapper::before { content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
         .paylater-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; position: relative; z-index: 1; }
         .paylater-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--danger); backdrop-filter: blur(10px); transition: transform 0.2s ease; margin-bottom: 0.75rem; }
+        .paylater-progress { height: 4px; background: rgba(255,255,255,0.1); border-radius: 99px; margin-top: 0.45rem; overflow: hidden; }
+        .paylater-progress-fill { height: 100%; background: linear-gradient(90deg, #34d399, #10b981); border-radius: 99px; transition: width 0.4s ease; }
+        .paylater-actions { display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0; }
 
         .form-group { margin-bottom: 1.25rem; position: relative; text-align: left; }
         label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-muted); }
@@ -343,6 +346,19 @@
         .premium-opt.selected { border-color: var(--premium-gold); background: rgba(245, 158, 11, 0.2); box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
         .premium-opt-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.25rem; color: white; }
         .premium-opt-price { font-size: 1.1rem; font-weight: 800; color: var(--premium-gold); }
+        /* Theme Swatch */
+        .theme-swatch {
+            background: linear-gradient(135deg, var(--sw-a), var(--sw-b));
+            border: 2px solid transparent; border-radius: var(--radius-md);
+            cursor: pointer; height: 44px; display: flex; align-items: center; justify-content: center;
+            transition: all var(--transition-normal); position: relative; overflow: hidden;
+        }
+        .theme-swatch span { font-size: 0.65rem; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.4); letter-spacing: 0.03em; }
+        .theme-swatch:hover { transform: scale(1.05); box-shadow: var(--shadow-md); }
+        .is-premium .theme-swatch:hover { border-color: white; }
+        body:not(.is-premium) .theme-swatch:not(:first-child) { opacity: 0.45; cursor: not-allowed; }
+        body:not(.is-premium) .theme-swatch:first-child { opacity: 1; cursor: pointer; }
+
     </style>
 </head>
 <body>
@@ -668,6 +684,31 @@
                 <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Pisahkan dan pantau uang untuk impian finansialmu.</p>
                 <div id="goalsList" class="list-group"><div class="skeleton" style="height: 100px;"></div></div>
             </div>
+
+            <!-- Transfer Antar Akun -->
+            <div class="card">
+                <div class="section-title"><span>⇄ Transfer Antar Akun</span><button class="btn btn-primary btn-sm" onclick="App.UI.showModal('transferModal')">+ Transfer</button></div>
+                <p class="text-sm text-muted" style="margin-bottom: 1.25rem;">Pindahkan uang antara Cash dan Saldo Bank tanpa mempengaruhi catatan transaksi.</p>
+                <div id="transfersList" class="list-group"><div class="skeleton" style="height: 70px;"></div></div>
+            </div>
+
+            <!-- Kalkulator Cicilan -->
+            <div class="card">
+                <div class="section-title"><span>🧮 Kalkulator Cicilan</span></div>
+                <p class="text-sm text-muted" style="margin-bottom: 1.25rem;">Hitung estimasi angsuran bulanan sebelum mengambil pinjaman.</p>
+                <div class="grid-2">
+                    <div class="form-group"><label>💰 Jumlah Pinjaman</label><input type="text" id="calcPrincipal" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this); App.Handlers.calcCicilan()"></div>
+                    <div class="form-group"><label>📅 Tenor (bulan)</label><input type="number" id="calcTenor" placeholder="12" min="1" max="360" oninput="App.Handlers.calcCicilan()"></div>
+                </div>
+                <div class="form-group"><label>📈 Bunga per Bulan (%)</label><input type="number" id="calcRate" placeholder="1.5" step="0.1" min="0" oninput="App.Handlers.calcCicilan()"></div>
+                <div id="calcResult" style="display:none; background:var(--primary-light); border:1px solid var(--primary); border-radius:var(--radius-md); padding:1rem; margin-top:0.5rem;">
+                    <div class="grid-2" style="gap:0.75rem;">
+                        <div style="text-align:center;"><div class="text-xs text-muted" style="margin-bottom:0.25rem;">Angsuran / Bulan</div><div class="font-bold text-primary" style="font-size:1.1rem;" id="calcMonthly">—</div></div>
+                        <div style="text-align:center;"><div class="text-xs text-muted" style="margin-bottom:0.25rem;">Total Bunga</div><div class="font-bold text-danger" style="font-size:1.1rem;" id="calcInterest">—</div></div>
+                    </div>
+                    <div style="text-align:center; margin-top:0.75rem; padding-top:0.75rem; border-top:1px dashed var(--border-medium);"><div class="text-xs text-muted" style="margin-bottom:0.25rem;">Total Pembayaran</div><div class="font-bold" style="font-size:1.25rem;" id="calcTotal">—</div></div>
+                </div>
+            </div>
         </main>
 
         <!-- 5. TAB SETTINGS -->
@@ -692,13 +733,16 @@
                 </div>
 
                 <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
-                    <h3 class="font-bold" style="margin-bottom: 0.5rem;">🎨 Warna Tema Utama</h3>
-                    <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-                        <button style="width:30px;height:30px;border-radius:50%;background:#4f46e5;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(244)"></button>
-                        <button style="width:30px;height:30px;border-radius:50%;background:#10b981;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(160)"></button>
-                        <button style="width:30px;height:30px;border-radius:50%;background:#f59e0b;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(38)"></button>
-                        <button style="width:30px;height:30px;border-radius:50%;background:#e11d48;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(347)"></button>
-                        <button style="width:30px;height:30px;border-radius:50%;background:#8b5cf6;border:none;cursor:pointer;" onclick="App.Theme.changeAccent(258)"></button>
+                    <h3 class="font-bold" style="margin-bottom: 0.5rem;">🎨 Tema Warna</h3>
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:0.5rem; margin-top:0.5rem;">
+                        <button class="theme-swatch" onclick="App.Theme.changeAccent(244)" title="Indigo" style="--sw-a:hsl(244,75%,59%); --sw-b:hsl(244,75%,72%);"><span>Indigo</span></button>
+                        <button class="theme-swatch" onclick="App.Theme.changeAccent(160)" title="Emerald" style="--sw-a:hsl(160,75%,40%); --sw-b:hsl(160,75%,55%);"><span>Emerald</span></button>
+                        <button class="theme-swatch" onclick="App.Theme.changeAccent(38)"  title="Amber"   style="--sw-a:hsl(38,90%,50%);  --sw-b:hsl(38,90%,65%);"><span>Amber</span></button>
+                        <button class="theme-swatch" onclick="App.Theme.changeAccent(347)" title="Rose"    style="--sw-a:hsl(347,80%,55%); --sw-b:hsl(347,80%,70%);"><span>Rose</span></button>
+                        <button class="theme-swatch" onclick="App.Theme.changeAccent(258)" title="Violet"  style="--sw-a:hsl(258,75%,62%); --sw-b:hsl(258,75%,75%);"><span>Violet</span></button>
+                        <button class="theme-swatch" onclick="App.Theme.changeAccent(200)" title="Sky"     style="--sw-a:hsl(200,85%,45%); --sw-b:hsl(200,85%,60%);"><span>Sky</span></button>
+                        <button class="theme-swatch" onclick="App.Theme.changeAccent(176)" title="Teal"    style="--sw-a:hsl(176,70%,38%); --sw-b:hsl(176,70%,53%);"><span>Teal</span></button>
+                        <button class="theme-swatch" onclick="App.Theme.changeAccent(15)"  title="Coral"   style="--sw-a:hsl(15,85%,55%);  --sw-b:hsl(15,85%,68%);"><span>Coral</span></button>
                     </div>
                     <p class="text-xs text-muted" style="margin-top:0.5rem;" id="themeLockText">Eksklusif untuk pengguna Premium 👑</p>
                 </div>
@@ -776,7 +820,7 @@
                 <li>Riwayat Transaksi Tanpa Batas Waktu</li>
                 <li>Laporan PDF Cantik & Backup JSON</li>
                 <li>Advanced Smart Insights & AI Analysis</li>
-                <li>Kustomisasi Warna Tema Penuh</li>
+                <li>8 Tema Warna Eksklusif (Indigo, Emerald, Amber, Rose, Violet, Sky, Teal, Coral)</li>
             </ul>
             
             <div class="premium-options">
@@ -842,6 +886,77 @@
             </div>
         </div>
     </div>
+    <div id="transferModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('transferModal')">
+        <div class="modal-content" style="max-width:400px;">
+            <div class="modal-header"><h2>⇄ Transfer Antar Akun</h2><button class="modal-close" onclick="App.UI.closeModal('transferModal')">&times;</button></div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Dari</label>
+                    <select id="tfDari">
+                        <option value="cash">💵 Cash / Tunai</option>
+                        <option value="saldo">🪪 Saldo Bank</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ke</label>
+                    <select id="tfKe">
+                        <option value="saldo">🪪 Saldo Bank</option>
+                        <option value="cash">💵 Cash / Tunai</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"><label>Jumlah (Rp)</label><input type="text" id="tfJumlah" inputmode="numeric" oninput="App.Utils.formatInput(this)" placeholder="0"></div>
+            <div class="form-group"><label>Tanggal</label><input type="date" id="tfTanggal"></div>
+            <div class="form-group"><label>Catatan (opsional)</label><input type="text" id="tfCatatan" placeholder="Cth: Top up GoPay, dll"></div>
+            <div class="grid-2">
+                <button class="btn btn-secondary" onclick="App.UI.closeModal('transferModal')">Batal</button>
+                <button class="btn btn-primary" onclick="App.Handlers.saveTransfer()">Simpan Transfer</button>
+            </div>
+        </div>
+    </div>
+    <div id="payoffModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('payoffModal')">
+        <div class="modal-content" style="max-width:420px;">
+            <div class="modal-header">
+                <h2>💳 Bayar Tagihan</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('payoffModal')">&times;</button>
+            </div>
+            <input type="hidden" id="payoffId">
+            <div style="background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.2); border-radius:var(--radius-md); padding:0.75rem 1rem; margin-bottom:1rem;">
+                <div class="text-xs text-muted" style="margin-bottom:0.2rem;">Tagihan</div>
+                <div class="font-bold" id="payoffNama" style="font-size:1rem;"></div>
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.2rem;">
+                    <span class="text-xs text-muted">Sisa hutang:</span>
+                    <span class="font-bold text-danger" id="payoffSisa"></span>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Bayar dari Akun</label>
+                    <select id="payoffAkun">
+                        <option value="cash">💵 Cash / Tunai</option>
+                        <option value="saldo">🪪 Saldo Bank</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Bayar</label>
+                    <input type="date" id="payoffTanggal">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Jumlah Dibayar (Rp)</label>
+                <input type="text" id="payoffJumlah" inputmode="numeric" oninput="App.Utils.formatInput(this)">
+            </div>
+            <div class="form-group">
+                <label>Keterangan (opsional)</label>
+                <input type="text" id="payoffCatatan" placeholder="Cth: Lunas GoPaylater Mei">
+            </div>
+            <div style="display:flex; gap:0.5rem; flex-direction:column;">
+                <button id="payoffFullBtn" class="btn btn-primary" style="background:linear-gradient(135deg,#10b981,#059669);">✅ Tandai LUNAS Sepenuhnya</button>
+                <button id="payoffPartBtn" class="btn" style="background:var(--warning-light); color:var(--warning-dark); font-weight:700;">💸 Bayar Sebagian</button>
+                <button class="btn btn-secondary" onclick="App.UI.closeModal('payoffModal')">Batal</button>
+            </div>
+        </div>
+    </div>
     <div id="catModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('catModal')"><div class="modal-content" style="max-width: 400px;"><div class="modal-header"><h2>Kategori Baru</h2><button class="modal-close" onclick="App.UI.closeModal('catModal')">&times;</button></div><div class="form-group"><label>Nama</label><input type="text" id="catName" required></div><div class="form-group"><label>Ikon (Emoji)</label><input type="text" id="catIcon" required maxlength="2"></div><div class="grid-2"><button class="btn btn-secondary" onclick="App.UI.closeModal('catModal')">Batal</button><button class="btn btn-primary" onclick="App.Handlers.addCategory()">Simpan</button></div></div></div>
     <div id="paylaterModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('paylaterModal')"><div class="modal-content"><div class="modal-header"><h2>Tagihan Baru</h2><button class="modal-close" onclick="App.UI.closeModal('paylaterModal')">&times;</button></div><form onsubmit="App.Handlers.addPaylater(event)"><div class="form-group"><label>Nama Tagihan</label><input type="text" id="plName" required></div><div class="form-group"><label>Jumlah (Rp)</label><input type="text" id="plAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('paylaterModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
 
@@ -890,7 +1005,7 @@
                 user: null,
                 isAdmin: false,
                 isPremium: false,
-                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [],
+                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [],
                 settings: { reminderEnabled: false, reminderTime: "20:00", theme: "light", accentHue: 244 },
                 isLoading: true, charts: {}, searchTimer: null
             },
@@ -1316,6 +1431,7 @@
                             App.State.isPremium = data.isPremium || false; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
                             App.State.goals = data.goals || []; App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
+                            App.State.transfers = data.transfers || [];
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
                         App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll(); return;
@@ -1329,6 +1445,7 @@
                             App.State.isPremium = data.isPremium || false; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
                             App.State.goals = data.goals || []; App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
+                            App.State.transfers = data.transfers || [];
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
                         App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll();
@@ -1336,7 +1453,7 @@
                 },
                 save() {
                     if (!App.State.user) return;
-                    const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, settings: App.State.settings, updatedAt: new Date().toISOString() };
+                    const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, settings: App.State.settings, updatedAt: new Date().toISOString() };
                     if (App.Auth.isDummy) { localStorage.setItem('dummy_db_' + App.State.user.uid, JSON.stringify(dataToSave)); return; }
                     if (this.dbInstance) { set(ref(this.dbInstance, `users/${App.State.user.uid}/appData`), dataToSave); }
                 }
@@ -1374,6 +1491,7 @@
                 confirmResolver: null,
                 init() {
                     const today = new Date().toISOString().split('T')[0]; document.getElementById('txDate').value = today;
+                    if(document.getElementById('tfTanggal')) document.getElementById('tfTanggal').value = today;
                     const d = new Date(); document.getElementById('filterStart').value = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().split('T')[0]; document.getElementById('filterEnd').value = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().split('T')[0];
                     const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
                     const dateEl = document.getElementById('currentDateStr'); if (dateEl) dateEl.textContent = dateStr;
@@ -1412,7 +1530,7 @@
                     else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
-                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderHistory(); this.renderBudgets(); this.renderGoals(); this.renderSettings(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
+                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderHistory(); this.renderBudgets(); this.renderGoals(); this.renderTransfers(); this.renderSettings(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
@@ -1424,6 +1542,10 @@
                     App.State.transactions.forEach(t => {
                         const amt = (t.pemasukan || 0) - (t.pengeluaran || 0);
                         if (t.jenisAkun === 'cash') bal.cash += amt; else bal.saldo += amt; 
+                    });
+                    (App.State.transfers || []).forEach(tf => {
+                        bal[tf.dari] -= tf.jumlah;
+                        bal[tf.ke] += tf.jumlah;
                     });
                     document.getElementById('balanceCards').innerHTML = `
                         <div class="balance-card bc-cash"><div class="bc-label">💵 Uang Tunai</div><div class="bc-value">${App.Utils.formatCurrency(bal.cash)}</div></div>
@@ -1437,9 +1559,24 @@
                     let total = 0;
                     list.innerHTML = App.State.paylaters.map(p => {
                         total += p.amount;
+                        const orig = p.originalAmount || p.amount;
+                        const paid = orig - p.amount;
+                        const perc = orig > 0 ? Math.round((paid / orig) * 100) : 0;
+                        const hasProgress = paid > 0;
                         return `<div class="paylater-item">
-                            <div><div style="font-weight: 600; font-size: 0.875rem;">${p.name}</div><div style="color: #fecdd3; font-weight: 800; font-size: 1.1rem; margin-top: 0.25rem;">${App.Utils.formatCurrency(p.amount)}</div></div>
-                            <button class="btn btn-icon" style="background:rgba(239,68,68,0.2); color:#fca5a5; width:36px; height:36px; font-size:0.875rem;" onclick="App.Handlers.deletePaylater(${p.id})" title="Tandai Lunas">✔</button>
+                            <div style="flex:1; min-width:0;">
+                                <div style="font-weight:600; font-size:0.875rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
+                                <div style="margin-top:0.2rem;">
+                                    <span style="color:#fecdd3; font-weight:800; font-size:1.05rem;">${App.Utils.formatCurrency(p.amount)}</span>
+                                    ${hasProgress ? `<span style="color:rgba(255,255,255,0.4); font-size:0.7rem; margin-left:0.4rem;">dari ${App.Utils.formatCurrency(orig)}</span>` : ''}
+                                </div>
+                                ${hasProgress ? `<div class="paylater-progress"><div class="paylater-progress-fill" style="width:${perc}%"></div></div>
+                                <div style="font-size:0.65rem; color:rgba(255,255,255,0.4); margin-top:0.2rem;">${perc}% sudah dibayar</div>` : ''}
+                            </div>
+                            <div class="paylater-actions">
+                                <button class="btn btn-sm" style="background:rgba(52,211,153,0.2); color:#34d399; padding:0.35rem 0.65rem; font-size:0.75rem; font-weight:700; border-radius:8px;" onclick="App.Handlers.openPayoffModal(${p.id})" title="Bayar / Lunas">💳 Bayar</button>
+                                <button class="btn btn-icon" style="background:rgba(239,68,68,0.15); color:#fca5a5; width:30px; height:30px; font-size:0.75rem;" onclick="App.Handlers.deletePaylater(${p.id})" title="Hapus tanpa mencatat pembayaran">🗑️</button>
+                            </div>
                         </div>`;
                     }).join('');
                     if(totalEl) totalEl.textContent = App.Utils.formatCurrency(total);
@@ -1554,6 +1691,30 @@
                         </div>`;
                     }).join('');
                 },
+                renderTransfers() {
+                    const list = document.getElementById('transfersList'); if (!list || App.State.isLoading) return;
+                    const transfers = (App.State.transfers || []).slice().sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
+                    if (!transfers.length) { list.innerHTML = `<div class="text-center" style="padding:2rem;"><p>Belum ada riwayat transfer.</p></div>`; return; }
+                    list.innerHTML = transfers.map(tf => {
+                        const fromIcon = tf.dari === 'cash' ? '💵' : '🪪';
+                        const toIcon   = tf.ke   === 'cash' ? '💵' : '🪪';
+                        const fromName = tf.dari === 'cash' ? 'Cash' : 'Saldo Bank';
+                        const toName   = tf.ke   === 'cash' ? 'Cash' : 'Saldo Bank';
+                        return `<div class="list-item" style="padding:0.8rem 1rem;">
+                            <div class="item-left">
+                                <div class="item-icon" style="width:42px;height:42px;font-size:1.2rem;background:var(--primary-light);color:var(--primary);">⇄</div>
+                                <div class="item-details">
+                                    <span class="item-title">${fromIcon} ${fromName} → ${toIcon} ${toName}</span>
+                                    <span class="item-meta">${App.Utils.formatDateStr(tf.tanggal)}${tf.catatan ? ' · ' + tf.catatan : ''}</span>
+                                </div>
+                            </div>
+                            <div class="item-right" style="display:flex;align-items:center;gap:0.5rem;">
+                                <span class="item-amount font-bold text-primary">${App.Utils.formatCurrency(tf.jumlah)}</span>
+                                <button class="btn btn-icon text-danger" style="background:none;width:28px;height:28px;font-size:0.8rem;" onclick="App.Handlers.deleteTransfer(${tf.id})" title="Hapus">🗑️</button>
+                            </div>
+                        </div>`;
+                    }).join('');
+                },
                 renderSettings() {
                     if (App.State.isLoading) return;
                     const catList = document.getElementById('settingsCatList');
@@ -1640,9 +1801,56 @@
                 addPaylater(e) {
                     e.preventDefault(); const name = document.getElementById('plName').value.trim(); const amt = App.Utils.parseCurrency(document.getElementById('plAmount').value);
                     if(!name || amt <= 0) return App.UI.showToast('Form tidak valid', 'error');
-                    App.State.paylaters.push({id: Date.now(), name, amount: amt}); App.DB.save(); App.UI.renderPaylaters(); App.UI.closeModal('paylaterModal'); e.target.reset(); App.UI.showToast('Tagihan berhasil disimpan!', 'success');
+                    App.State.paylaters.push({id: Date.now(), name, amount: amt, originalAmount: amt}); App.DB.save(); App.UI.renderPaylaters(); App.UI.closeModal('paylaterModal'); e.target.reset(); App.UI.showToast('Tagihan berhasil disimpan!', 'success');
                 },
-                async deletePaylater(id) { const yes = await App.UI.confirm('Tandai tagihan lunas/dihapus secara permanen?'); if(!yes) return; App.State.paylaters = App.State.paylaters.filter(p => p.id !== id); App.DB.save(); App.UI.renderPaylaters(); App.UI.showToast('Tagihan diselesaikan!', 'success'); },
+                async deletePaylater(id) {
+                    const yes = await App.UI.confirm('Hapus tagihan ini tanpa mencatat pembayaran?');
+                    if(!yes) return;
+                    App.State.paylaters = App.State.paylaters.filter(p => p.id !== id);
+                    App.DB.save(); App.UI.renderPaylaters(); App.UI.showToast('Tagihan dihapus.', 'success');
+                },
+                openPayoffModal(id) {
+                    const p = App.State.paylaters.find(x => x.id === id); if(!p) return;
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('payoffId').value = id;
+                    document.getElementById('payoffNama').textContent = p.name;
+                    document.getElementById('payoffSisa').textContent = App.Utils.formatCurrency(p.amount);
+                    document.getElementById('payoffJumlah').value = p.amount.toLocaleString('id-ID');
+                    document.getElementById('payoffTanggal').value = today;
+                    document.getElementById('payoffAkun').value = 'cash';
+                    document.getElementById('payoffCatatan').value = `Lunas: ${p.name}`;
+                    document.getElementById('payoffFullBtn').onclick  = () => App.Handlers.submitPayoff('full');
+                    document.getElementById('payoffPartBtn').onclick  = () => App.Handlers.submitPayoff('partial');
+                    App.UI.showModal('payoffModal');
+                },
+                submitPayoff(mode) {
+                    const id      = parseInt(document.getElementById('payoffId').value);
+                    const akun    = document.getElementById('payoffAkun').value;
+                    const tanggal = document.getElementById('payoffTanggal').value;
+                    const catatan = document.getElementById('payoffCatatan').value.trim();
+                    const jumlah  = App.Utils.parseCurrency(document.getElementById('payoffJumlah').value);
+                    const p = App.State.paylaters.find(x => x.id === id); if(!p) return;
+                    if(!jumlah || jumlah <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
+                    if(jumlah > p.amount) return App.UI.showToast('Jumlah melebihi sisa tagihan!', 'error');
+                    if(!tanggal) return App.UI.showToast('Pilih tanggal pembayaran', 'error');
+                    // Catat sebagai pengeluaran di history
+                    App.State.transactions.push({
+                        id: Date.now(), tanggal, jenisAkun: akun,
+                        pemasukan: 0, pengeluaran: jumlah,
+                        kategori: 'lainnya', keterangan: catatan
+                    });
+                    const isFullyPaid = mode === 'full' || jumlah >= p.amount;
+                    if(isFullyPaid) {
+                        App.State.paylaters = App.State.paylaters.filter(x => x.id !== id);
+                        App.UI.closeModal('payoffModal');
+                        App.UI.showToast(`🎉 Tagihan "${p.name}" LUNAS! Tercatat di riwayat.`, 'success');
+                    } else {
+                        p.amount -= jumlah;
+                        App.UI.closeModal('payoffModal');
+                        App.UI.showToast(`✅ Bayar ${App.Utils.formatCurrency(jumlah)} tercatat. Sisa: ${App.Utils.formatCurrency(p.amount)}`, 'success');
+                    }
+                    App.DB.save(); App.UI.renderAll();
+                },
                 openEdit(id) {
                     const t = App.State.transactions.find(x => x.id === id); if(!t) return;
                     document.getElementById('edit-id').value = id; document.getElementById('edit-tanggal').value = t.tanggal; document.getElementById('edit-jenis-akun').value = t.jenisAkun; document.getElementById('edit-pemasukan').value = t.pemasukan ? t.pemasukan.toLocaleString('id-ID') : ''; document.getElementById('edit-pengeluaran').value = t.pengeluaran ? t.pengeluaran.toLocaleString('id-ID') : ''; document.getElementById('edit-kategori').value = t.kategori; document.getElementById('edit-keterangan').value = t.keterangan || '';
@@ -1680,6 +1888,43 @@
                     App.DB.save(); App.UI.renderGoals(); App.UI.closeModal('addFundModal');
                     const isDone = goal.current >= goal.target;
                     App.UI.showToast(isDone ? `🏆 Target ${goal.name} tercapai!` : `✅ +${App.Utils.formatCurrency(amount)} ditambahkan ke ${goal.name}`, 'success');
+                },
+                saveTransfer() {
+                    const dari   = document.getElementById('tfDari').value;
+                    const ke     = document.getElementById('tfKe').value;
+                    const jumlah = App.Utils.parseCurrency(document.getElementById('tfJumlah').value);
+                    const tgl    = document.getElementById('tfTanggal').value;
+                    const cat    = document.getElementById('tfCatatan').value.trim();
+                    if(dari === ke) return App.UI.showToast('Pilih akun yang berbeda!', 'error');
+                    if(!jumlah || jumlah <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
+                    if(!tgl) return App.UI.showToast('Pilih tanggal transfer', 'error');
+                    App.State.transfers.push({ id: Date.now(), dari, ke, jumlah, tanggal: tgl, catatan: cat });
+                    App.DB.save(); App.UI.renderTransfers(); App.UI.renderBalances(); App.UI.closeModal('transferModal');
+                    document.getElementById('tfJumlah').value = '';
+                    document.getElementById('tfCatatan').value = '';
+                    const fromName = dari === 'cash' ? 'Cash' : 'Saldo Bank';
+                    const toName   = ke   === 'cash' ? 'Cash' : 'Saldo Bank';
+                    App.UI.showToast(`✅ Transfer ${fromName} → ${toName} berhasil disimpan!`, 'success');
+                },
+                async deleteTransfer(id) {
+                    const yes = await App.UI.confirm('Hapus catatan transfer ini?'); if(!yes) return;
+                    App.State.transfers = App.State.transfers.filter(t => t.id !== id);
+                    App.DB.save(); App.UI.renderTransfers(); App.UI.renderBalances();
+                },
+                calcCicilan() {
+                    const principal = App.Utils.parseCurrency(document.getElementById('calcPrincipal').value);
+                    const tenor     = parseInt(document.getElementById('calcTenor').value) || 0;
+                    const rate      = parseFloat(document.getElementById('calcRate').value) || 0;
+                    const res = document.getElementById('calcResult');
+                    if(!principal || !tenor) { res.style.display = 'none'; return; }
+                    let monthly, totalBayar;
+                    if(rate === 0) { monthly = principal / tenor; totalBayar = principal; }
+                    else { const r = rate / 100; monthly = principal * r * Math.pow(1+r, tenor) / (Math.pow(1+r, tenor) - 1); totalBayar = monthly * tenor; }
+                    const totalBunga = totalBayar - principal;
+                    document.getElementById('calcMonthly').textContent  = App.Utils.formatCurrency(Math.round(monthly));
+                    document.getElementById('calcInterest').textContent  = App.Utils.formatCurrency(Math.round(totalBunga));
+                    document.getElementById('calcTotal').textContent     = App.Utils.formatCurrency(Math.round(totalBayar));
+                    res.style.display = 'block';
                 },
                 
                 addCategory() { const name = document.getElementById('catName').value.trim(); const icon = document.getElementById('catIcon').value.trim(); const id = name.toLowerCase().replace(/\s+/g, '-'); if(!name || !icon) return App.UI.showToast('Isi form!', 'error'); App.State.customCategories.push({id, name, icon}); App.DB.save(); App.UI.renderCategoriesSelect(); App.UI.renderSettings(); App.UI.closeModal('catModal'); },
@@ -1736,6 +1981,10 @@
                         lines.push('[PAYLATERS]');
                         lines.push('ID,Nama,Jumlah');
                         App.State.paylaters.forEach(p => lines.push(`${p.id},${esc(p.name)},${p.amount}`));
+                        lines.push('');
+                        lines.push('[TRANSFERS]');
+                        lines.push('ID,Dari,Ke,Jumlah,Tanggal,Catatan');
+                        App.State.transfers.forEach(tf => lines.push(`${tf.id},${tf.dari},${tf.ke},${tf.jumlah},${tf.tanggal},${esc(tf.catatan||'')}`));
                         text = lines.join('\n');
                         filename = `Backup_KeuanganPro_${new Date().toISOString().split('T')[0]}.csv`;
                     }
@@ -1814,6 +2063,14 @@
                                             if(!line.trim()) return;
                                             const p = parseCSVLine(line);
                                             if(p.length >= 3) App.State.paylaters.push({ id:parseInt(p[0])||Date.now(), name:p[1], amount:parseInt(p[2])||0 });
+                                        });
+                                    }
+                                    if(sections.TRANSFERS) {
+                                        App.State.transfers = [];
+                                        sections.TRANSFERS.slice(1).forEach(line => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 5) App.State.transfers.push({ id:parseInt(p[0])||Date.now(), dari:p[1], ke:p[2], jumlah:parseInt(p[3])||0, tanggal:p[4], catatan:p[5]||'' });
                                         });
                                     }
                                     App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect();
