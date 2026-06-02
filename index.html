@@ -346,6 +346,25 @@
         .premium-opt.selected { border-color: var(--premium-gold); background: rgba(245, 158, 11, 0.2); box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
         .premium-opt-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.25rem; color: white; }
         .premium-opt-price { font-size: 1.1rem; font-weight: 800; color: var(--premium-gold); }
+        /* ── Utang Piutang Section ── */
+        .debt-wrapper { background: linear-gradient(135deg, #0c1445 0%, #1a237e 50%, #0d2137 100%); border: 1px solid #3949ab; border-radius: var(--radius-xl); padding: 1.5rem; margin-bottom: 2rem; color: white; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.25); position: relative; overflow: hidden; }
+        .debt-wrapper::before { content: ""; position: absolute; top: -40px; right: -40px; width: 130px; height: 130px; background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .debt-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+        .debt-item { display: flex; justify-content: space-between; align-items: flex-start; background: rgba(255,255,255,0.05); padding: 0.9rem 1rem; border-radius: var(--radius-md); border-left: 4px solid; margin-bottom: 0.65rem; transition: background 0.2s; }
+        .debt-item.utang { border-color: #f87171; }
+        .debt-item.piutang { border-color: #34d399; }
+        .debt-type-badge { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.62rem; font-weight: 800; padding: 0.15rem 0.5rem; border-radius: 99px; letter-spacing: 0.04em; text-transform: uppercase; }
+        .debt-type-badge.utang  { background: rgba(248,113,113,0.2); color: #fca5a5; border: 1px solid rgba(248,113,113,0.3); }
+        .debt-type-badge.piutang { background: rgba(52,211,153,0.2); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.3); }
+        .debt-actions { display: flex; gap: 0.35rem; align-items: center; flex-shrink: 0; margin-left: 0.75rem; }
+        .debt-progress { height: 3px; background: rgba(255,255,255,0.08); border-radius: 99px; margin-top: 0.4rem; overflow: hidden; }
+        .debt-progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+        .debt-item.utang  .debt-progress-fill { background: linear-gradient(90deg, #f87171, #ef4444); }
+        .debt-item.piutang .debt-progress-fill { background: linear-gradient(90deg, #34d399, #10b981); }
+        .tx-source-badge { display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.6rem; font-weight: 800; padding: 0.12rem 0.45rem; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tx-source-paylater { background: rgba(139,92,246,0.15); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+        .tx-source-debt-utang    { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); }
+        .tx-source-debt-piutang  { background: rgba(16,185,129,0.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
         /* Theme Swatch */
         .theme-swatch {
             background: linear-gradient(135deg, var(--sw-a), var(--sw-b));
@@ -578,6 +597,26 @@
                 <div style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 1rem; text-align: right; display: flex; justify-content: space-between; align-items: center;">
                     <span class="text-sm" style="color: rgba(255,255,255,0.7);">Total Tagihan Aktif:</span>
                     <span class="font-bold text-lg" style="color: #fecdd3;" id="paylaterTotalAmount">Rp 0</span>
+                </div>
+            </section>
+
+            <!-- Utang Piutang Section -->
+            <section class="debt-wrapper" id="debtSection">
+                <div class="debt-header">
+                    <div>
+                        <h3 class="text-sm font-bold" style="color: white; margin: 0;">🤝 Utang & Piutang</h3>
+                        <p style="color: rgba(255,255,255,0.5); font-size: 0.7rem; margin: 0.2rem 0 0;">Lacak hutang & tagihan yang belum dibayar</p>
+                    </div>
+                    <button class="btn btn-sm btn-outline" style="border-color: #5c6bc0; color: white;" onclick="App.UI.showModal('debtModal')">+ Catat</button>
+                </div>
+                <div id="debtList">
+                    <div class="skeleton" style="height: 58px; background: rgba(255,255,255,0.08); border-radius: 10px;"></div>
+                </div>
+                <div style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display:flex; gap:1.25rem;">
+                        <span class="text-sm" style="color: rgba(255,255,255,0.6);">Hutang: <span style="color:#fca5a5; font-weight:700;" id="debtTotalUtang">Rp 0</span></span>
+                        <span class="text-sm" style="color: rgba(255,255,255,0.6);">Piutang: <span style="color:#6ee7b7; font-weight:700;" id="debtTotalPiutang">Rp 0</span></span>
+                    </div>
                 </div>
             </section>
 
@@ -958,6 +997,68 @@
         </div>
     </div>
     <div id="catModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('catModal')"><div class="modal-content" style="max-width: 400px;"><div class="modal-header"><h2>Kategori Baru</h2><button class="modal-close" onclick="App.UI.closeModal('catModal')">&times;</button></div><div class="form-group"><label>Nama</label><input type="text" id="catName" required></div><div class="form-group"><label>Ikon (Emoji)</label><input type="text" id="catIcon" required maxlength="2"></div><div class="grid-2"><button class="btn btn-secondary" onclick="App.UI.closeModal('catModal')">Batal</button><button class="btn btn-primary" onclick="App.Handlers.addCategory()">Simpan</button></div></div></div>
+    <div id="debtModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('debtModal')">
+        <div class="modal-content" style="max-width:420px;">
+            <div class="modal-header"><h2>🤝 Catat Utang / Piutang</h2><button class="modal-close" onclick="App.UI.closeModal('debtModal')">&times;</button></div>
+            <div class="form-group">
+                <label>Jenis</label>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+                    <label id="debtTypeLabelUtang" style="display:flex; align-items:center; gap:0.5rem; padding:0.75rem 1rem; border-radius:var(--radius-md); border:2px solid var(--danger); background:var(--danger-light); cursor:pointer; font-weight:700; color:var(--danger-dark); transition:all 0.2s;">
+                        <input type="radio" name="debtType" value="utang" checked onchange="App.Handlers.onDebtTypeChange()" style="display:none;">
+                        🔴 Hutang saya
+                    </label>
+                    <label id="debtTypeLabelPiutang" style="display:flex; align-items:center; gap:0.5rem; padding:0.75rem 1rem; border-radius:var(--radius-md); border:2px solid var(--border-medium); background:var(--bg-body); cursor:pointer; font-weight:600; color:var(--text-muted); transition:all 0.2s;">
+                        <input type="radio" name="debtType" value="piutang" onchange="App.Handlers.onDebtTypeChange()" style="display:none;">
+                        🟢 Piutang saya
+                    </label>
+                </div>
+                <p id="debtTypeHint" class="text-xs text-muted" style="margin-top:0.5rem;">Hutang = uang yang kamu pinjam / wajib bayar</p>
+            </div>
+            <div class="form-group"><label id="debtNamaLabel">Nama Pemberi Hutang / Konteks</label><input type="text" id="debtNama" placeholder="Cth: Pinjam ke Budi, Kartu Kredit BCA" required></div>
+            <div class="grid-2">
+                <div class="form-group"><label>Jumlah (Rp)</label><input type="text" id="debtJumlah" inputmode="numeric" oninput="App.Utils.formatInput(this)" required></div>
+                <div class="form-group"><label>Tanggal</label><input type="date" id="debtTanggal"></div>
+            </div>
+            <div class="form-group">
+                <label id="debtAkunLabel">Masuk ke Akun</label>
+                <select id="debtAkun">
+                    <option value="cash">💵 Cash / Tunai</option>
+                    <option value="saldo">🪪 Saldo Bank / E-Wallet</option>
+                </select>
+                <p id="debtAkunHint" class="text-xs text-muted" style="margin-top:0.35rem;">Uang pinjaman diterima ke akun mana? Saldo akun ini akan <b>bertambah</b>.</p>
+            </div>
+            <div class="form-group"><label>Catatan (opsional)</label><input type="text" id="debtCatatan" placeholder="Cth: Pinjam buat bayar SPP"></div>
+            <div class="grid-2">
+                <button class="btn btn-secondary" onclick="App.UI.closeModal('debtModal')">Batal</button>
+                <button class="btn btn-primary" onclick="App.Handlers.saveDebt()">Simpan</button>
+            </div>
+        </div>
+    </div>
+    <div id="settleDebtModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('settleDebtModal')">
+        <div class="modal-content" style="max-width:430px;">
+            <div class="modal-header"><h2 id="settleDebtTitle">💸 Lunasi Hutang</h2><button class="modal-close" onclick="App.UI.closeModal('settleDebtModal')">&times;</button></div>
+            <input type="hidden" id="settleDebtId">
+            <input type="hidden" id="settleDebtType">
+            <div id="settleDebtInfo" style="border-radius:var(--radius-md); padding:0.75rem 1rem; margin-bottom:1rem; border:1px solid;"></div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label id="settleDebtAkunLabel">Bayar dari Akun</label>
+                    <select id="settleDebtAkun">
+                        <option value="cash">💵 Cash / Tunai</option>
+                        <option value="saldo">🪪 Saldo Bank</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Tanggal Bayar</label><input type="date" id="settleDebtTanggal"></div>
+            </div>
+            <div class="form-group"><label>Jumlah Dibayar (Rp)</label><input type="text" id="settleDebtJumlah" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
+            <div class="form-group"><label>Keterangan (opsional)</label><input type="text" id="settleDebtCatatan"></div>
+            <div style="display:flex; gap:0.5rem; flex-direction:column;">
+                <button id="settleDebtFullBtn" class="btn btn-primary">✅ Lunasi Sepenuhnya</button>
+                <button id="settleDebtPartBtn" class="btn" style="background:var(--warning-light); color:var(--warning-dark); font-weight:700;">💸 Bayar Sebagian</button>
+                <button class="btn btn-secondary" onclick="App.UI.closeModal('settleDebtModal')">Batal</button>
+            </div>
+        </div>
+    </div>
     <div id="paylaterModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('paylaterModal')"><div class="modal-content"><div class="modal-header"><h2>Tagihan Baru</h2><button class="modal-close" onclick="App.UI.closeModal('paylaterModal')">&times;</button></div><form onsubmit="App.Handlers.addPaylater(event)"><div class="form-group"><label>Nama Tagihan</label><input type="text" id="plName" required></div><div class="form-group"><label>Jumlah (Rp)</label><input type="text" id="plAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('paylaterModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
 
     <!-- Logout Confirmation Modal -->
@@ -1005,7 +1106,7 @@
                 user: null,
                 isAdmin: false,
                 isPremium: false,
-                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [],
+                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [],
                 settings: { reminderEnabled: false, reminderTime: "20:00", theme: "light", accentHue: 244 },
                 isLoading: true, charts: {}, searchTimer: null
             },
@@ -1431,7 +1532,7 @@
                             App.State.isPremium = data.isPremium || false; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
                             App.State.goals = data.goals || []; App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
-                            App.State.transfers = data.transfers || [];
+                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || [];
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
                         App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll(); return;
@@ -1445,7 +1546,7 @@
                             App.State.isPremium = data.isPremium || false; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
                             App.State.goals = data.goals || []; App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
-                            App.State.transfers = data.transfers || [];
+                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || [];
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
                         App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll();
@@ -1453,7 +1554,7 @@
                 },
                 save() {
                     if (!App.State.user) return;
-                    const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, settings: App.State.settings, updatedAt: new Date().toISOString() };
+                    const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, debts: App.State.debts, settings: App.State.settings, updatedAt: new Date().toISOString() };
                     if (App.Auth.isDummy) { localStorage.setItem('dummy_db_' + App.State.user.uid, JSON.stringify(dataToSave)); return; }
                     if (this.dbInstance) { set(ref(this.dbInstance, `users/${App.State.user.uid}/appData`), dataToSave); }
                 }
@@ -1492,7 +1593,8 @@
                 init() {
                     const today = new Date().toISOString().split('T')[0]; document.getElementById('txDate').value = today;
                     if(document.getElementById('tfTanggal')) document.getElementById('tfTanggal').value = today;
-                    const d = new Date(); document.getElementById('filterStart').value = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().split('T')[0]; document.getElementById('filterEnd').value = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().split('T')[0];
+                    if(document.getElementById('debtTanggal')) document.getElementById('debtTanggal').value = today;
+                    // Filter tanggal dibiarkan kosong agar semua history tampil
                     const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
                     const dateEl = document.getElementById('currentDateStr'); if (dateEl) dateEl.textContent = dateStr;
                     this.renderCategoriesSelect();
@@ -1530,7 +1632,7 @@
                     else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
-                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderHistory(); this.renderBudgets(); this.renderGoals(); this.renderTransfers(); this.renderSettings(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
+                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderGoals(); this.renderTransfers(); this.renderSettings(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
@@ -1581,6 +1683,43 @@
                     }).join('');
                     if(totalEl) totalEl.textContent = App.Utils.formatCurrency(total);
                 },
+                renderDebts() {
+                    const list = document.getElementById('debtList'); if(!list || App.State.isLoading) return;
+                    const debts = App.State.debts || [];
+                    let totalUtang = 0, totalPiutang = 0;
+                    debts.forEach(d => { if(d.tipe === 'utang') totalUtang += d.sisa; else totalPiutang += d.sisa; });
+                    const tu = document.getElementById('debtTotalUtang'); const tp = document.getElementById('debtTotalPiutang');
+                    if(tu) tu.textContent = App.Utils.formatCurrency(totalUtang);
+                    if(tp) tp.textContent = App.Utils.formatCurrency(totalPiutang);
+                    if(!debts.length) { list.innerHTML = `<p class="text-xs" style="color:rgba(255,255,255,0.4); text-align:center; padding:1rem 0;">Belum ada catatan utang atau piutang.</p>`; return; }
+                    list.innerHTML = debts.map(d => {
+                        const orig = d.originalAmount || d.sisa;
+                        const paid = orig - d.sisa;
+                        const perc = orig > 0 ? Math.round((paid/orig)*100) : 0;
+                        const isUtang = d.tipe === 'utang';
+                        const color   = isUtang ? '#fca5a5' : '#6ee7b7';
+                        const settleLabel = isUtang ? '💸 Bayar' : '✅ Terima';
+                        return `<div class="debt-item ${d.tipe}">
+                            <div style="flex:1; min-width:0;">
+                                <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem;">
+                                    <span class="debt-type-badge ${d.tipe}">${isUtang ? '🔴 HUTANG' : '🟢 PIUTANG'}</span>
+                                    <span style="font-weight:700; font-size:0.875rem; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px;">${d.nama}</span>
+                                </div>
+                                <div style="display:flex; align-items:baseline; gap:0.4rem;">
+                                    <span style="color:${color}; font-weight:800; font-size:1rem;">${App.Utils.formatCurrency(d.sisa)}</span>
+                                    ${paid > 0 ? `<span style="color:rgba(255,255,255,0.35); font-size:0.68rem;">dari ${App.Utils.formatCurrency(orig)}</span>` : ''}
+                                </div>
+                                ${d.catatan ? `<div style="color:rgba(255,255,255,0.4); font-size:0.7rem; margin-top:0.15rem;">${d.catatan}</div>` : ''}
+                                ${paid > 0 ? `<div class="debt-progress"><div class="debt-progress-fill" style="width:${perc}%"></div></div>
+                                <div style="font-size:0.63rem; color:rgba(255,255,255,0.3); margin-top:0.15rem;">${perc}% ${isUtang ? 'sudah dibayar' : 'sudah diterima'}</div>` : ''}
+                            </div>
+                            <div class="debt-actions">
+                                <button class="btn btn-sm" style="background:rgba(99,102,241,0.2); color:#a5b4fc; padding:0.35rem 0.6rem; font-size:0.72rem; font-weight:700; border-radius:8px;" onclick="App.Handlers.openSettleDebt(${d.id})">${settleLabel}</button>
+                                <button class="btn btn-icon" style="background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.3); width:28px; height:28px; font-size:0.7rem;" onclick="App.Handlers.deleteDebt(${d.id})" title="Hapus">🗑️</button>
+                            </div>
+                        </div>`;
+                    }).join('');
+                },
                 renderHistory() {
                     const list = document.getElementById('historyList'); if (App.State.isLoading) return;
                     const q = document.getElementById('filterSearch').value.toLowerCase(); const cat = document.getElementById('filterCategory').value;
@@ -1618,13 +1757,23 @@
                             const isInc = (t.pemasukan || 0) > 0; const amt = isInc ? t.pemasukan : t.pengeluaran;
                             const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === t.kategori) || {icon:'📝', name:t.kategori};
                             const accIcon = App.Config.AccountIcons[t.jenisAkun] || '🏦';
+                            // Badge sumber khusus
+                            let sourceBadge = '';
+                            if(t._source === 'paylater')       sourceBadge = `<span class="tx-source-badge tx-source-paylater">💳 Pelunasan Tagihan</span>`;
+                            else if(t._source === 'debt-utang')   sourceBadge = `<span class="tx-source-badge tx-source-debt-utang">🔴 Bayar Hutang</span>`;
+                            else if(t._source === 'debt-piutang') sourceBadge = `<span class="tx-source-badge tx-source-debt-piutang">🟢 Terima Piutang</span>`;
+                            const iconStyle = t._source === 'paylater' ? 'background:#ede9fe;color:#7c3aed;'
+                                : t._source === 'debt-utang'   ? 'background:#fee2e2;color:#b91c1c;'
+                                : t._source === 'debt-piutang' ? 'background:#d1fae5;color:#065f46;'
+                                : isInc ? 'background:var(--success-light);color:var(--success-dark);' : 'background:var(--danger-light);color:var(--danger-dark);';
                             
                             html += `<div class="list-item" style="padding: 0.8rem 1rem;" onclick="App.Handlers.openEdit(${t.id})">
                                     <div class="item-left">
-                                        <div class="item-icon" style="width:42px;height:42px;font-size:1.25rem; ${isInc ? 'background:var(--success-light);color:var(--success-dark);' : 'background:var(--danger-light);color:var(--danger-dark);'}">${catObj.icon}</div>
+                                        <div class="item-icon" style="width:42px;height:42px;font-size:1.25rem;${iconStyle}">${catObj.icon}</div>
                                         <div class="item-details">
                                             <span class="item-title">${catObj.name}</span>
                                             <span class="item-meta">
+                                                ${sourceBadge}
                                                 ${t.keterangan ? `<span>${t.keterangan}</span>` : '<span style="opacity:0.5">Tanpa keterangan</span>'}
                                                 <span class="acc-badge">${accIcon} ${t.jenisAkun.toUpperCase()}</span>
                                             </span>
@@ -1837,7 +1986,8 @@
                     App.State.transactions.push({
                         id: Date.now(), tanggal, jenisAkun: akun,
                         pemasukan: 0, pengeluaran: jumlah,
-                        kategori: 'lainnya', keterangan: catatan
+                        kategori: 'lainnya', keterangan: catatan,
+                        _source: 'paylater'
                     });
                     const isFullyPaid = mode === 'full' || jumlah >= p.amount;
                     if(isFullyPaid) {
@@ -1863,7 +2013,7 @@
                 },
                 async deleteTx(id) { const yes = await App.UI.confirm('Transaksi ini akan dihapus secara permanen.'); if(!yes) return; App.State.transactions = App.State.transactions.filter(t => t.id !== id); App.DB.save(); App.UI.closeModal('editModal'); App.UI.renderAll(); App.UI.showToast('Transaksi Dihapus', 'success'); },
                 debounceSearch() { clearTimeout(App.State.searchTimer); App.State.searchTimer = setTimeout(() => App.UI.renderHistory(), 300); },
-                resetFilters() { const d = new Date(); document.getElementById('filterStart').value = new Date(d.getFullYear(), d.getMonth(), 1).toISOString().split('T')[0]; document.getElementById('filterEnd').value = new Date(d.getFullYear(), d.getMonth() + 1, 0).toISOString().split('T')[0]; document.getElementById('filterSearch').value = ''; document.getElementById('filterCategory').value = ''; document.getElementById('filterAccount').value = ''; document.getElementById('filterType').value = 'all'; App.UI.renderHistory(); },
+                resetFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterSearch').value = ''; document.getElementById('filterCategory').value = ''; document.getElementById('filterAccount').value = ''; document.getElementById('filterType').value = 'all'; App.UI.renderHistory(); },
                 
                 openBudgetModal() { if (!App.State.isPremium && App.State.budgets.length >= App.Config.FreeLimits.budget) { App.UI.showModal('premiumModal'); return; } App.UI.showModal('budgetModal'); },
                 addBudget(e) { e.preventDefault(); const category = document.getElementById('bCategory').value; const amount = App.Utils.parseCurrency(document.getElementById('bAmount').value); const period = document.getElementById('bPeriod').value; if(amount <= 0) return App.UI.showToast('Isi limit yang valid', 'error'); const existing = App.State.budgets.findIndex(b => b.category === category); if(existing > -1) App.State.budgets[existing] = { id: App.State.budgets[existing].id, category, amount, period }; else App.State.budgets.push({ id: Date.now(), category, amount, period }); App.DB.save(); App.UI.renderBudgets(); App.UI.closeModal('budgetModal'); e.target.reset(); App.UI.showToast('Budget tersimpan!', 'success'); },
@@ -1926,7 +2076,119 @@
                     document.getElementById('calcTotal').textContent     = App.Utils.formatCurrency(Math.round(totalBayar));
                     res.style.display = 'block';
                 },
-                
+
+                // ── Utang Piutang ──
+                onDebtTypeChange() {
+                    const val = document.querySelector('input[name="debtType"]:checked').value;
+                    const isUtang = val === 'utang';
+                    const lU = document.getElementById('debtTypeLabelUtang');
+                    const lP = document.getElementById('debtTypeLabelPiutang');
+                    lU.style.border = isUtang ? '2px solid var(--danger)' : '2px solid var(--border-medium)';
+                    lU.style.background = isUtang ? 'var(--danger-light)' : 'var(--bg-body)';
+                    lU.style.color = isUtang ? 'var(--danger-dark)' : 'var(--text-muted)';
+                    lP.style.border = !isUtang ? '2px solid var(--success-dark)' : '2px solid var(--border-medium)';
+                    lP.style.background = !isUtang ? 'var(--success-light)' : 'var(--bg-body)';
+                    lP.style.color = !isUtang ? 'var(--success-dark)' : 'var(--text-muted)';
+                    document.getElementById('debtTypeHint').textContent = isUtang
+                        ? 'Hutang = uang yang kamu pinjam / wajib bayar'
+                        : 'Piutang = uang yang kamu pinjamkan / orang lain yang berhutang ke kamu';
+                    document.getElementById('debtNamaLabel').textContent = isUtang
+                        ? 'Nama Pemberi Pinjaman / Konteks'
+                        : 'Nama Orang yang Berhutang ke Kamu';
+                    document.getElementById('debtAkunLabel').textContent = isUtang
+                        ? 'Masuk ke Akun (kamu terima uang)'
+                        : 'Keluar dari Akun (kamu keluarkan uang)';
+                    document.getElementById('debtAkunHint').innerHTML = isUtang
+                        ? 'Uang pinjaman diterima ke akun mana? Saldo akun ini akan <b>bertambah</b>.'
+                        : 'Uang dipinjamkan dari akun mana? Saldo akun ini akan <b>berkurang</b>.';
+                },
+                saveDebt() {
+                    const tipe   = document.querySelector('input[name="debtType"]:checked').value;
+                    const nama   = document.getElementById('debtNama').value.trim();
+                    const jumlah = App.Utils.parseCurrency(document.getElementById('debtJumlah').value);
+                    const tgl    = document.getElementById('debtTanggal').value;
+                    const akun   = document.getElementById('debtAkun').value;
+                    const cat    = document.getElementById('debtCatatan').value.trim();
+                    if(!nama) return App.UI.showToast('Nama wajib diisi!', 'error');
+                    if(!jumlah || jumlah <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
+                    if(!tgl) return App.UI.showToast('Pilih tanggal', 'error');
+                    const isUtang = tipe === 'utang';
+                    // Hutang = terima uang (pemasukan), Piutang = keluarkan uang (pengeluaran)
+                    App.State.transactions.push({
+                        id: Date.now(), tanggal: tgl, jenisAkun: akun,
+                        pemasukan:   isUtang ? jumlah : 0,
+                        pengeluaran: isUtang ? 0 : jumlah,
+                        kategori: 'lainnya',
+                        keterangan: cat || (isUtang ? `Terima hutang dari ${nama}` : `Piutang ke ${nama}`),
+                        _source: isUtang ? 'debt-utang' : 'debt-piutang'
+                    });
+                    App.State.debts.push({ id: Date.now() + 1, tipe, nama, sisa: jumlah, originalAmount: jumlah, tanggal: tgl, catatan: cat, akun });
+                    App.DB.save(); App.UI.renderAll(); App.UI.closeModal('debtModal');
+                    document.getElementById('debtNama').value = '';
+                    document.getElementById('debtJumlah').value = '';
+                    document.getElementById('debtCatatan').value = '';
+                    App.UI.showToast(`${isUtang ? '🔴 Hutang dicatat — saldo bertambah!' : '🟢 Piutang dicatat — saldo berkurang!'}`, 'success');
+                },
+                openSettleDebt(id) {
+                    const d = App.State.debts.find(x => x.id === id); if(!d) return;
+                    const today = new Date().toISOString().split('T')[0];
+                    const isUtang = d.tipe === 'utang';
+                    document.getElementById('settleDebtId').value = id;
+                    document.getElementById('settleDebtType').value = d.tipe;
+                    document.getElementById('settleDebtTitle').textContent = isUtang ? '💸 Bayar Hutang' : '✅ Terima Piutang';
+                    document.getElementById('settleDebtAkunLabel').textContent = isUtang ? 'Bayar dari Akun' : 'Masuk ke Akun';
+                    const infoEl = document.getElementById('settleDebtInfo');
+                    infoEl.style.background  = isUtang ? 'rgba(239,68,68,0.07)'  : 'rgba(16,185,129,0.07)';
+                    infoEl.style.borderColor = isUtang ? 'rgba(239,68,68,0.25)'  : 'rgba(16,185,129,0.25)';
+                    infoEl.innerHTML = `<div class="text-xs text-muted">${isUtang ? 'Hutang ke' : 'Piutang dari'}</div>
+                        <div class="font-bold" style="font-size:1rem;">${d.nama}</div>
+                        <div style="margin-top:0.2rem;"><span class="text-xs text-muted">Sisa: </span><span class="font-bold" style="color:${isUtang?'var(--danger)':'var(--success-dark)'};">${App.Utils.formatCurrency(d.sisa)}</span></div>`;
+                    document.getElementById('settleDebtJumlah').value = d.sisa.toLocaleString('id-ID');
+                    document.getElementById('settleDebtTanggal').value = today;
+                    document.getElementById('settleDebtCatatan').value = isUtang ? `Bayar hutang ke ${d.nama}` : `Terima piutang dari ${d.nama}`;
+                    document.getElementById('settleDebtFullBtn').onclick = () => App.Handlers.submitSettleDebt('full');
+                    document.getElementById('settleDebtPartBtn').textContent = isUtang ? '💸 Bayar Sebagian' : '✅ Terima Sebagian';
+                    document.getElementById('settleDebtPartBtn').onclick = () => App.Handlers.submitSettleDebt('partial');
+                    App.UI.showModal('settleDebtModal');
+                },
+                submitSettleDebt(mode) {
+                    const id      = parseInt(document.getElementById('settleDebtId').value);
+                    const tipe    = document.getElementById('settleDebtType').value;
+                    const akun    = document.getElementById('settleDebtAkun').value;
+                    const tanggal = document.getElementById('settleDebtTanggal').value;
+                    const catatan = document.getElementById('settleDebtCatatan').value.trim();
+                    const jumlah  = App.Utils.parseCurrency(document.getElementById('settleDebtJumlah').value);
+                    const d = App.State.debts.find(x => x.id === id); if(!d) return;
+                    if(!jumlah || jumlah <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
+                    if(jumlah > d.sisa) return App.UI.showToast('Jumlah melebihi sisa!', 'error');
+                    if(!tanggal) return App.UI.showToast('Pilih tanggal', 'error');
+                    const isUtang = tipe === 'utang';
+                    // Catat ke history — hutang = pengeluaran, piutang = pemasukan
+                    App.State.transactions.push({
+                        id: Date.now(), tanggal, jenisAkun: akun,
+                        pemasukan: isUtang ? 0 : jumlah,
+                        pengeluaran: isUtang ? jumlah : 0,
+                        kategori: 'lainnya', keterangan: catatan,
+                        _source: isUtang ? 'debt-utang' : 'debt-piutang'
+                    });
+                    const isFullyPaid = mode === 'full' || jumlah >= d.sisa;
+                    if(isFullyPaid) {
+                        App.State.debts = App.State.debts.filter(x => x.id !== id);
+                        App.UI.closeModal('settleDebtModal');
+                        App.UI.showToast(isUtang ? `🎉 Hutang ke "${d.nama}" LUNAS!` : `🎉 Piutang dari "${d.nama}" LUNAS diterima!`, 'success');
+                    } else {
+                        d.sisa -= jumlah;
+                        App.UI.closeModal('settleDebtModal');
+                        App.UI.showToast(`✅ ${App.Utils.formatCurrency(jumlah)} tercatat. Sisa: ${App.Utils.formatCurrency(d.sisa)}`, 'success');
+                    }
+                    App.DB.save(); App.UI.renderAll();
+                },
+                async deleteDebt(id) {
+                    const yes = await App.UI.confirm('Hapus catatan ini tanpa mencatat pembayaran?'); if(!yes) return;
+                    App.State.debts = App.State.debts.filter(d => d.id !== id);
+                    App.DB.save(); App.UI.renderDebts();
+                },
+
                 addCategory() { const name = document.getElementById('catName').value.trim(); const icon = document.getElementById('catIcon').value.trim(); const id = name.toLowerCase().replace(/\s+/g, '-'); if(!name || !icon) return App.UI.showToast('Isi form!', 'error'); App.State.customCategories.push({id, name, icon}); App.DB.save(); App.UI.renderCategoriesSelect(); App.UI.renderSettings(); App.UI.closeModal('catModal'); },
                 async deleteCategory(id) { const yes = await App.UI.confirm('Hapus kategori kustom ini?'); if(!yes) return; App.State.customCategories = App.State.customCategories.filter(c => c.id !== id); App.DB.save(); App.UI.renderCategoriesSelect(); App.UI.renderSettings(); },
                 
@@ -1985,6 +2247,10 @@
                         lines.push('[TRANSFERS]');
                         lines.push('ID,Dari,Ke,Jumlah,Tanggal,Catatan');
                         App.State.transfers.forEach(tf => lines.push(`${tf.id},${tf.dari},${tf.ke},${tf.jumlah},${tf.tanggal},${esc(tf.catatan||'')}`));
+                        lines.push('');
+                        lines.push('[DEBTS]');
+                        lines.push('ID,Tipe,Nama,Sisa,OriginalAmount,Tanggal,Catatan');
+                        (App.State.debts || []).forEach(d => lines.push(`${d.id},${d.tipe},${esc(d.nama)},${d.sisa},${d.originalAmount||d.sisa},${d.tanggal||''},${esc(d.catatan||'')}`));
                         text = lines.join('\n');
                         filename = `Backup_KeuanganPro_${new Date().toISOString().split('T')[0]}.csv`;
                     }
@@ -1998,7 +2264,7 @@
                                 const data = JSON.parse(ev.target.result);
                                 if(data.transactions) {
                                     const yes = await App.UI.confirm('Menimpa data saat ini dengan data Backup?'); if(!yes) return;
-                                    App.State.isPremium = data.isPremium || App.State.isPremium; App.State.transactions = data.transactions; if(data.customCategories) App.State.customCategories = data.customCategories; if(data.goals) App.State.goals = data.goals; if(data.budgets) App.State.budgets = data.budgets; if(data.recurring) App.State.recurring = data.recurring; if(data.paylaters) App.State.paylaters = data.paylaters; App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect(); App.UI.showToast('Backup berhasil dipulihkan!', 'success');
+                                    App.State.isPremium = data.isPremium || App.State.isPremium; App.State.transactions = data.transactions; if(data.customCategories) App.State.customCategories = data.customCategories; if(data.goals) App.State.goals = data.goals; if(data.budgets) App.State.budgets = data.budgets; if(data.recurring) App.State.recurring = data.recurring; if(data.paylaters) App.State.paylaters = data.paylaters; if(data.transfers) App.State.transfers = data.transfers; if(data.debts) App.State.debts = data.debts; App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect(); App.UI.showToast('Backup berhasil dipulihkan!', 'success');
                                 }
                             } else if (file.name.endsWith('.csv')) {
                                 const content = ev.target.result;
@@ -2071,6 +2337,14 @@
                                             if(!line.trim()) return;
                                             const p = parseCSVLine(line);
                                             if(p.length >= 5) App.State.transfers.push({ id:parseInt(p[0])||Date.now(), dari:p[1], ke:p[2], jumlah:parseInt(p[3])||0, tanggal:p[4], catatan:p[5]||'' });
+                                        });
+                                    }
+                                    if(sections.DEBTS) {
+                                        App.State.debts = [];
+                                        sections.DEBTS.slice(1).forEach(line => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 5) App.State.debts.push({ id:parseInt(p[0])||Date.now(), tipe:p[1], nama:p[2], sisa:parseInt(p[3])||0, originalAmount:parseInt(p[4])||parseInt(p[3])||0, tanggal:p[5]||'', catatan:p[6]||'' });
                                         });
                                     }
                                     App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect();
