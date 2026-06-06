@@ -1,9 +1,40 @@
 // ================================================================
 // firebase-messaging-sw.js — Keuangan Pro Service Worker
-// Versi: 2.0 (Smart Notification Engine)
+// Versi: 3.0 (FCM + Smart Notification Engine)
 // ================================================================
 
-const SW_VERSION = '2.0.0';
+// ── FCM: wajib ada di baris paling atas ──
+importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
+
+firebase.initializeApp({
+  apiKey:            "AIzaSyCI32Fl3oFo8MqcFfaWOae73vbP-aKqqSw",
+  authDomain:        "bygf-6f77.firebaseapp.com",
+  databaseURL:       "https://bygf-6f77-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:         "bygf-6f77",
+  storageBucket:     "bygf-6f77.firebasestorage.app",
+  messagingSenderId: "127025825709",
+  appId:             "1:127025825709:web:e6b75daea1f707c674c324"
+});
+
+const messaging = firebase.messaging();
+
+// ── FCM background message handler ──
+// Dipanggil saat app TIDAK terbuka / browser minimize
+messaging.onBackgroundMessage((payload) => {
+  const n = payload.webpush?.notification || payload.notification || {};
+  self.registration.showNotification(n.title || 'Keuangan Pro', {
+    body:    n.body    || '',
+    icon:    n.icon    || 'https://i.ibb.co.com/0RGKc1CF/only-logo-192.png',
+    badge:              'https://i.ibb.co.com/0RGKc1CF/only-logo-192.png',
+    tag:     n.tag     || 'kp-fcm',
+    renotify: true,
+    vibrate: [200, 100, 200],
+    data:    payload.webpush?.fcmOptions || { url: './' },
+  });
+});
+
+const SW_VERSION = '3.0.0';
 
 // ── State internal SW ──
 let state = {
@@ -45,7 +76,16 @@ function canNotify(id) {
 // LIFECYCLE
 // ================================================================
 self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    clients.claim().then(() => {
+      // Minta semua client kirim ulang SYNC_STATE setelah SW restart
+      return clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+        list.forEach(c => c.postMessage({ type: 'SW_WAKE' }));
+      });
+    })
+  );
+});
 
 // ================================================================
 // MESSAGE HANDLER — menerima perintah dari halaman utama
