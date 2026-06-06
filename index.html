@@ -457,35 +457,84 @@
         /* ── Intro / Loading Screen ── */
         #introScreen {
             position: fixed; inset: 0; z-index: 99999;
-            background: #000; display: flex; align-items: center; justify-content: center;
-            transition: opacity 0.7s ease;
+            background: #000;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1);
         }
         #introScreen.fade-out { opacity: 0; pointer-events: none; }
         #introScreen.hidden   { display: none !important; }
 
         #introVideo {
-            width: 100%; height: 100%; object-fit: cover;
             position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
 
+        /* Gradient bawah supaya bar loading terbaca */
+        #introScreen::after {
+            content: '';
+            position: absolute; left: 0; right: 0; bottom: 0;
+            height: 120px;
+            background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Bar loading di paling bawah */
+        #introLoadingBar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 4px; background: rgba(255,255,255,0.1);
+            z-index: 3;
+        }
+        #introLoadingFill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #818cf8 0%, #6366f1 50%, #a78bfa 100%);
+            background-size: 200% 100%;
+            border-radius: 0 2px 2px 0;
+            transition: width 0.3s ease;
+            animation: shimmer 2s linear infinite;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Label % loading */
+        #introLoadingPct {
+            position: absolute; bottom: 14px; left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.72rem; font-weight: 600;
+            letter-spacing: 0.08em; z-index: 3;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        /* Tombol skip */
         #introSkip {
-            position: absolute; bottom: 2.5rem; right: 1.5rem;
-            background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
-            color: white; border: 1px solid rgba(255,255,255,0.25);
-            padding: 0.5rem 1.1rem; border-radius: 99px;
-            font-size: 0.8rem; font-weight: 600; cursor: pointer;
-            display: none; transition: background 0.2s, opacity 0.4s;
-            letter-spacing: 0.03em;
+            position: absolute; bottom: 2rem; right: 1.25rem;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
+            color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.2);
+            padding: 0.45rem 1rem; border-radius: 99px;
+            font-size: 0.75rem; font-weight: 600; cursor: pointer;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease, background 0.2s;
+            letter-spacing: 0.03em; z-index: 3;
         }
-        #introSkip.visible { display: block; }
-        #introSkip:hover   { background: rgba(255,255,255,0.22); }
+        #introSkip.visible { opacity: 1; pointer-events: auto; }
+        #introSkip:hover   { background: rgba(255,255,255,0.2); }
 
-        #introProgress {
-            position: absolute; bottom: 0; left: 0;
-            height: 3px; width: 0%;
-            background: linear-gradient(90deg, #818cf8, #6366f1);
-            transition: width linear;
+        /* Fallback saat video tidak bisa autoplay */
+        #introFallback {
+            position: absolute; inset: 0; z-index: 2;
+            display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
         }
+        #introFallback.show { display: flex; }
+        #introFallback img  { width: 80px; height: 80px; border-radius: 20px; margin-bottom: 1rem; box-shadow: 0 8px 32px rgba(99,102,241,0.4); }
+        #introFallback p    { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.5rem; }
     </style>
 </head>
 <body>
@@ -494,12 +543,25 @@
         <video
             id="introVideo"
             src="intro.mp4"
-            autoplay
-            muted
-            playsinline
-            preload="auto"
+            autoplay muted playsinline preload="auto"
+            disablePictureInPicture
+            controlsList="nodownload nofullscreen noremoteplayback"
         ></video>
-        <div id="introProgress"></div>
+
+        <!-- Fallback kalau video tidak bisa play (autoplay block / file tidak ada) -->
+        <div id="introFallback">
+            <img src="https://i.ibb.co.com/0RGKc1CF/only-logo-192.png" alt="Keuangan Pro" onerror="this.style.display='none'">
+            <h2 style="color:white; font-size:1.5rem; font-weight:800; margin:0;">Keuangan Pro</h2>
+            <p>Memuat aplikasi...</p>
+        </div>
+
+        <!-- Bar loading -->
+        <div id="introLoadingBar">
+            <div id="introLoadingFill"></div>
+        </div>
+        <div id="introLoadingPct">0%</div>
+
+        <!-- Tombol skip -->
         <button id="introSkip">Lewati ✕</button>
     </div>
     <div class="ambient-bg"></div>
@@ -1245,18 +1307,22 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getDatabase, ref, set, get, onValue, remove, update } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-messaging.js";
 
         const App = {
             State: {
                 user: null,
                 isAdmin: false,
                 isPremium: false,
-                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [],
+                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [], fcmMessaging: null,
                 settings: { reminderEnabled: false, reminderTime: '20:00', morningEnabled: false, morningTime: '08:00', budgetAlertEnabled: false, theme: 'light', accentHue: 244 },
                 isLoading: true, charts: {}, searchTimer: null
             },
 
             Config: {
+                // ⚠️  GANTI dengan VAPID Key dari Firebase Console →
+                //    Project Settings → Cloud Messaging → Web Push certificates
+                VapidKey: 'BDCpoWJ8teHPVbStjXx2LxbF7Rs5ktLY3SQa4J9dMp6fH_y30XXNBdyo9pe3n7IAdmD5-UXJgyYcFa4pYUFDdnE_KAMU',
                 Firebase: { 
                     apiKey: "AIzaSyCI32Fl3oFo8MqcFfaWOae73vbP-aKqqSw",
                     authDomain: "bygf-6f77.firebaseapp.com",
@@ -1318,7 +1384,9 @@
 
                         App.UI.toggleAuthView(false);
                         App.DB.listen(user.uid);
-                        
+                        // Subscribe FCM push setelah login berhasil
+                        setTimeout(() => App.Handlers.subscribeFCM(user.uid), 2500);
+
                         if(App.DB.dbInstance && !this.isDummy) {
                             update(ref(App.DB.dbInstance, `users/${user.uid}/profile`), {
                                 name: user.displayName || user.email.split('@')[0],
@@ -1681,6 +1749,7 @@
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
                         App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll();
+                        if(window._introAppReady) window._introAppReady();
                         setTimeout(() => App.Handlers.syncSWState(), 1500); return;
                     }
 
@@ -1695,7 +1764,9 @@
                             App.State.transfers = data.transfers || []; App.State.debts = data.debts || [];
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
-                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll(); setTimeout(() => { App.Handlers.syncSWState(); App.Handlers.checkDueSW(); }, 1500);
+                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll();
+                        if(window._introAppReady) window._introAppReady();
+                        setTimeout(() => { App.Handlers.syncSWState(); App.Handlers.checkDueSW(); }, 1500);
                     }, (error) => { console.error("Firebase DB Error:", error); App.UI.updateSyncStatus('error'); });
                 },
                 save() {
@@ -2368,6 +2439,32 @@
                     if(added > 0) { App.DB.save(); App.UI.showToast(`✨ ${added} Transaksi otomatis ditambahkan!`, 'success'); }
                 },
 
+                // ── Subscribe FCM: ambil token & simpan ke Firebase DB ──
+                async subscribeFCM(uid) {
+                    if(!App.State.fcmMessaging) return;
+                    if(Notification.permission !== 'granted') return;
+                    try {
+                        const token = await getToken(App.State.fcmMessaging, {
+                            vapidKey: App.Config.VapidKey,
+                            serviceWorkerRegistration: await navigator.serviceWorker.ready
+                        });
+                        if(!token) return;
+                        // Simpan token ke users/{uid}/fcmToken
+                        const dbRef = ref(App.DB.dbInstance, `users/${uid}/fcmToken`);
+                        const snap  = await get(dbRef);
+                        if(snap.val() !== token) {
+                            await set(dbRef, token);
+                            console.log('✅ FCM token saved');
+                        }
+                        // Dengarkan notif saat app di foreground
+                        onMessage(App.State.fcmMessaging, (payload) => {
+                            const n = payload.webpush?.notification || payload.notification || {};
+                            App.UI.showToast(`🔔 ${n.title || 'Notifikasi'}: ${n.body || ''}`, 'success');
+                        });
+                    } catch(err) {
+                        console.warn('FCM token error:', err.message);
+                    }
+                },
                 updateNotifStatus() {
                     const dot  = document.getElementById('notifStatusDot');
                     const text = document.getElementById('notifStatusText');
@@ -2405,6 +2502,9 @@
                         App.Handlers.updateNotifStatus();
                         if(permission === 'granted') {
                             App.Handlers.syncSWState();
+                            // Subscribe FCM setelah izin diberikan
+                            if(App.State.user && App.DB.dbInstance && !App.Auth.isDummy)
+                                App.Handlers.subscribeFCM(App.State.user.uid);
                             App.UI.showToast('✅ Notifikasi berhasil diaktifkan!', 'success');
                         } else if(permission === 'denied') {
                             App.UI.showToast('Notifikasi diblokir. Aktifkan manual di pengaturan browser.', 'error');
@@ -2679,6 +2779,8 @@
                 this.UI.init();
                 if (typeof __firebase_config !== 'undefined') { const canvasConfig = JSON.parse(__firebase_config); this.Config.Firebase.apiKey = canvasConfig.apiKey; this.Config.Firebase.authDomain = canvasConfig.authDomain; this.Config.Firebase.projectId = canvasConfig.projectId; this.Config.Firebase.storageBucket = canvasConfig.storageBucket; this.Config.Firebase.messagingSenderId = canvasConfig.messagingSenderId; this.Config.Firebase.appId = canvasConfig.appId; }
                 const fApp = initializeApp(this.Config.Firebase); this.Auth.init(fApp); this.DB.dbInstance = getDatabase(fApp);
+                // Init Firebase Messaging untuk FCM push
+                try { App.State.fcmMessaging = getMessaging(fApp); } catch(e) { console.warn('FCM not supported:', e.message); }
                 const savedSet = localStorage.getItem('backup_v6'); if(savedSet) { try { const parsed = JSON.parse(savedSet); if(parsed.settings) this.State.settings = {...this.State.settings, ...parsed.settings}; } catch(e){} }
                 document.getElementById('setReminder').checked = this.State.settings.reminderEnabled; document.getElementById('setReminderTime').value = this.State.settings.reminderTime || "20:00"; if(this.State.settings.reminderEnabled) document.getElementById('setReminderTimeWrap').style.display = 'block';
                 setTimeout(() => App.Handlers.updateNotifStatus(), 200);
@@ -2696,9 +2798,13 @@
                         });
                        waitActive(reg).then(() => { setTimeout(() => App.Handlers.syncSWState(), 2000); }); // tunggu DB load
                     }).catch(err => console.warn('SW register failed:', err));
-                    // Dengarkan pesan dari SW (opsional — bisa untuk deep link)
+                    // Dengarkan pesan dari SW
                     navigator.serviceWorker.addEventListener('message', (e) => {
                         if(e.data && e.data.type === 'SW_READY') App.Handlers.syncSWState();
+                        // SW restart → kirim ulang state agar reminder terjadwal kembali
+                        if(e.data && e.data.type === 'SW_WAKE') {
+                            setTimeout(() => App.Handlers.syncSWState(), 300);
+                        }
                     });
                 }
           // ✅ Re-sync SW setiap kali tab aktif kembali (atasi SW suspend saat tab switch)
@@ -2770,40 +2876,111 @@ document.addEventListener('visibilitychange', () => {
             const screen   = document.getElementById('introScreen');
             const video    = document.getElementById('introVideo');
             const skipBtn  = document.getElementById('introSkip');
-            const progress = document.getElementById('introProgress');
+            const fill     = document.getElementById('introLoadingFill');
+            const pctLabel = document.getElementById('introLoadingPct');
+            const fallback = document.getElementById('introFallback');
             if(!screen || !video) return;
 
-            let dismissed = false;
+            let dismissed  = false;
+            let appReady   = false;   // sinyal dari App.Init bahwa data sudah load
+            let vidPct     = 0;       // 0-80 dari video
+            let appPct     = 0;       // 0-20 dari app init
+            let rafId      = null;
+
+            // Update bar gabungan video (80%) + app init (20%)
+            function setBar(pct) {
+                pct = Math.min(100, Math.round(pct));
+                if(fill)     fill.style.width = pct + '%';
+                if(pctLabel) pctLabel.textContent = pct + '%';
+            }
+
+            // Animasi bar fake saat buffering (0→30% dalam 1.5 detik)
+            let fakeStart = Date.now();
+            function fakeProgress() {
+                const elapsed = Date.now() - fakeStart;
+                vidPct = Math.min(30, (elapsed / 1500) * 30);
+                setBar(vidPct + appPct);
+                if(vidPct < 30) rafId = requestAnimationFrame(fakeProgress);
+            }
+            fakeProgress();
+
+            // Progress nyata dari video buffer
+            video.addEventListener('progress', () => {
+                if(!video.duration || !video.buffered.length) return;
+                const buf = video.buffered.end(video.buffered.length - 1);
+                vidPct = Math.min(80, (buf / video.duration) * 80);
+                setBar(vidPct + appPct);
+            });
+
+            // Update bar dari timeupdate (progress pemutaran)
+            video.addEventListener('timeupdate', () => {
+                if(!video.duration) return;
+                const playPct = (video.currentTime / video.duration) * 80;
+                if(playPct > vidPct) {
+                    vidPct = playPct;
+                    setBar(vidPct + appPct);
+                }
+            });
 
             function dismiss() {
                 if(dismissed) return;
                 dismissed = true;
-                screen.classList.add('fade-out');
-                setTimeout(() => screen.classList.add('hidden'), 750);
+                cancelAnimationFrame(rafId);
+                setBar(100);
+                setTimeout(() => {
+                    screen.classList.add('fade-out');
+                    setTimeout(() => screen.classList.add('hidden'), 850);
+                }, 250);
             }
 
-            // Perbarui progress bar selama video jalan
-            video.addEventListener('timeupdate', () => {
-                if(!video.duration) return;
-                const pct = (video.currentTime / video.duration) * 100;
-                progress.style.width = pct + '%';
-                progress.style.transitionDuration = '0.2s';
-            });
+            // Sinyal dari App: data selesai dimuat → bar naik ke 100%
+            window._introAppReady = function() {
+                appPct = 20;
+                setBar(vidPct + appPct);
+                appReady = true;
+                // Jika video sudah selesai, dismiss sekarang
+                if(video.ended || video.paused) dismiss();
+            };
 
-            // Tampilkan tombol skip setelah 2 detik
-            setTimeout(() => skipBtn.classList.add('visible'), 2000);
-            skipBtn.addEventListener('click', dismiss);
+            // Tampilkan tombol skip setelah 2.5 detik
+            setTimeout(() => skipBtn?.classList.add('visible'), 2500);
+            skipBtn?.addEventListener('click', dismiss);
 
-            // Dismiss otomatis saat video selesai
+            // Video selesai
             video.addEventListener('ended', () => {
-                progress.style.width = '100%';
-                progress.style.transitionDuration = '0.3s';
-                setTimeout(dismiss, 300);
+                vidPct = 80; setBar(vidPct + appPct);
+                // Tunggu app ready atau max 1.5 detik lagi
+                if(appReady) dismiss();
+                else setTimeout(dismiss, 1500);
             });
 
-            // Fallback: kalau video gagal load atau error → langsung dismiss
-            video.addEventListener('error', dismiss);
-            setTimeout(() => { if(!dismissed) dismiss(); }, 12000); // max 12 detik
+            // Autoplay diblokir → tampilkan fallback
+            const playPromise = video.play();
+            if(playPromise !== undefined) {
+                playPromise.catch(() => {
+                    fallback?.classList.add('show');
+                    video.style.display = 'none';
+                    // Animasi bar fake sampai app ready
+                    let t = 0;
+                    const iv = setInterval(() => {
+                        t += 2;
+                        vidPct = Math.min(80, t);
+                        setBar(vidPct + appPct);
+                        if(t >= 80) clearInterval(iv);
+                    }, 60);
+                    // Auto dismiss setelah 3 detik
+                    setTimeout(dismiss, 3000);
+                });
+            }
+
+            // Error video
+            video.addEventListener('error', () => {
+                fallback?.classList.add('show');
+                setTimeout(dismiss, 2500);
+            });
+
+            // Paksa dismiss max 15 detik
+            setTimeout(() => { if(!dismissed) dismiss(); }, 15000);
         })();
     </script>
 </body>
