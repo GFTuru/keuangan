@@ -3,20 +3,28 @@
 // Dijalankan oleh GitHub Actions setiap menit
 // ================================================================
 
-const admin = require('firebase-admin');
+// notify.js
 
-// Init Firebase Admin dengan service account dari GitHub Secrets
+// === BAGIAN UPDATE UTAMA UNTUK MEMBACA KREDENSIAL ===
+const admin = require('firebase-admin'); 
+// Buat objek kredensial dari environment variable USER
+const serviceAccount = {
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL, // Gunakan nama variabel kamu
+  // Kita perlu menangani baris baru (\n) yang mungkin hilang saat menyimpan private key
+  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Gunakan nama variabel kamu
+  projectId: process.env.FIREBASE_PROJECT_ID, // Gunakan nama variabel kamu
+};
+
+// Validasi sederhana: Pastikan ketiga kredensial tersedia
+if (!serviceAccount.clientEmail || !serviceAccount.privateKey || !serviceAccount.projectId) {
+  console.error("Error: Satu atau lebih kredensial Firebase (FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY, FIREBASE_PROJECT_ID) tidak didefinisikan di environment variable!");
+  process.exit(1); // Hentikan script dengan error
+}
+
+// Inisialisasi Firebase Admin SDK dengan kredensial tersebut
 admin.initializeApp({
-  credential: admin.credential.cert({
-    projectId:   process.env.FIREBASE_PROJECT_ID,
-    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    privateKey:  process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-  }),
-  databaseURL: 'https://bygf-6f77-default-rtdb.asia-southeast1.firebasedatabase.app'
+  credential: admin.credential.cert(serviceAccount),
 });
-
-const db        = admin.database();
-const messaging = admin.messaging();
 
 // ── Waktu sekarang dalam zona Jakarta (UTC+7) ──
 function getJakartaTime() {
