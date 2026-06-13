@@ -444,7 +444,238 @@
         body:not(.is-premium) .theme-swatch:not(:first-child) { opacity: 0.45; cursor: not-allowed; }
         body:not(.is-premium) .theme-swatch:first-child { opacity: 1; cursor: pointer; }
 
-        /* ── PWA Install Prompt ── */
+        /* ── NEW HOME SCREEN STYLES ── */
+
+        /* Hero Balance */
+        .home-hero {
+            background: var(--primary-gradient);
+            border-radius: var(--radius-xl);
+            padding: 1.75rem 1.75rem 2.25rem;
+            margin-bottom: 1rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 12px 30px -8px hsla(var(--hue-primary), var(--sat-primary), 50%, 0.4);
+        }
+        .home-hero::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 180px; height: 180px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+        }
+        .home-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; left: -30px;
+            width: 200px; height: 200px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .home-hero-greeting {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.75);
+            margin-bottom: 0.25rem;
+            position: relative; z-index: 1;
+        }
+        .home-hero-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.65);
+            position: relative; z-index: 1;
+        }
+        .home-hero-amount {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin: 0.25rem 0 1.25rem;
+            position: relative; z-index: 1;
+        }
+        .home-hero-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            position: relative; z-index: 1;
+        }
+        .home-mini-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-md);
+            padding: 0.875rem 1rem;
+            min-height: 70px;
+        }
+        .home-mini-card .bc-label {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.75);
+            margin-bottom: 0.4rem;
+        }
+        .home-mini-card .bc-value {
+            font-size: 1rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        /* Quick Stats Row */
+        .home-stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .home-stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 0.875rem 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .home-stat-icon {
+            width: 34px; height: 34px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .home-stat-pill.income .home-stat-icon {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+        .home-stat-pill.expense .home-stat-icon {
+            background: var(--danger-light);
+            color: var(--danger-dark);
+        }
+        .home-stat-val {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.1;
+        }
+        .home-stat-lbl {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 0.1rem;
+        }
+
+        /* Tx Card */
+        .home-tx-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+        .home-tx-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+        .home-tx-title {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .home-tx-icon-wrap {
+            width: 32px; height: 32px;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+        }
+
+        /* Type Toggle */
+        .tx-type-toggle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-body);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            gap: 4px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 1.25rem;
+        }
+        .tx-type-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: calc(var(--radius-md) - 2px);
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-muted);
+            background: transparent;
+            transition: all var(--transition-normal);
+        }
+        #txTypeBtnIn.active {
+            background: var(--success-light);
+            color: var(--success-dark);
+            box-shadow: var(--shadow-sm);
+        }
+        #txTypeBtnOut.active {
+            background: var(--danger-light);
+            color: var(--danger-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Big Amount Input */
+        .tx-amount-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-body);
+            border: 2px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0.25rem;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .tx-amount-wrap:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        .tx-currency {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .tx-amount-input {
+            flex: 1;
+            border: none !important;
+            background: transparent !important;
+            font-size: 1.75rem !important;
+            font-weight: 800 !important;
+            color: var(--text-main) !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            letter-spacing: -0.02em;
+        }
+        .tx-amount-input:focus {
+            outline: none !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        .tx-amount-input::placeholder { color: var(--border-medium); }
+
+        /* ── END NEW HOME SCREEN STYLES ── */
         #installBanner { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%) translateY(120px); width: calc(100% - 2rem); max-width: 480px; background: linear-gradient(135deg, #312e81, #1e1b4b); border: 1px solid rgba(99,102,241,0.4); border-radius: 18px; padding: 1rem 1.1rem; display: flex; align-items: center; gap: 0.9rem; box-shadow: 0 -4px 30px rgba(79,70,229,0.3), 0 10px 40px rgba(0,0,0,0.4); z-index: 9998; transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; opacity: 0; pointer-events: none; }
         #installBanner.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: all; }
         #installBanner .ib-icon { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
@@ -765,27 +996,35 @@
 
         <!-- 1. TAB INPUT -->
         <main class="app-section active" id="view-input">
-            <!-- Balances -->
-            <section class="balance-grid" id="balanceCards">
-                <div class="balance-card bc-cash skeleton"></div>
-                <div class="balance-card bc-saldo skeleton"></div>
-            </section>
 
-            <!-- Paylater Form -->
-            <section class="paylater-wrapper" id="paylaterSection">
-                <div class="paylater-header">
-                    <h3 class="text-sm font-bold" style="color: white; margin: 0;">💳 Tagihan & Cicilan</h3>
-                    <button class="btn btn-sm btn-outline" style="border-color: #475569; color: white;" onclick="App.UI.showModal('paylaterModal')">+ Tambah</button>
+            <!-- Hero Balance Strip -->
+            <div class="home-hero">
+                <div class="home-hero-greeting" id="homeGreeting">Selamat datang 👋</div>
+                <div class="home-hero-label">Total Saldo Bersih</div>
+                <div class="home-hero-amount" id="homeNetBalance">Rp 0</div>
+                <div class="home-hero-cards" id="balanceCards">
+                    <div class="home-mini-card bc-cash skeleton"></div>
+                    <div class="home-mini-card bc-saldo skeleton"></div>
                 </div>
-                <div class="paylater-list" id="paylaterList">
-                    <div class="skeleton" style="height: 60px; background: rgba(255,255,255,0.1);"></div>
+            </div>
+
+            <!-- Quick Stats Row -->
+            <div class="home-stats-row">
+                <div class="home-stat-pill income">
+                    <span class="home-stat-icon">↑</span>
+                    <div>
+                        <div class="home-stat-val" id="homeMonthIn">Rp 0</div>
+                        <div class="home-stat-lbl">Masuk bulan ini</div>
+                    </div>
                 </div>
-                <!-- Area Total Paylater -->
-                <div style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 1rem; text-align: right; display: flex; justify-content: space-between; align-items: center;">
-                    <span class="text-sm" style="color: rgba(255,255,255,0.7);">Total Tagihan Aktif:</span>
-                    <span class="font-bold text-lg" style="color: #fecdd3;" id="paylaterTotalAmount">Rp 0</span>
+                <div class="home-stat-pill expense">
+                    <span class="home-stat-icon">↓</span>
+                    <div>
+                        <div class="home-stat-val" id="homeMonthOut">Rp 0</div>
+                        <div class="home-stat-lbl">Keluar bulan ini</div>
+                    </div>
                 </div>
-            </section>
+            </div>
 
             <!-- Utang Piutang Section -->
             <section class="debt-wrapper" id="debtSection">
@@ -807,24 +1046,46 @@
                 </div>
             </section>
 
-            <div class="card">
-                <div class="section-title"><span>📝 Catat Transaksi</span></div>
+            <!-- Catat Transaksi Card - Modern Redesign -->
+            <div class="home-tx-card">
+                <div class="home-tx-header">
+                    <div class="home-tx-title">
+                        <div class="home-tx-icon-wrap">✍️</div>
+                        <span>Catat Transaksi</span>
+                    </div>
+                </div>
                 <form id="txForm" onsubmit="App.Handlers.addTransaction(event)">
-                    <div class="grid-2">
+                    <!-- Type Toggle -->
+                    <div class="tx-type-toggle">
+                        <button type="button" class="tx-type-btn active" id="txTypeBtnIn" onclick="App.UI.setTxType('in')">
+                            <span>⬆</span> Pemasukan
+                        </button>
+                        <button type="button" class="tx-type-btn" id="txTypeBtnOut" onclick="App.UI.setTxType('out')">
+                            <span>⬇</span> Pengeluaran
+                        </button>
+                    </div>
+
+                    <!-- Amount input big -->
+                    <div class="tx-amount-wrap">
+                        <span class="tx-currency">Rp</span>
+                        <input type="text" id="txAmountDisplay" class="tx-amount-input" placeholder="0" inputmode="numeric"
+                            oninput="App.UI.syncTxAmount(this)" autocomplete="off">
+                    </div>
+                    <input type="hidden" id="txIn">
+                    <input type="hidden" id="txOut">
+                    <div class="error-text" id="err-tx">Nominal wajib diisi</div>
+
+                    <div class="grid-2" style="margin-top:1rem;">
                         <div class="form-group"><label>📅 Tanggal</label><input type="date" id="txDate" required></div>
-                        <div class="form-group"><label>🏦 Akun / Sumber</label>
+                        <div class="form-group"><label>🏦 Akun</label>
                             <select id="txAccount" required>
                                 <option value="cash">💵 Cash / Tunai</option>
                                 <option value="saldo">🪪 Saldo Bank / E-Wallet</option>
                             </select>
                         </div>
                     </div>
-                    <div class="grid-2">
-                        <div class="form-group"><label>💰 Pemasukan (+)</label><input type="text" id="txIn" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this)"><div class="error-text" id="err-tx">Nominal wajib diisi</div></div>
-                        <div class="form-group"><label>💸 Pengeluaran (-)</label><input type="text" id="txOut" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
-                    </div>
                     <div class="form-group"><label>📂 Kategori</label><select id="txCategory" required></select></div>
-                    <div class="form-group"><label>📝 Keterangan Singkat</label><input type="text" id="txNote" placeholder="Cth: Gaji bulanan, Bensin, dll"></div>
+                    <div class="form-group"><label>📝 Keterangan</label><input type="text" id="txNote" placeholder="Cth: Gaji bulanan, Bensin, dll"></div>
 
                     <div class="form-group" style="background: var(--bg-body); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
                         <label class="switch-wrapper" style="margin: 0;">
@@ -837,7 +1098,7 @@
                             <select id="txRecurringType"><option value="daily">Setiap Hari</option><option value="weekly">Setiap Minggu</option><option value="monthly">Setiap Bulan</option></select>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem;">Simpan Transaksi</button>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem; margin-top: 0.25rem;">Simpan Transaksi</button>
                 </form>
             </div>
         </main>
@@ -893,6 +1154,21 @@
 
         <!-- 4. TAB PLANNING (BUDGET & TARGET) -->
         <main class="app-section" id="view-planning">
+            <!-- Tagihan & Cicilan (Paylater) -->
+            <section class="paylater-wrapper" id="paylaterSection">
+                <div class="paylater-header">
+                    <h3 class="text-sm font-bold" style="color: white; margin: 0;">💳 Tagihan & Cicilan</h3>
+                    <button class="btn btn-sm btn-outline" style="border-color: #475569; color: white;" onclick="App.UI.showModal('paylaterModal')">+ Tambah</button>
+                </div>
+                <div class="paylater-list" id="paylaterList">
+                    <div class="skeleton" style="height: 60px; background: rgba(255,255,255,0.1);"></div>
+                </div>
+                <div style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 1rem; text-align: right; display: flex; justify-content: space-between; align-items: center;">
+                    <span class="text-sm" style="color: rgba(255,255,255,0.7);">Total Tagihan Aktif:</span>
+                    <span class="font-bold text-lg" style="color: #fecdd3;" id="paylaterTotalAmount">Rp 0</span>
+                </div>
+            </section>
+
             <!-- Budget -->
             <div class="card">
                 <div class="section-title"><span>💸 Rencana Budget</span><button class="btn btn-primary btn-sm" onclick="App.Handlers.openBudgetModal()">+ Buat Budget</button></div>
@@ -1045,7 +1321,7 @@
                 <button class="nav-item active" onclick="App.UI.switchTab('input', this)"><div class="nav-icon">✍️</div><span class="nav-label">Input</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('history', this)"><div class="nav-icon">🕰️</div><span class="nav-label">Riwayat</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('analytics', this)"><div class="nav-icon">📈</div><span class="nav-label">Analisis</span></button>
-                <button class="nav-item" onclick="App.UI.switchTab('planning', this)"><div class="nav-icon">🎯</div><span class="nav-label">Rencana</span></button>
+                <button class="nav-item" onclick="App.UI.switchTab('planning', this)"><div class="nav-icon">🗂️</div><span class="nav-label">Kelola</span></button>
                 <button class="nav-item" id="navSettingsTab" onclick="App.UI.switchTab('settings', this)"><div class="nav-icon">⚙️</div><span class="nav-label">Setelan</span></button>
                 <button class="nav-item" id="navAdminTab" style="display: none;" onclick="App.UI.switchTab('admin', this)"><div class="nav-icon">🛡️</div><span class="nav-label">Admin</span></button>
             </div>
@@ -1322,7 +1598,7 @@
             Config: {
                 // ⚠️  GANTI dengan VAPID Key dari Firebase Console →
                 //    Project Settings → Cloud Messaging → Web Push certificates
-                VapidKey: 'BDCpoWJ8teHPVbStjXx2LxbF7Rs5ktLY3SQa4J9dMp6fH_y30XXNBdyo9pe3n7IAdmD5-UXJgyYcFa4pYUFDdnE_KAMU',
+                VapidKey: 'GANTI_DENGAN_VAPID_KEY_KAMU',
                 Firebase: { 
                     apiKey: "AIzaSyCI32Fl3oFo8MqcFfaWOae73vbP-aKqqSw",
                     authDomain: "bygf-6f77.firebaseapp.com",
@@ -1819,6 +2095,27 @@
                     const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
                     const dateEl = document.getElementById('currentDateStr'); if (dateEl) dateEl.textContent = dateStr;
                     this.renderCategoriesSelect();
+                    // init tx type to 'in'
+                    this._txType = 'in';
+                },
+                setTxType(type) {
+                    this._txType = type;
+                    const btnIn = document.getElementById('txTypeBtnIn');
+                    const btnOut = document.getElementById('txTypeBtnOut');
+                    if(btnIn) btnIn.classList.toggle('active', type === 'in');
+                    if(btnOut) btnOut.classList.toggle('active', type === 'out');
+                    // sync hidden fields
+                    this.syncTxAmount(document.getElementById('txAmountDisplay'));
+                },
+                syncTxAmount(el) {
+                    if(!el) return;
+                    App.Utils.formatInput(el);
+                    const raw = App.Utils.parseCurrency(el.value);
+                    const inEl = document.getElementById('txIn');
+                    const outEl = document.getElementById('txOut');
+                    const type = this._txType || 'in';
+                    if(inEl) inEl.value = type === 'in' ? (raw || '') : '';
+                    if(outEl) outEl.value = type === 'out' ? (raw || '') : '';
                 },
                 toggleAuthView(showAuth) {
                     const authView = document.getElementById('authView'); const appView = document.getElementById('appContainer');
@@ -1870,10 +2167,30 @@
                         bal[tf.dari] -= tf.jumlah;
                         bal[tf.ke] += tf.jumlah;
                     });
-                    document.getElementById('balanceCards').innerHTML = `
-                        <div class="balance-card bc-cash"><div class="bc-label">💵 Uang Tunai</div><div class="bc-value">${App.Utils.formatCurrency(bal.cash)}</div></div>
-                        <div class="balance-card bc-saldo"><div class="bc-label">🪪 Saldo Bank / E-Wallet</div><div class="bc-value">${App.Utils.formatCurrency(bal.saldo)}</div></div>
+                    // Net balance
+                    const netEl = document.getElementById('homeNetBalance');
+                    if(netEl) netEl.textContent = App.Utils.formatCurrency(bal.cash + bal.saldo);
+                    // Mini balance cards
+                    const balCards = document.getElementById('balanceCards');
+                    if(balCards) balCards.innerHTML = `
+                        <div class="home-mini-card bc-cash"><div class="bc-label">💵 Uang Tunai</div><div class="bc-value">${App.Utils.formatCurrency(bal.cash)}</div></div>
+                        <div class="home-mini-card bc-saldo"><div class="bc-label">🪪 Saldo Bank / E-Wallet</div><div class="bc-value">${App.Utils.formatCurrency(bal.saldo)}</div></div>
                     `;
+                    // Monthly income/expense stats
+                    const now = new Date(); const thisYM = now.toISOString().slice(0,7);
+                    let monthIn = 0, monthOut = 0;
+                    App.State.transactions.forEach(t => { if(t.tanggal && t.tanggal.startsWith(thisYM)) { monthIn += (t.pemasukan||0); monthOut += (t.pengeluaran||0); } });
+                    const inEl = document.getElementById('homeMonthIn'); const outEl = document.getElementById('homeMonthOut');
+                    if(inEl) inEl.textContent = App.Utils.formatCurrency(monthIn);
+                    if(outEl) outEl.textContent = App.Utils.formatCurrency(monthOut);
+                    // Greeting
+                    const greetEl = document.getElementById('homeGreeting');
+                    if(greetEl && App.State.user) {
+                        const name = (App.State.user.displayName || App.State.user.email.split('@')[0]).split(' ')[0];
+                        const h = now.getHours();
+                        const salam = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam';
+                        greetEl.textContent = `${salam}, ${name} 👋`;
+                    }
                 },
                 renderPaylaters() {
                     const list = document.getElementById('paylaterList'); const totalEl = document.getElementById('paylaterTotalAmount');
@@ -2161,8 +2478,8 @@
                 addTransaction(e) {
                     e.preventDefault();
                     const p = App.Utils.parseCurrency(document.getElementById('txIn').value); const out = App.Utils.parseCurrency(document.getElementById('txOut').value); const errorEl = document.getElementById('err-tx');
-                    if (p === 0 && out === 0) { document.getElementById('txIn').classList.add('input-error'); errorEl.classList.add('show'); return; }
-                    document.getElementById('txIn').classList.remove('input-error'); errorEl.classList.remove('show');
+                    if (p === 0 && out === 0) { const amtDisp = document.getElementById('txAmountDisplay'); if(amtDisp) amtDisp.style.outline = '2px solid var(--danger)'; errorEl.classList.add('show'); return; }
+                    const amtDisp2 = document.getElementById('txAmountDisplay'); if(amtDisp2) amtDisp2.style.outline = ''; errorEl.classList.remove('show');
                     if (document.getElementById('txRecurring').checked && !App.State.isPremium && App.State.recurring.length >= App.Config.FreeLimits.recurring) { App.UI.showToast(`Batas otomatisasi (${App.Config.FreeLimits.recurring}) tercapai.`, 'error'); App.UI.showModal('premiumModal'); return; }
 
                     const tx = { id: Date.now(), tanggal: document.getElementById('txDate').value, jenisAkun: document.getElementById('txAccount').value, pemasukan: p, pengeluaran: out, kategori: document.getElementById('txCategory').value, keterangan: document.getElementById('txNote').value.trim() };
@@ -2173,7 +2490,7 @@
                         if(type === 'daily') nextDate.setDate(nextDate.getDate() + 1); else if(type === 'weekly') nextDate.setDate(nextDate.getDate() + 7); else if(type === 'monthly') nextDate.setMonth(nextDate.getMonth() + 1);
                         App.State.recurring.push({ id: Date.now(), type, template: tx, lastExecuted: tx.tanggal, nextExecution: nextDate.toISOString().split('T')[0], status: 'active' });
                     }
-                    App.DB.save(); App.UI.renderAll(); e.target.reset(); App.UI.init(); document.getElementById('txRecurring').checked = false; document.getElementById('recurringOpts').style.display = 'none'; App.UI.showToast('Transaksi Berhasil Dicatat!', 'success');
+                    App.DB.save(); App.UI.renderAll(); e.target.reset(); App.UI.init(); App.UI.setTxType('in'); document.getElementById('txRecurring').checked = false; document.getElementById('recurringOpts').style.display = 'none'; App.UI.showToast('Transaksi Berhasil Dicatat!', 'success');
                     App.Handlers.syncSWState(); App.Handlers.checkBudgetSW();
                 },
                 addPaylater(e) {
