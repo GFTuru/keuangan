@@ -554,7 +554,7 @@
         
 
         /* ══ MODERN HOME ══ */
-        .mh-hero { background: linear-gradient(145deg, hsl(var(--accent-hue),72%,28%) 0%, hsl(var(--accent-hue),65%,40%) 55%, hsl(calc(var(--accent-hue) + 25),70%,46%) 100%); border-radius: 0 0 28px 28px; padding: 1.75rem 1.5rem 2.25rem; color: white; position: relative; overflow: hidden; margin: -1.5rem -1.5rem 1.5rem; }
+        .mh-hero { background: linear-gradient(145deg, hsl(var(--hue-primary),75%,38%) 0%, hsl(var(--hue-primary),70%,52%) 55%, hsl(var(--hue-primary),65%,62%) 100%); border-radius: 0 0 28px 28px; padding: 1.75rem 1.5rem 2.25rem; color: white; position: relative; overflow: hidden; margin: -1.5rem -1.5rem 1.5rem; }
         @media(max-width:640px){ .mh-hero { margin: -1rem -1rem 1.25rem; padding: 1.5rem 1.25rem 2rem; } }
         .mh-hero::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
         .mh-hero::after  { content:''; position:absolute; bottom:-40px; left:-20px; width:150px; height:150px; border-radius:50%; background:rgba(255,255,255,0.04); pointer-events:none; }
@@ -1006,45 +1006,46 @@
         <main class="app-section" id="view-planning">
 
             <!-- Paylater & Cicilan -->
-            <section class="paylater-wrapper" id="paylaterSection">
-                <div class="paylater-header">
-                    <h3 class="text-sm font-bold" style="color:white;margin:0;">💳 Paylater & Cicilan</h3>
-                    <button class="btn btn-sm btn-outline" style="border-color:#475569;color:white;" onclick="App.UI.showModal('paylaterModal')">+ Tambah</button>
+            <div class="card">
+                <div class="section-title">
+                    <span>💳 Paylater & Cicilan</span>
+                    <button class="btn btn-primary btn-sm" onclick="App.UI.showModal('paylaterModal')">+ Tambah</button>
                 </div>
-                <div class="paylater-list" id="paylaterList"><div class="skeleton" style="height:60px;background:rgba(255,255,255,0.1);"></div></div>
-                <div style="margin-top:1rem;border-top:1px dashed rgba(255,255,255,0.2);padding-top:1rem;display:flex;justify-content:space-between;align-items:center;">
-                    <span class="text-sm" style="color:rgba(255,255,255,0.7);">Total Aktif:</span>
-                    <span class="font-bold text-lg" style="color:#fecdd3;" id="paylaterTotalAmount">Rp 0</span>
+                <p class="text-sm text-muted" style="margin-bottom:1.25rem;">Tagihan cicilan, paylater, dan kredit aktif.</p>
+                <div id="paylaterList"><div class="skeleton" style="height:60px;"></div></div>
+                <div style="margin-top:1rem;border-top:1px dashed var(--border-light);padding-top:0.85rem;display:flex;justify-content:space-between;align-items:center;">
+                    <span class="text-sm text-muted">Total Aktif:</span>
+                    <span class="font-bold text-danger" id="paylaterTotalAmount">Rp 0</span>
                 </div>
-            </section>
+            </div>
 
             <!-- Tagihan Rutin -->
-            <div class="bills-wrapper">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                    <div><h3 class="text-sm font-bold" style="color:white;margin:0;">⚡ Tagihan Rutin</h3>
-                    <p style="color:rgba(255,255,255,0.4);font-size:0.65rem;margin:0.15rem 0 0;">Listrik, air, internet, langganan, dll.</p></div>
-                    <button class="btn btn-sm btn-outline" style="border-color:#38bdf8;color:#7dd3fc;" onclick="App.UI.showModal('billModal')">+ Tambah</button>
+            <div class="card">
+                <div class="section-title">
+                    <span>⚡ Tagihan Rutin</span>
+                    <button class="btn btn-primary btn-sm" onclick="App.UI.showModal('billModal')">+ Tambah</button>
                 </div>
-                <div id="billsList"><div class="skeleton" style="height:52px;background:rgba(255,255,255,0.08);border-radius:10px;"></div></div>
-                <div style="margin-top:0.85rem;padding-top:0.75rem;border-top:1px dashed rgba(255,255,255,0.12);display:flex;justify-content:space-between;">
-                    <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);">Total tagihan bulan ini</span>
-                    <span style="font-size:0.82rem;font-weight:800;color:#7dd3fc;" id="billsTotalAmount">Rp 0</span>
+                <p class="text-sm text-muted" style="margin-bottom:1.25rem;">Listrik, air, internet, langganan bulanan, dll.</p>
+                <div id="billsList"><div class="skeleton" style="height:52px;"></div></div>
+                <div style="margin-top:0.85rem;border-top:1px dashed var(--border-light);padding-top:0.75rem;display:flex;justify-content:space-between;">
+                    <span class="text-sm text-muted">Total tagihan bulan ini</span>
+                    <span class="font-bold text-primary" id="billsTotalAmount">Rp 0</span>
                 </div>
             </div>
 
             <!-- Utang & Piutang -->
-            <section class="debt-wrapper" id="debtSection">
-                <div class="debt-header">
-                    <div><h3 class="text-sm font-bold" style="color:white;margin:0;">🤝 Utang & Piutang</h3>
-                    <p style="color:rgba(255,255,255,0.5);font-size:0.7rem;margin:0.2rem 0 0;">Lacak hutang & tagihan yang belum dibayar</p></div>
-                    <button class="btn btn-sm btn-outline" style="border-color:#5c6bc0;color:white;" onclick="App.UI.showModal('debtModal')">+ Catat</button>
+            <div class="card" id="debtSection">
+                <div class="section-title">
+                    <span>🤝 Utang & Piutang</span>
+                    <button class="btn btn-primary btn-sm" onclick="App.UI.showModal('debtModal')">+ Catat</button>
                 </div>
-                <div id="debtList"><div class="skeleton" style="height:58px;background:rgba(255,255,255,0.08);border-radius:10px;"></div></div>
-                <div style="margin-top:1rem;border-top:1px dashed rgba(255,255,255,0.15);padding-top:0.9rem;display:flex;justify-content:space-between;">
-                    <span class="text-sm" style="color:rgba(255,255,255,0.6);">Hutang: <span style="color:#fca5a5;font-weight:700;" id="debtTotalUtang">Rp 0</span></span>
-                    <span class="text-sm" style="color:rgba(255,255,255,0.6);">Piutang: <span style="color:#6ee7b7;font-weight:700;" id="debtTotalPiutang">Rp 0</span></span>
+                <p class="text-sm text-muted" style="margin-bottom:1.25rem;">Lacak hutang & piutang yang belum diselesaikan.</p>
+                <div id="debtList"><div class="skeleton" style="height:58px;"></div></div>
+                <div style="margin-top:1rem;border-top:1px dashed var(--border-light);padding-top:0.85rem;display:flex;justify-content:space-between;">
+                    <span class="text-sm text-muted">Hutang: <span class="font-bold text-danger" id="debtTotalUtang">Rp 0</span></span>
+                    <span class="text-sm text-muted">Piutang: <span class="font-bold text-success" id="debtTotalPiutang">Rp 0</span></span>
                 </div>
-            </section>
+            </div>
 
             <!-- Budget -->
             <div class="card">
@@ -2216,18 +2217,18 @@
                                 else                   dueBadge = `<span class="bill-due-badge ok">Tgl ${b.dueDay}</span>`;
                             }
                         }
-                        return `<div class="bill-item${isPaid?' paid':''}">
-                            <div class="bill-left">
-                                <div class="bill-icon">${b.icon}</div>
+                        return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg-body);padding:0.75rem 0.9rem;border-radius:var(--radius-md);border-left:3px solid ${isPaid?'var(--success-dark)':'var(--primary)'};margin-bottom:0.6rem;">
+                            <div style="display:flex;align-items:center;gap:0.65rem;flex:1;min-width:0;">
+                                <div style="width:34px;height:34px;border-radius:8px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">${b.icon}</div>
                                 <div>
-                                    <div class="bill-name">${b.name} ${dueBadge}</div>
-                                    <div class="bill-meta">${b.amount ? App.Utils.formatCurrency(b.amount) : 'Estimasi belum diisi'} · ${b.akun==='cash'?'💵 Cash':'🪪 Saldo'}</div>
+                                    <div style="font-weight:700;font-size:0.82rem;color:var(--text-main);">${b.name} ${dueBadge}</div>
+                                    <div style="font-size:0.63rem;color:var(--text-muted);margin-top:0.1rem;">${b.amount ? App.Utils.formatCurrency(b.amount) : 'Estimasi belum diisi'} · ${b.akun==='cash'?'💵 Cash':'🪪 Saldo'}</div>
                                 </div>
                             </div>
                             <div style="display:flex;gap:0.3rem;align-items:center;flex-shrink:0;margin-left:0.5rem;">
-                                <button class="btn btn-sm" style="background:rgba(${isPaid?'255,255,255,0.08':'52,211,153,0.18'});color:${isPaid?'rgba(255,255,255,0.4)':'#34d399'};padding:0.3rem 0.55rem;font-size:0.7rem;border-radius:8px;font-weight:700;" onclick="App.Handlers.payBill(${b.id})">${isPaid?'Batal':'✓ Bayar'}</button>
-                                <button class="btn btn-icon" style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.35);width:26px;height:26px;font-size:0.65rem;" onclick="App.Handlers.openEditBill(${b.id})">✏️</button>
-                                <button class="btn btn-icon" style="background:rgba(239,68,68,0.12);color:#fca5a5;width:26px;height:26px;font-size:0.65rem;" onclick="App.Handlers.deleteBill(${b.id})">🗑️</button>
+                                <button class="btn btn-sm" style="background:${isPaid?'var(--bg-body)':'var(--success-light)'};color:${isPaid?'var(--text-muted)':'var(--success-dark)'};padding:0.3rem 0.55rem;font-size:0.7rem;border-radius:8px;font-weight:700;border:1px solid var(--border-light);" onclick="App.Handlers.payBill(${b.id})">${isPaid?'Batal':'✓ Bayar'}</button>
+                                <button class="btn btn-icon" style="background:var(--primary-light);color:var(--primary);width:26px;height:26px;font-size:0.65rem;" onclick="App.Handlers.openEditBill(${b.id})">✏️</button>
+                                <button class="btn btn-icon" style="background:var(--danger-light);color:var(--danger);width:26px;height:26px;font-size:0.65rem;" onclick="App.Handlers.deleteBill(${b.id})">🗑️</button>
                             </div>
                         </div>`;
                     }).join('');
@@ -2236,7 +2237,7 @@
                 renderPaylaters() {
                     const list = document.getElementById('paylaterList'); const totalEl = document.getElementById('paylaterTotalAmount');
                     if (App.State.isLoading) return;
-                    if (!App.State.paylaters.length) { list.innerHTML = `<p class="text-xs" style="color: #94a3b8;">Belum ada paylater / cicilan aktif.</p>`; if(totalEl) totalEl.textContent = 'Rp 0'; return; }
+                    if (!App.State.paylaters.length) { list.innerHTML = `<p class="text-xs text-muted" style="text-align:center;padding:0.75rem 0;">Belum ada paylater / cicilan aktif.</p>`; if(totalEl) totalEl.textContent = 'Rp 0'; return; }
                     let total = 0;
                     const today = new Date(); today.setHours(0,0,0,0);
                     list.innerHTML = App.State.paylaters.map(p => {
@@ -2252,20 +2253,20 @@
                             else if(dL<=3)  dueBadge = `<span style="font-size:0.6rem;background:rgba(245,158,11,0.25);color:#fcd34d;padding:0.1rem 0.4rem;border-radius:99px;margin-left:0.35rem;font-weight:700;">${dL}h lagi</span>`;
                             else            dueBadge = `<span style="font-size:0.6rem;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);padding:0.1rem 0.4rem;border-radius:99px;margin-left:0.35rem;">${App.Utils.formatDateStr(p.dueDate)}</span>`;
                         }
-                        return `<div class="paylater-item">
+                        return `<div style="display:flex;justify-content:space-between;align-items:flex-start;background:var(--bg-body);padding:0.9rem 1rem;border-radius:var(--radius-md);border-left:4px solid var(--danger);margin-bottom:0.65rem;">
                             <div style="flex:1;min-width:0;">
                                 <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.25rem;">
-                                    <span style="font-weight:600;font-size:0.875rem;">${p.name}</span>${dueBadge}
+                                    <span style="font-weight:700;font-size:0.875rem;color:var(--text-main);">${p.name}</span>${dueBadge}
                                 </div>
                                 <div style="margin-top:0.2rem;">
-                                    <span style="color:#fecdd3;font-weight:800;font-size:1.05rem;">${App.Utils.formatCurrency(p.amount)}</span>
-                                    ${paid > 0 ? `<span style="color:rgba(255,255,255,0.4);font-size:0.7rem;margin-left:0.4rem;">dari ${App.Utils.formatCurrency(orig)}</span>` : ''}
+                                    <span style="color:var(--danger-dark);font-weight:800;font-size:1.05rem;">${App.Utils.formatCurrency(p.amount)}</span>
+                                    ${paid > 0 ? `<span style="color:var(--text-muted);font-size:0.7rem;margin-left:0.4rem;">dari ${App.Utils.formatCurrency(orig)}</span>` : ''}
                                 </div>
-                                ${paid > 0 ? `<div class="paylater-progress"><div class="paylater-progress-fill" style="width:${perc}%"></div></div><div style="font-size:0.65rem;color:rgba(255,255,255,0.4);margin-top:0.2rem;">${perc}% sudah dibayar</div>` : ''}
+                                ${paid > 0 ? `<div class="paylater-progress"><div class="paylater-progress-fill" style="width:${perc}%"></div></div><div style="font-size:0.65rem;color:var(--text-muted);margin-top:0.2rem;">${perc}% sudah dibayar</div>` : ''}
                             </div>
-                            <div class="paylater-actions">
-                                <button class="btn btn-sm" style="background:rgba(52,211,153,0.2);color:#34d399;padding:0.35rem 0.65rem;font-size:0.75rem;font-weight:700;border-radius:8px;" onclick="App.Handlers.openPayoffModal(${p.id})">💳 Bayar</button>
-                                <button class="btn btn-icon" style="background:rgba(239,68,68,0.15);color:#fca5a5;width:30px;height:30px;font-size:0.75rem;" onclick="App.Handlers.deletePaylater(${p.id})">🗑️</button>
+                            <div style="display:flex;gap:0.35rem;align-items:center;flex-shrink:0;margin-left:0.75rem;">
+                                <button class="btn btn-sm" style="background:var(--success-light);color:var(--success-dark);padding:0.35rem 0.65rem;font-size:0.75rem;font-weight:700;border-radius:8px;" onclick="App.Handlers.openPayoffModal(${p.id})">💳 Bayar</button>
+                                <button class="btn btn-icon" style="background:var(--danger-light);color:var(--danger);width:30px;height:30px;font-size:0.75rem;" onclick="App.Handlers.deletePaylater(${p.id})">🗑️</button>
                             </div>
                         </div>`;
                     }).join('');
