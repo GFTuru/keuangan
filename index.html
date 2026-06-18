@@ -554,7 +554,7 @@
         
 
         /* ══ MODERN HOME ══ */
-        .mh-hero { background: linear-gradient(145deg, hsl(var(--hue-primary),75%,38%) 0%, hsl(var(--hue-primary),70%,52%) 55%, hsl(var(--hue-primary),65%,62%) 100%); border-radius: 0 0 28px 28px; padding: 1.75rem 1.5rem 2.25rem; color: white; position: relative; overflow: hidden; margin: -1.5rem -1.5rem 1.5rem; }
+        .mh-hero { background: linear-gradient(145deg, #0e7490 0%, #0891b2 50%, #06b6d4 100%); border-radius: 0 0 28px 28px; padding: 1.75rem 1.5rem 2.25rem; color: white; position: relative; overflow: hidden; margin: -1.5rem -1.5rem 1.5rem; }
         @media(max-width:640px){ .mh-hero { margin: -1rem -1rem 1.25rem; padding: 1.5rem 1.25rem 2rem; } }
         .mh-hero::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
         .mh-hero::after  { content:''; position:absolute; bottom:-40px; left:-20px; width:150px; height:150px; border-radius:50%; background:rgba(255,255,255,0.04); pointer-events:none; }
@@ -863,16 +863,16 @@
             <!-- Quick Actions -->
             <div class="mh-quick">
                 <button class="mh-qa" onclick="document.getElementById('txForm').scrollIntoView({behavior:'smooth'})">
-                    <div class="qa-ico" style="background:var(--primary-gradient);color:white;">➕</div><span class="qa-lbl">Catat</span>
+                    <div class="qa-ico" style="background:linear-gradient(135deg,#0e7490,#06b6d4);">➕</div><span class="qa-lbl">Catat</span>
                 </button>
                 <button class="mh-qa" onclick="App.UI.showModal('transferModal')">
-                    <div class="qa-ico" style="background:linear-gradient(135deg,#0891b2,#06b6d4);">⇄</div><span class="qa-lbl">Transfer</span>
+                    <div class="qa-ico" style="background:linear-gradient(135deg,#0369a1,#0ea5e9);">⇄</div><span class="qa-lbl">Transfer</span>
                 </button>
                 <button class="mh-qa" onclick="App.UI.switchTab('analytics', document.getElementById('navAnalytics'))">
-                    <div class="qa-ico" style="background:linear-gradient(135deg,#7c3aed,#8b5cf6);">📊</div><span class="qa-lbl">Analisis</span>
+                    <div class="qa-ico" style="background:linear-gradient(135deg,#0f766e,#14b8a6);">📊</div><span class="qa-lbl">Analisis</span>
                 </button>
                 <button class="mh-qa" onclick="App.UI.switchTab('planning', document.getElementById('navPlanning'))">
-                    <div class="qa-ico" style="background:linear-gradient(135deg,#065f46,#059669);">🗂️</div><span class="qa-lbl">Kelola</span>
+                    <div class="qa-ico" style="background:linear-gradient(135deg,#155e75,#22d3ee);">🗂️</div><span class="qa-lbl">Kelola</span>
                 </button>
             </div>
 
