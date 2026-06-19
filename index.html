@@ -444,238 +444,7 @@
         body:not(.is-premium) .theme-swatch:not(:first-child) { opacity: 0.45; cursor: not-allowed; }
         body:not(.is-premium) .theme-swatch:first-child { opacity: 1; cursor: pointer; }
 
-        /* ── NEW HOME SCREEN STYLES ── */
-
-        /* Hero Balance */
-        .home-hero {
-            background: var(--primary-gradient);
-            border-radius: var(--radius-xl);
-            padding: 1.75rem 1.75rem 2.25rem;
-            margin-bottom: 1rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 12px 30px -8px hsla(var(--hue-primary), var(--sat-primary), 50%, 0.4);
-        }
-        .home-hero::before {
-            content: '';
-            position: absolute;
-            top: -40px; right: -40px;
-            width: 180px; height: 180px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 50%;
-        }
-        .home-hero::after {
-            content: '';
-            position: absolute;
-            bottom: -60px; left: -30px;
-            width: 200px; height: 200px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
-        }
-        .home-hero-greeting {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: rgba(255,255,255,0.75);
-            margin-bottom: 0.25rem;
-            position: relative; z-index: 1;
-        }
-        .home-hero-label {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.65);
-            position: relative; z-index: 1;
-        }
-        .home-hero-amount {
-            font-size: 2.25rem;
-            font-weight: 800;
-            color: white;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            margin: 0.25rem 0 1.25rem;
-            position: relative; z-index: 1;
-        }
-        .home-hero-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-            position: relative; z-index: 1;
-        }
-        .home-mini-card {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: var(--radius-md);
-            padding: 0.875rem 1rem;
-            min-height: 70px;
-        }
-        .home-mini-card .bc-label {
-            font-size: 0.72rem;
-            color: rgba(255,255,255,0.75);
-            margin-bottom: 0.4rem;
-        }
-        .home-mini-card .bc-value {
-            font-size: 1rem;
-            font-weight: 800;
-            color: white;
-        }
-
-        /* Quick Stats Row */
-        .home-stats-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-            margin-bottom: 1.25rem;
-        }
-        .home-stat-pill {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            padding: 0.875rem 1rem;
-            box-shadow: var(--shadow-sm);
-        }
-        .home-stat-icon {
-            width: 34px; height: 34px;
-            border-radius: var(--radius-sm);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.95rem;
-            font-weight: 800;
-            flex-shrink: 0;
-        }
-        .home-stat-pill.income .home-stat-icon {
-            background: var(--success-light);
-            color: var(--success-dark);
-        }
-        .home-stat-pill.expense .home-stat-icon {
-            background: var(--danger-light);
-            color: var(--danger-dark);
-        }
-        .home-stat-val {
-            font-size: 0.9rem;
-            font-weight: 800;
-            color: var(--text-main);
-            line-height: 1.1;
-        }
-        .home-stat-lbl {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            margin-top: 0.1rem;
-        }
-
-        /* Tx Card */
-        .home-tx-card {
-            background: var(--bg-surface);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-light);
-        }
-        .home-tx-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-        }
-        .home-tx-title {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-        .home-tx-icon-wrap {
-            width: 32px; height: 32px;
-            background: var(--primary-light);
-            border-radius: var(--radius-sm);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1rem;
-        }
-
-        /* Type Toggle */
-        .tx-type-toggle {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: var(--bg-body);
-            border-radius: var(--radius-md);
-            padding: 4px;
-            gap: 4px;
-            border: 1px solid var(--border-light);
-            margin-bottom: 1.25rem;
-        }
-        .tx-type-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            padding: 0.6rem 1rem;
-            border: none;
-            border-radius: calc(var(--radius-md) - 2px);
-            font-family: inherit;
-            font-size: 0.875rem;
-            font-weight: 700;
-            cursor: pointer;
-            color: var(--text-muted);
-            background: transparent;
-            transition: all var(--transition-normal);
-        }
-        #txTypeBtnIn.active {
-            background: var(--success-light);
-            color: var(--success-dark);
-            box-shadow: var(--shadow-sm);
-        }
-        #txTypeBtnOut.active {
-            background: var(--danger-light);
-            color: var(--danger-dark);
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* Big Amount Input */
-        .tx-amount-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--bg-body);
-            border: 2px solid var(--border-medium);
-            border-radius: var(--radius-lg);
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 0.25rem;
-            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-        }
-        .tx-amount-wrap:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-light);
-        }
-        .tx-currency {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-        .tx-amount-input {
-            flex: 1;
-            border: none !important;
-            background: transparent !important;
-            font-size: 1.75rem !important;
-            font-weight: 800 !important;
-            color: var(--text-main) !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-            letter-spacing: -0.02em;
-        }
-        .tx-amount-input:focus {
-            outline: none !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-        .tx-amount-input::placeholder { color: var(--border-medium); }
-
-        /* ── END NEW HOME SCREEN STYLES ── */
+        /* ── PWA Install Prompt ── */
         #installBanner { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%) translateY(120px); width: calc(100% - 2rem); max-width: 480px; background: linear-gradient(135deg, #312e81, #1e1b4b); border: 1px solid rgba(99,102,241,0.4); border-radius: 18px; padding: 1rem 1.1rem; display: flex; align-items: center; gap: 0.9rem; box-shadow: 0 -4px 30px rgba(79,70,229,0.3), 0 10px 40px rgba(0,0,0,0.4); z-index: 9998; transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; opacity: 0; pointer-events: none; }
         #installBanner.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: all; }
         #installBanner .ib-icon { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
@@ -766,6 +535,88 @@
         #introFallback.show { display: flex; }
         #introFallback img  { width: 80px; height: 80px; border-radius: 20px; margin-bottom: 1rem; box-shadow: 0 8px 32px rgba(99,102,241,0.4); }
         #introFallback p    { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.5rem; }
+
+        
+        /* ── Bills (Tagihan Rutin) ── */
+        .bills-wrapper { background: linear-gradient(135deg, #0d1f2d 0%, #1a3a4f 100%); border: 1px solid #1e4976; border-radius: var(--radius-xl); padding: 1.5rem; margin-bottom: 1.5rem; color: white; position: relative; overflow: hidden; }
+        .bills-wrapper::before { content:''; position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 70%); border-radius:50%; }
+        .bill-item { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:0.75rem 0.9rem; border-radius:var(--radius-md); border-left:3px solid #38bdf8; margin-bottom:0.6rem; }
+        .bill-item.paid { border-left-color:#34d399; opacity:0.6; }
+        .bill-item .bill-left { display:flex; align-items:center; gap:0.65rem; flex:1; min-width:0; }
+        .bill-item .bill-icon { width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+        .bill-item .bill-name { font-weight:700; font-size:0.82rem; color:white; }
+        .bill-item .bill-meta { font-size:0.63rem; color:rgba(255,255,255,0.4); margin-top:0.1rem; }
+        .bill-due-badge { font-size:0.6rem; padding:0.12rem 0.4rem; border-radius:99px; font-weight:700; }
+        .bill-due-badge.urgent { background:rgba(239,68,68,0.25); color:#fca5a5; }
+        .bill-due-badge.soon   { background:rgba(245,158,11,0.25); color:#fcd34d; }
+        .bill-due-badge.ok     { background:rgba(52,211,153,0.12); color:#6ee7b7; }
+        .bill-due-badge.paid   { background:rgba(52,211,153,0.18); color:#34d399; }
+        
+
+        /* ══ MODERN HOME ══ */
+        .mh-hero { background: linear-gradient(145deg, #0e7490 0%, #0891b2 50%, #06b6d4 100%); border-radius: 0 0 28px 28px; padding: 1.75rem 1.5rem 2.25rem; color: white; position: relative; overflow: hidden; margin: -1.5rem -1.5rem 1.5rem; }
+        @media(max-width:640px){ .mh-hero { margin: -1rem -1rem 1.25rem; padding: 1.5rem 1.25rem 2rem; } }
+        .mh-hero::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.06); pointer-events:none; }
+        .mh-hero::after  { content:''; position:absolute; bottom:-40px; left:-20px; width:150px; height:150px; border-radius:50%; background:rgba(255,255,255,0.04); pointer-events:none; }
+        .mh-greeting { font-size:0.78rem; color:rgba(255,255,255,0.65); margin-bottom:0.3rem; font-weight:500; }
+        .mh-balance-label { font-size:0.65rem; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:0.07em; margin-bottom:0.15rem; }
+        .mh-balance { font-size:2.4rem; font-weight:900; letter-spacing:-0.04em; line-height:1.05; margin-bottom:0.1rem; }
+        .mh-trend { font-size:0.67rem; color:rgba(255,255,255,0.5); margin-bottom:1.25rem; }
+        .mh-accounts { display:flex; gap:0.65rem; }
+        .mh-account-pill { flex:1; background:rgba(255,255,255,0.12); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.18); border-radius:14px; padding:0.6rem 0.85rem; }
+        .mh-account-pill .apl { font-size:0.6rem; color:rgba(255,255,255,0.55); margin-bottom:0.15rem; }
+        .mh-account-pill .apv { font-size:0.88rem; font-weight:800; color:white; }
+        .mh-quick { display:grid; grid-template-columns:repeat(4,1fr); gap:0.75rem; margin-bottom:1.5rem; }
+        .mh-qa { background:var(--bg-card); border:1px solid var(--border-light); border-radius:16px; padding:0.85rem 0.4rem 0.7rem; display:flex; flex-direction:column; align-items:center; gap:0.3rem; cursor:pointer; transition:all 0.2s; box-shadow:var(--shadow-sm); }
+        .mh-qa:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+        .mh-qa .qa-ico { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:1.15rem; color:white; }
+        .mh-qa .qa-lbl { font-size:0.62rem; font-weight:700; color:var(--text-muted); }
+        .mh-month { background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius-xl); padding:1.25rem; margin-bottom:1.25rem; box-shadow:var(--shadow-sm); }
+        .mh-month-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+        .mh-save-chip { font-size:0.65rem; font-weight:700; padding:0.2rem 0.6rem; border-radius:99px; }
+        .mh-bar-row { margin-bottom:0.75rem; }
+        .mh-bar-row:last-child { margin-bottom:0; }
+        .mh-bar-meta { display:flex; justify-content:space-between; margin-bottom:0.35rem; }
+        .mh-bar-meta span:first-child { font-size:0.72rem; color:var(--text-muted); }
+        .mh-bar-meta span:last-child { font-size:0.72rem; font-weight:700; }
+        .mh-bar-track { height:8px; background:var(--bg-body); border-radius:99px; overflow:hidden; }
+        .mh-bar-fill { height:100%; border-radius:99px; transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1); min-width:4px; }
+        .mh-bar-fill.inc { background:linear-gradient(90deg,#10b981,#34d399); }
+        .mh-bar-fill.exp { background:linear-gradient(90deg,#f43f5e,#fb7185); }
+        .mh-cats { display:flex; gap:0.5rem; overflow-x:auto; padding-bottom:0.25rem; margin-bottom:1.25rem; scrollbar-width:none; }
+        .mh-cats::-webkit-scrollbar { display:none; }
+        .mh-cat-chip { background:var(--bg-card); border:1px solid var(--border-light); border-radius:12px; padding:0.55rem 0.75rem; display:flex; flex-direction:column; align-items:center; gap:0.2rem; flex-shrink:0; min-width:70px; box-shadow:var(--shadow-sm); }
+        .mh-cat-chip .cc-ico  { font-size:1.2rem; }
+        .mh-cat-chip .cc-name { font-size:0.6rem; color:var(--text-muted); font-weight:600; white-space:nowrap; max-width:62px; overflow:hidden; text-overflow:ellipsis; }
+        .mh-cat-chip .cc-val  { font-size:0.68rem; font-weight:800; color:var(--text-main); }
+        .mh-tx { display:flex; align-items:center; gap:0.75rem; padding:0.65rem 0.5rem; border-radius:10px; cursor:pointer; transition:background 0.15s; }
+        .mh-tx:hover { background:var(--bg-body); }
+        .mh-tx .ti { width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+        .mh-tx .td { flex:1; min-width:0; }
+        .mh-tx .td .n { font-size:0.82rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .mh-tx .td .m { font-size:0.63rem; color:var(--text-muted); margin-top:0.05rem; }
+        .mh-tx .ta { font-size:0.85rem; font-weight:800; flex-shrink:0; }
+        /* Bills */
+        .bills-wrapper { background: linear-gradient(135deg, #0d1f2d 0%, #1a3a4f 100%); border: 1px solid #1e4976; border-radius: var(--radius-xl); padding: 1.5rem; margin-bottom: 1.5rem; color: white; position: relative; overflow: hidden; }
+        .bills-wrapper::before { content:''; position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 70%); border-radius:50%; }
+        .bill-item { display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:0.75rem 0.9rem; border-radius:var(--radius-md); border-left:3px solid #38bdf8; margin-bottom:0.6rem; }
+        .bill-item.paid { border-left-color:#34d399; opacity:0.6; }
+        .bill-item .bill-left { display:flex; align-items:center; gap:0.65rem; flex:1; min-width:0; }
+        .bill-item .bill-icon { width:34px; height:34px; border-radius:8px; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+        .bill-item .bill-name { font-weight:700; font-size:0.82rem; color:white; }
+        .bill-item .bill-meta { font-size:0.63rem; color:rgba(255,255,255,0.4); margin-top:0.1rem; }
+        .bill-due-badge { font-size:0.6rem; padding:0.12rem 0.4rem; border-radius:99px; font-weight:700; }
+        .bill-due-badge.urgent { background:rgba(239,68,68,0.25); color:#fca5a5; }
+        .bill-due-badge.soon   { background:rgba(245,158,11,0.25); color:#fcd34d; }
+        .bill-due-badge.ok     { background:rgba(52,211,153,0.12); color:#6ee7b7; }
+        .bill-due-badge.paid   { background:rgba(52,211,153,0.18); color:#34d399; }
+        /* Onboarding */
+        .onboarding-overlay { position:fixed; inset:0; z-index:99998; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:1rem; }
+        .onboarding-card { background:var(--bg-card); border-radius:24px; width:100%; max-width:420px; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,0.3); }
+        .onboarding-progress { height:3px; background:var(--border-light); }
+        .onboarding-fill { height:100%; background:var(--primary-gradient); transition:width 0.4s ease; }
+        .onboarding-body { padding:2rem 1.75rem; text-align:center; }
+        .onboarding-footer { padding:1.25rem 1.75rem; border-top:1px solid var(--border-light); display:flex; justify-content:space-between; align-items:center; gap:0.75rem; }
     </style>
 </head>
 <body>
@@ -994,68 +845,84 @@
             </div>
         </main>
 
-        <!-- 1. TAB INPUT -->
+        <!-- 1. HOME TAB — Modern Design -->
         <main class="app-section active" id="view-input">
 
-            <!-- Hero Balance Strip -->
-            <div class="home-hero">
-                <div class="home-hero-greeting" id="homeGreeting">Selamat datang 👋</div>
-                <div class="home-hero-label">Total Saldo Bersih</div>
-                <div class="home-hero-amount" id="homeNetBalance">Rp 0</div>
-                <div class="home-hero-cards" id="balanceCards">
-                    <div class="home-mini-card bc-cash skeleton"></div>
-                    <div class="home-mini-card bc-saldo skeleton"></div>
+            <!-- Hero Balance Card -->
+            <div class="mh-hero">
+                <div class="mh-greeting" id="mhGreeting">Selamat datang 👋</div>
+                <div class="mh-balance-label">Total Kekayaan Bersih</div>
+                <div class="mh-balance" id="mhBalance">Rp 0</div>
+                <div class="mh-trend" id="mhTrend">&nbsp;</div>
+                <div class="mh-accounts">
+                    <div class="mh-account-pill"><div class="apl">💵 Cash</div><div class="apv" id="mhCash">Rp 0</div></div>
+                    <div class="mh-account-pill"><div class="apl">🪪 Saldo Bank</div><div class="apv" id="mhSaldo">Rp 0</div></div>
                 </div>
             </div>
 
-            <!-- Quick Stats Row -->
-            <div class="home-stats-row">
-                <div class="home-stat-pill income">
-                    <span class="home-stat-icon">↑</span>
-                    <div>
-                        <div class="home-stat-val" id="homeMonthIn">Rp 0</div>
-                        <div class="home-stat-lbl">Masuk bulan ini</div>
-                    </div>
+            <!-- Quick Actions -->
+            <div class="mh-quick">
+                <button class="mh-qa" onclick="document.getElementById('txForm').scrollIntoView({behavior:'smooth'})">
+                    <div class="qa-ico" style="background:linear-gradient(135deg,#0e7490,#06b6d4);">➕</div><span class="qa-lbl">Catat</span>
+                </button>
+                <button class="mh-qa" onclick="App.UI.showModal('transferModal')">
+                    <div class="qa-ico" style="background:linear-gradient(135deg,#0369a1,#0ea5e9);">⇄</div><span class="qa-lbl">Transfer</span>
+                </button>
+                <button class="mh-qa" onclick="App.UI.switchTab('analytics', document.getElementById('navAnalytics'))">
+                    <div class="qa-ico" style="background:linear-gradient(135deg,#0f766e,#14b8a6);">📊</div><span class="qa-lbl">Analisis</span>
+                </button>
+                <button class="mh-qa" onclick="App.UI.switchTab('planning', document.getElementById('navPlanning'))">
+                    <div class="qa-ico" style="background:linear-gradient(135deg,#155e75,#22d3ee);">🗂️</div><span class="qa-lbl">Kelola</span>
+                </button>
+            </div>
+
+            <!-- Month Summary -->
+            <div class="mh-month">
+                <div class="mh-month-hdr">
+                    <span class="font-bold text-sm" id="mhMonthTitle">Bulan Ini</span>
+                    <span class="mh-save-chip" id="mhSaveChip" style="background:var(--success-light);color:var(--success-dark);">—</span>
                 </div>
-                <div class="home-stat-pill expense">
-                    <span class="home-stat-icon">↓</span>
-                    <div>
-                        <div class="home-stat-val" id="homeMonthOut">Rp 0</div>
-                        <div class="home-stat-lbl">Keluar bulan ini</div>
-                    </div>
+                <div class="mh-bar-row">
+                    <div class="mh-bar-meta"><span>📈 Pemasukan</span><span class="text-success" id="mhIncome">Rp 0</span></div>
+                    <div class="mh-bar-track"><div class="mh-bar-fill inc" id="mhIncBar" style="width:0%"></div></div>
+                </div>
+                <div class="mh-bar-row">
+                    <div class="mh-bar-meta"><span>📉 Pengeluaran</span><span class="text-danger" id="mhExpense">Rp 0</span></div>
+                    <div class="mh-bar-track"><div class="mh-bar-fill exp" id="mhExpBar" style="width:0%"></div></div>
                 </div>
             </div>
 
-            <!-- Catat Transaksi Card - Modern Redesign -->
-            <div class="home-tx-card">
-                <div class="home-tx-header">
-                    <div class="home-tx-title">
-                        <div class="home-tx-icon-wrap">✍️</div>
-                        <span>Catat Transaksi</span>
-                    </div>
+            <!-- Top Categories -->
+            <div style="margin-bottom:1.25rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
+                    <span class="font-bold text-sm">📂 Pengeluaran Terbesar</span>
+                    <span class="text-xs text-muted" id="mhCatMonth"></span>
                 </div>
+                <div class="mh-cats" id="mhCatChips">
+                    <div class="mh-cat-chip" style="height:72px;min-width:70px;"></div>
+                    <div class="mh-cat-chip" style="height:72px;min-width:70px;"></div>
+                    <div class="mh-cat-chip" style="height:72px;min-width:70px;"></div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="card" style="margin-bottom:1.25rem;">
+                <div class="section-title" style="margin-bottom:0.85rem;">
+                    <span class="font-bold">🕐 Terakhir Dicatat</span>
+                    <button class="btn btn-sm btn-outline" onclick="App.UI.switchTab('history', document.getElementById('navHistory'))">Semua →</button>
+                </div>
+                <div id="mhRecentTx">
+                    <div class="skeleton" style="height:44px;margin-bottom:0.5rem;border-radius:10px;"></div>
+                    <div class="skeleton" style="height:44px;margin-bottom:0.5rem;border-radius:10px;"></div>
+                    <div class="skeleton" style="height:44px;border-radius:10px;"></div>
+                </div>
+            </div>
+
+            <!-- Input Form -->
+            <div class="card">
+                <div class="section-title"><span>📝 Catat Transaksi</span></div>
                 <form id="txForm" onsubmit="App.Handlers.addTransaction(event)">
-                    <!-- Type Toggle -->
-                    <div class="tx-type-toggle">
-                        <button type="button" class="tx-type-btn active" id="txTypeBtnIn" onclick="App.UI.setTxType('in')">
-                            <span>⬆</span> Pemasukan
-                        </button>
-                        <button type="button" class="tx-type-btn" id="txTypeBtnOut" onclick="App.UI.setTxType('out')">
-                            <span>⬇</span> Pengeluaran
-                        </button>
-                    </div>
-
-                    <!-- Amount input big -->
-                    <div class="tx-amount-wrap">
-                        <span class="tx-currency">Rp</span>
-                        <input type="text" id="txAmountDisplay" class="tx-amount-input" placeholder="0" inputmode="numeric"
-                            oninput="App.UI.syncTxAmount(this)" autocomplete="off">
-                    </div>
-                    <input type="hidden" id="txIn">
-                    <input type="hidden" id="txOut">
-                    <div class="error-text" id="err-tx">Nominal wajib diisi</div>
-
-                    <div class="grid-2" style="margin-top:1rem;">
+                    <div class="grid-2">
                         <div class="form-group"><label>📅 Tanggal</label><input type="date" id="txDate" required></div>
                         <div class="form-group"><label>🏦 Akun</label>
                             <select id="txAccount" required>
@@ -1064,21 +931,24 @@
                             </select>
                         </div>
                     </div>
+                    <div class="grid-2">
+                        <div class="form-group"><label>💰 Pemasukan (+)</label><input type="text" id="txIn" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this)"><div class="error-text" id="err-tx">Nominal wajib diisi</div></div>
+                        <div class="form-group"><label>💸 Pengeluaran (-)</label><input type="text" id="txOut" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
+                    </div>
                     <div class="form-group"><label>📂 Kategori</label><select id="txCategory" required></select></div>
                     <div class="form-group"><label>📝 Keterangan</label><input type="text" id="txNote" placeholder="Cth: Gaji bulanan, Bensin, dll"></div>
-
-                    <div class="form-group" style="background: var(--bg-body); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
-                        <label class="switch-wrapper" style="margin: 0;">
+                    <div class="form-group" style="background:var(--bg-body);padding:1.25rem;border-radius:var(--radius-md);border:1px solid var(--border-light);">
+                        <label class="switch-wrapper" style="margin:0;">
                             <div><span class="font-bold text-sm">Otomatisasi Rutin</span><p class="text-xs text-muted" style="margin-top:0.25rem;">Jadikan transaksi berulang otomatis.</p></div>
                             <input type="checkbox" id="txRecurring" onchange="document.getElementById('recurringOpts').style.display = this.checked ? 'block' : 'none'">
                             <div class="switch"></div>
                         </label>
-                        <div id="recurringOpts" style="display: none; margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--border-medium);">
+                        <div id="recurringOpts" style="display:none;margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--border-medium);">
                             <label>Periode Pengulangan</label>
                             <select id="txRecurringType"><option value="daily">Setiap Hari</option><option value="weekly">Setiap Minggu</option><option value="monthly">Setiap Bulan</option></select>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1.1rem; margin-top: 0.25rem;">Simpan Transaksi</button>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding:1rem;font-size:1.05rem;">Simpan Transaksi</button>
                 </form>
             </div>
         </main>
@@ -1132,79 +1002,70 @@
             </div>
         </main>
 
-        <!-- 4. TAB PLANNING (BUDGET & TARGET) -->
+        <!-- 4. TAB KELOLA — Paylater, Tagihan, Hutang, Budget, Goals, Transfer -->
         <main class="app-section" id="view-planning">
-            <!-- Tagihan & Cicilan (Paylater) -->
-            <div class="card" id="paylaterSection">
+
+            <!-- Paylater & Cicilan -->
+            <div class="card">
                 <div class="section-title">
-                    <span>💳 Tagihan & Cicilan</span>
+                    <span>💳 Paylater & Cicilan</span>
                     <button class="btn btn-primary btn-sm" onclick="App.UI.showModal('paylaterModal')">+ Tambah</button>
                 </div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Kelola tagihan paylater atau cicilan bulananmu.</p>
-                <div class="list-group" id="paylaterList">
-                    <div class="skeleton" style="height: 60px;"></div>
-                </div>
-                <div style="margin-top: 1rem; border-top: 1px dashed var(--border-medium); padding-top: 1rem; text-align: right; display: flex; justify-content: space-between; align-items: center;">
-                    <span class="text-sm font-semibold">Total Tagihan Aktif:</span>
-                    <span class="font-bold text-lg text-danger" id="paylaterTotalAmount">Rp 0</span>
+                <p class="text-sm text-muted" style="margin-bottom:1.25rem;">Tagihan cicilan, paylater, dan kredit aktif.</p>
+                <div id="paylaterList"><div class="skeleton" style="height:60px;"></div></div>
+                <div style="margin-top:1rem;border-top:1px dashed var(--border-light);padding-top:0.85rem;display:flex;justify-content:space-between;align-items:center;">
+                    <span class="text-sm text-muted">Total Aktif:</span>
+                    <span class="font-bold text-danger" id="paylaterTotalAmount">Rp 0</span>
                 </div>
             </div>
 
-            <!-- Utang Piutang -->
+            <!-- Tagihan Rutin -->
+            <div class="card">
+                <div class="section-title">
+                    <span>⚡ Tagihan Rutin</span>
+                    <button class="btn btn-primary btn-sm" onclick="App.UI.showModal('billModal')">+ Tambah</button>
+                </div>
+                <p class="text-sm text-muted" style="margin-bottom:1.25rem;">Listrik, air, internet, langganan bulanan, dll.</p>
+                <div id="billsList"><div class="skeleton" style="height:52px;"></div></div>
+                <div style="margin-top:0.85rem;border-top:1px dashed var(--border-light);padding-top:0.75rem;display:flex;justify-content:space-between;">
+                    <span class="text-sm text-muted">Total tagihan bulan ini</span>
+                    <span class="font-bold text-primary" id="billsTotalAmount">Rp 0</span>
+                </div>
+            </div>
+
+            <!-- Utang & Piutang -->
             <div class="card" id="debtSection">
                 <div class="section-title">
                     <span>🤝 Utang & Piutang</span>
                     <button class="btn btn-primary btn-sm" onclick="App.UI.showModal('debtModal')">+ Catat</button>
                 </div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Lacak hutang & tagihan yang belum dibayar</p>
-                <div class="list-group" id="debtList">
-                    <div class="skeleton" style="height: 58px;"></div>
-                </div>
-                <div style="margin-top: 1rem; border-top: 1px dashed var(--border-medium); padding-top: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
-                    <div style="display:flex; gap:1.25rem;">
-                        <span class="text-sm font-semibold">Hutang: <span class="text-danger font-bold" id="debtTotalUtang">Rp 0</span></span>
-                        <span class="text-sm font-semibold">Piutang: <span class="text-success font-bold" id="debtTotalPiutang">Rp 0</span></span>
-                    </div>
+                <p class="text-sm text-muted" style="margin-bottom:1.25rem;">Lacak hutang & piutang yang belum diselesaikan.</p>
+                <div id="debtList"><div class="skeleton" style="height:58px;"></div></div>
+                <div style="margin-top:1rem;border-top:1px dashed var(--border-light);padding-top:0.85rem;display:flex;justify-content:space-between;">
+                    <span class="text-sm text-muted">Hutang: <span class="font-bold text-danger" id="debtTotalUtang">Rp 0</span></span>
+                    <span class="text-sm text-muted">Piutang: <span class="font-bold text-success" id="debtTotalPiutang">Rp 0</span></span>
                 </div>
             </div>
 
             <!-- Budget -->
             <div class="card">
                 <div class="section-title"><span>💸 Rencana Budget</span><button class="btn btn-primary btn-sm" onclick="App.Handlers.openBudgetModal()">+ Buat Budget</button></div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Batasi pengeluaranmu per kategori agar tidak boros.</p>
-                <div id="budgetList" class="list-group"><div class="skeleton" style="height: 100px;"></div></div>
+                <p class="text-sm text-muted" style="margin-bottom:1.5rem;">Batasi pengeluaranmu per kategori agar tidak boros.</p>
+                <div id="budgetList" class="list-group"><div class="skeleton" style="height:100px;"></div></div>
             </div>
 
-            <!-- Target (Goals) -->
+            <!-- Target Impian -->
             <div class="card">
                 <div class="section-title"><span>🎯 Target Impian</span><button class="btn btn-primary btn-sm" onclick="App.Handlers.openGoalModal()">+ Buat Target</button></div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Pisahkan dan pantau uang untuk impian finansialmu.</p>
-                <div id="goalsList" class="list-group"><div class="skeleton" style="height: 100px;"></div></div>
+                <p class="text-sm text-muted" style="margin-bottom:1.5rem;">Pisahkan dan pantau uang untuk impian finansialmu.</p>
+                <div id="goalsList" class="list-group"><div class="skeleton" style="height:100px;"></div></div>
             </div>
 
             <!-- Transfer Antar Akun -->
             <div class="card">
                 <div class="section-title"><span>⇄ Transfer Antar Akun</span><button class="btn btn-primary btn-sm" onclick="App.UI.showModal('transferModal')">+ Transfer</button></div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.25rem;">Pindahkan uang antara Cash dan Saldo Bank tanpa mempengaruhi catatan transaksi.</p>
-                <div id="transfersList" class="list-group"><div class="skeleton" style="height: 70px;"></div></div>
-            </div>
-
-            <!-- Kalkulator Cicilan -->
-            <div class="card">
-                <div class="section-title"><span>🧮 Kalkulator Cicilan</span></div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.25rem;">Hitung estimasi angsuran bulanan sebelum mengambil pinjaman.</p>
-                <div class="grid-2">
-                    <div class="form-group"><label>💰 Jumlah Pinjaman</label><input type="text" id="calcPrincipal" placeholder="Rp 0" inputmode="numeric" oninput="App.Utils.formatInput(this); App.Handlers.calcCicilan()"></div>
-                    <div class="form-group"><label>📅 Tenor (bulan)</label><input type="number" id="calcTenor" placeholder="12" min="1" max="360" oninput="App.Handlers.calcCicilan()"></div>
-                </div>
-                <div class="form-group"><label>📈 Bunga per Bulan (%)</label><input type="number" id="calcRate" placeholder="1.5" step="0.1" min="0" oninput="App.Handlers.calcCicilan()"></div>
-                <div id="calcResult" style="display:none; background:var(--primary-light); border:1px solid var(--primary); border-radius:var(--radius-md); padding:1rem; margin-top:0.5rem;">
-                    <div class="grid-2" style="gap:0.75rem;">
-                        <div style="text-align:center;"><div class="text-xs text-muted" style="margin-bottom:0.25rem;">Angsuran / Bulan</div><div class="font-bold text-primary" style="font-size:1.1rem;" id="calcMonthly">—</div></div>
-                        <div style="text-align:center;"><div class="text-xs text-muted" style="margin-bottom:0.25rem;">Total Bunga</div><div class="font-bold text-danger" style="font-size:1.1rem;" id="calcInterest">—</div></div>
-                    </div>
-                    <div style="text-align:center; margin-top:0.75rem; padding-top:0.75rem; border-top:1px dashed var(--border-medium);"><div class="text-xs text-muted" style="margin-bottom:0.25rem;">Total Pembayaran</div><div class="font-bold" style="font-size:1.25rem;" id="calcTotal">—</div></div>
-                </div>
+                <p class="text-sm text-muted" style="margin-bottom:1.25rem;">Pindahkan uang antara Cash dan Saldo Bank.</p>
+                <div id="transfersList" class="list-group"><div class="skeleton" style="height:70px;"></div></div>
             </div>
         </main>
 
@@ -1320,7 +1181,7 @@
                 <button class="nav-item active" onclick="App.UI.switchTab('input', this)"><div class="nav-icon">✍️</div><span class="nav-label">Input</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('history', this)"><div class="nav-icon">🕰️</div><span class="nav-label">Riwayat</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('analytics', this)"><div class="nav-icon">📈</div><span class="nav-label">Analisis</span></button>
-                <button class="nav-item" onclick="App.UI.switchTab('planning', this)"><div class="nav-icon">🗂️</div><span class="nav-label">Kelola</span></button>
+                <button class="nav-item" onclick="App.UI.switchTab('planning', this)" id="navPlanning"><div class="nav-icon">🗂️</div><span class="nav-label">Kelola</span></button>
                 <button class="nav-item" id="navSettingsTab" onclick="App.UI.switchTab('settings', this)"><div class="nav-icon">⚙️</div><span class="nav-label">Setelan</span></button>
                 <button class="nav-item" id="navAdminTab" style="display: none;" onclick="App.UI.switchTab('admin', this)"><div class="nav-icon">🛡️</div><span class="nav-label">Admin</span></button>
             </div>
@@ -1541,7 +1402,49 @@
             </div>
         </div>
     </div>
-    <div id="paylaterModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('paylaterModal')"><div class="modal-content"><div class="modal-header"><h2>Tagihan Baru</h2><button class="modal-close" onclick="App.UI.closeModal('paylaterModal')">&times;</button></div><form onsubmit="App.Handlers.addPaylater(event)"><div class="form-group"><label>Nama Tagihan</label><input type="text" id="plName" required></div><div class="form-group"><label>Jumlah (Rp)</label><input type="text" id="plAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('paylaterModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
+        <div id="paylaterModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('paylaterModal')">
+        <div class="modal-content" style="max-width:400px;">
+            <div class="modal-header"><h2>💳 Paylater / Cicilan</h2><button class="modal-close" onclick="App.UI.closeModal('paylaterModal')">&times;</button></div>
+            <div class="form-group"><label>Nama Tagihan</label><input type="text" id="plName" placeholder="Cth: GoPay Paylater, Cicilan HP" required></div>
+            <div class="grid-2">
+                <div class="form-group"><label>Jumlah (Rp)</label><input type="text" id="plAmount" inputmode="numeric" oninput="App.Utils.formatInput(this)" required></div>
+                <div class="form-group"><label>Jatuh Tempo (opsional)</label><input type="date" id="plDueDate"></div>
+            </div>
+            <div class="grid-2"><button class="btn btn-secondary" onclick="App.UI.closeModal('paylaterModal')">Batal</button><button class="btn btn-primary" onclick="App.Handlers.addPaylater()">Simpan</button></div>
+        </div>
+    </div>
+
+    <!-- Bill Modal -->
+    <div id="billModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('billModal')">
+        <div class="modal-content" style="max-width:420px;">
+            <div class="modal-header"><h2 id="billModalTitle">⚡ Tambah Tagihan Rutin</h2><button class="modal-close" onclick="App.UI.closeModal('billModal')">&times;</button></div>
+            <input type="hidden" id="billEditId">
+            <div class="grid-2">
+                <div class="form-group"><label>Ikon</label><input type="text" id="billIcon" placeholder="⚡" maxlength="2" required></div>
+                <div class="form-group"><label>Nama Tagihan</label><input type="text" id="billName" placeholder="PLN Listrik" required></div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group"><label>Estimasi (Rp)</label><input type="text" id="billAmount" inputmode="numeric" oninput="App.Utils.formatInput(this)" placeholder="0"></div>
+                <div class="form-group"><label>Tanggal Jatuh Tempo (tiap bulan)</label><input type="number" id="billDueDay" min="1" max="31" placeholder="Tgl 1-31"></div>
+            </div>
+            <div class="form-group"><label>Akun Pembayaran</label>
+                <select id="billAkun"><option value="saldo">🪪 Saldo Bank / E-Wallet</option><option value="cash">💵 Cash / Tunai</option></select>
+            </div>
+            <div class="grid-2"><button class="btn btn-secondary" onclick="App.UI.closeModal('billModal')">Batal</button><button class="btn btn-primary" onclick="App.Handlers.saveBill()">Simpan</button></div>
+        </div>
+    </div>
+
+    <!-- Onboarding Modal -->
+    <div id="onboardingModal" class="onboarding-overlay" style="display:none;">
+        <div class="onboarding-card">
+            <div class="onboarding-progress"><div class="onboarding-fill" id="obProgress" style="width:33%;"></div></div>
+            <div class="onboarding-body" id="obBody"></div>
+            <div class="onboarding-footer">
+                <button class="btn btn-secondary btn-sm" onclick="App.Handlers.onboardingSkip()">Lewati</button>
+                <button class="btn btn-primary" id="obBtnNext" onclick="App.Handlers.onboardingNext()">Lanjut →</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Logout Confirmation Modal -->
     <div id="logoutModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('logoutModal')">
@@ -1589,7 +1492,7 @@
                 user: null,
                 isAdmin: false,
                 isPremium: false,
-                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [], fcmMessaging: null,
+                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [], bills: [], fcmMessaging: null,
                 settings: { reminderEnabled: false, reminderTime: '20:00', morningEnabled: false, morningTime: '08:00', budgetAlertEnabled: false, theme: 'light', accentHue: 244 },
                 isLoading: true, charts: {}, searchTimer: null
             },
@@ -2020,11 +1923,11 @@
                             App.State.isPremium = data.isPremium || false; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
                             App.State.goals = data.goals || []; App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
-                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || [];
+                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || []; App.State.bills = data.bills || [];
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
                         App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll();
-                        if(window._introAppReady) window._introAppReady();
+                        if(window._introAppReady) window._introAppReady(); setTimeout(() => App.Handlers.onboardingStart(), 1000);
                         setTimeout(() => App.Handlers.syncSWState(), 1500); return;
                     }
 
@@ -2036,17 +1939,17 @@
                             App.State.isPremium = data.isPremium || false; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
                             App.State.goals = data.goals || []; App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
-                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || [];
+                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || []; App.State.bills = data.bills || [];
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
                         App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.Handlers.processRecurring(); App.UI.renderAll();
-                        if(window._introAppReady) window._introAppReady();
+                        if(window._introAppReady) window._introAppReady(); setTimeout(() => App.Handlers.onboardingStart(), 1000);
                         setTimeout(() => { App.Handlers.syncSWState(); App.Handlers.checkDueSW(); }, 1500);
                     }, (error) => { console.error("Firebase DB Error:", error); App.UI.updateSyncStatus('error'); });
                 },
                 save() {
                    if (!App.State.user) return;
-                   const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, debts: App.State.debts, settings: App.State.settings, updatedAt: new Date().toISOString() };
+                   const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, debts: App.State.debts, bills: App.State.bills, settings: App.State.settings, updatedAt: new Date().toISOString() };
     
                  // ✅ Selalu backup settings ke backup_v6 agar persist saat refresh
                    localStorage.setItem('backup_v6', JSON.stringify({ settings: App.State.settings }));
@@ -2094,27 +1997,6 @@
                     const dateStr = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
                     const dateEl = document.getElementById('currentDateStr'); if (dateEl) dateEl.textContent = dateStr;
                     this.renderCategoriesSelect();
-                    // init tx type to 'in'
-                    this._txType = 'in';
-                },
-                setTxType(type) {
-                    this._txType = type;
-                    const btnIn = document.getElementById('txTypeBtnIn');
-                    const btnOut = document.getElementById('txTypeBtnOut');
-                    if(btnIn) btnIn.classList.toggle('active', type === 'in');
-                    if(btnOut) btnOut.classList.toggle('active', type === 'out');
-                    // sync hidden fields
-                    this.syncTxAmount(document.getElementById('txAmountDisplay'));
-                },
-                syncTxAmount(el) {
-                    if(!el) return;
-                    App.Utils.formatInput(el);
-                    const raw = App.Utils.parseCurrency(el.value);
-                    const inEl = document.getElementById('txIn');
-                    const outEl = document.getElementById('txOut');
-                    const type = this._txType || 'in';
-                    if(inEl) inEl.value = type === 'in' ? (raw || '') : '';
-                    if(outEl) outEl.value = type === 'out' ? (raw || '') : '';
                 },
                 toggleAuthView(showAuth) {
                     const authView = document.getElementById('authView'); const appView = document.getElementById('appContainer');
@@ -2149,14 +2031,81 @@
                     else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
-                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderGoals(); this.renderTransfers(); this.renderSettings(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
+                renderAll() { this.renderHomeSummary(); this.renderBills(); this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderGoals(); this.renderTransfers(); this.renderSettings(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
                     const ids = ['txCategory', 'filterCategory', 'edit-kategori', 'bCategory'];
                     ids.forEach(id => { const el = document.getElementById(id); if(el) { if(id === 'filterCategory') el.innerHTML = '<option value="">Semua Kategori</option>' + options; else el.innerHTML = options; } });
                 },
-                renderBalances() {
+                renderHomeSummary() {
+                    if(App.State.isLoading) return;
+                    const now = new Date();
+                    const monthStr = now.toISOString().substring(0,7);
+                    const prevStr  = new Date(now.getFullYear(), now.getMonth()-1, 1).toISOString().substring(0,7);
+                    const allCats  = [...App.Config.DefaultCategories, ...(App.State.customCategories||[])];
+                    const txAll    = App.State.transactions || [];
+                    const txMonth  = txAll.filter(t => (t.tanggal||'').startsWith(monthStr));
+                    const txPrev   = txAll.filter(t => (t.tanggal||'').startsWith(prevStr));
+                    const income   = txMonth.reduce((s,t) => s+(t.pemasukan||0), 0);
+                    const expense  = txMonth.reduce((s,t) => s+(t.pengeluaran||0), 0);
+                    const prevInc  = txPrev.reduce((s,t)  => s+(t.pemasukan||0), 0);
+                    const save     = income - expense;
+                    const saveRate = income > 0 ? Math.round((save/income)*100) : 0;
+                    // Saldo per akun (inkl transfer)
+                    let balCash = 0, balSaldo = 0;
+                    txAll.forEach(t => { const a=(t.pemasukan||0)-(t.pengeluaran||0); if(t.jenisAkun==='cash') balCash+=a; else balSaldo+=a; });
+                    (App.State.transfers||[]).forEach(tf => { balCash+=(tf.ke==='cash'?tf.jumlah:0)-(tf.dari==='cash'?tf.jumlah:0); balSaldo+=(tf.ke==='saldo'?tf.jumlah:0)-(tf.dari==='saldo'?tf.jumlah:0); });
+                    const totalBal = balCash + balSaldo;
+                    // Greeting
+                    const h = now.getHours();
+                    const greet = h<11?'Selamat pagi':h<15?'Selamat siang':h<18?'Selamat sore':'Selamat malam';
+                    const uname = App.State.user?.displayName || App.State.user?.username || '';
+                    const el = id => document.getElementById(id);
+                    if(el('mhGreeting'))   el('mhGreeting').textContent   = `${greet}${uname ? ', '+uname : ''} 👋`;
+                    if(el('mhBalance'))    el('mhBalance').textContent    = App.Utils.formatCurrency(totalBal);
+                    if(el('mhCash'))       el('mhCash').textContent       = App.Utils.formatCurrency(balCash);
+                    if(el('mhSaldo'))      el('mhSaldo').textContent      = App.Utils.formatCurrency(balSaldo);
+                    if(el('mhIncome'))     el('mhIncome').textContent     = App.Utils.formatCurrency(income);
+                    if(el('mhExpense'))    el('mhExpense').textContent    = App.Utils.formatCurrency(expense);
+                    if(el('mhMonthTitle')) el('mhMonthTitle').textContent = now.toLocaleDateString('id-ID',{month:'long',year:'numeric'});
+                    // Bar widths
+                    const maxBar = Math.max(income, expense, 1);
+                    if(el('mhIncBar'))  el('mhIncBar').style.width  = Math.round((income/maxBar)*100)+'%';
+                    if(el('mhExpBar'))  el('mhExpBar').style.width  = Math.round((expense/maxBar)*100)+'%';
+                    // Save chip
+                    const sc = el('mhSaveChip');
+                    if(sc) { sc.textContent = income>0 ? `Tabungan ${saveRate}%` : '—'; sc.style.background = saveRate>=20?'var(--success-light)':saveRate>0?'var(--warning-light)':'var(--danger-light)'; sc.style.color = saveRate>=20?'var(--success-dark)':saveRate>0?'var(--warning-dark)':'var(--danger-dark)'; }
+                    // Trend vs last month
+                    if(el('mhTrend')) { if(prevInc>0){ const d=Math.round(((income-prevInc)/prevInc)*100); el('mhTrend').textContent=`${d>=0?'↑':'↓'} ${Math.abs(d)}% pemasukan vs bulan lalu`; } else el('mhTrend').innerHTML='&nbsp;'; }
+                    // Top categories
+                    const expMap = {};
+                    txMonth.filter(t=>!t._source||t._source==='recurring').forEach(t => { if(t.pengeluaran>0) expMap[t.kategori]=(expMap[t.kategori]||0)+t.pengeluaran; });
+                    const topCats = Object.entries(expMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+                    const chips = el('mhCatChips');
+                    if(chips) {
+                        if(el('mhCatMonth')) el('mhCatMonth').textContent = now.toLocaleDateString('id-ID',{month:'long'});
+                        if(!topCats.length) { chips.innerHTML = `<div class="mh-cat-chip"><div class="cc-ico">🎉</div><div class="cc-name">Kosong</div><div class="cc-val">—</div></div>`; }
+                        else chips.innerHTML = topCats.map(([id,amt]) => { const c=allCats.find(x=>x.id===id)||{icon:'📦',name:id}; return `<div class="mh-cat-chip"><div class="cc-ico">${c.icon}</div><div class="cc-name">${c.name}</div><div class="cc-val">${App.Utils.formatCurrency(amt)}</div></div>`; }).join('');
+                    }
+                    // Recent transactions
+                    const recent = txAll.slice().sort((a,b)=>(b.tanggal||'').localeCompare(a.tanggal||'')).slice(0,5);
+                    const rEl = el('mhRecentTx');
+                    if(rEl) {
+                        if(!recent.length) { rEl.innerHTML = `<p class="text-xs text-muted" style="text-align:center;padding:1rem 0;">Belum ada transaksi. Yuk catat yang pertama! 🎉</p>`; }
+                        else rEl.innerHTML = recent.map(t => {
+                            const isInc=(t.pemasukan||0)>0; const amt=isInc?t.pemasukan:t.pengeluaran;
+                            const cat=allCats.find(c=>c.id===t.kategori)||{icon:'📝'};
+                            const srcBadge = t._source==='paylater'?'<span style="font-size:0.58rem;background:rgba(139,92,246,0.15);color:#c4b5fd;padding:0.08rem 0.3rem;border-radius:4px;margin-left:4px;">💳</span>': t._source==='bill'?'<span style="font-size:0.58rem;background:rgba(56,189,248,0.15);color:#7dd3fc;padding:0.08rem 0.3rem;border-radius:4px;margin-left:4px;">⚡</span>':'';
+                            return `<div class="mh-tx" onclick="App.Handlers.openEdit(${t.id})">
+                                <div class="ti" style="${isInc?'background:var(--success-light);color:var(--success-dark);':'background:var(--danger-light);color:var(--danger-dark);'}">${cat.icon}</div>
+                                <div class="td"><div class="n">${t.keterangan||cat.name||'—'}${srcBadge}</div><div class="m">${App.Utils.formatDateStr(t.tanggal)}</div></div>
+                                <span class="ta ${isInc?'text-success':'text-danger'}">${isInc?'+':'-'}${App.Utils.formatNumber(amt)}</span>
+                            </div>`;
+                        }).join('');
+                    }
+                },
+                                renderBalances() {
                     if (App.State.isLoading) return; let bal = { cash: 0, saldo: 0 };
                     App.State.transactions.forEach(t => {
                         const amt = (t.pemasukan || 0) - (t.pengeluaran || 0);
@@ -2166,59 +2115,80 @@
                         bal[tf.dari] -= tf.jumlah;
                         bal[tf.ke] += tf.jumlah;
                     });
-                    // Net balance
-                    const netEl = document.getElementById('homeNetBalance');
-                    if(netEl) netEl.textContent = App.Utils.formatCurrency(bal.cash + bal.saldo);
-                    // Mini balance cards
-                    const balCards = document.getElementById('balanceCards');
-                    if(balCards) balCards.innerHTML = `
-                        <div class="home-mini-card bc-cash"><div class="bc-label">💵 Uang Tunai</div><div class="bc-value">${App.Utils.formatCurrency(bal.cash)}</div></div>
-                        <div class="home-mini-card bc-saldo"><div class="bc-label">🪪 Saldo Bank / E-Wallet</div><div class="bc-value">${App.Utils.formatCurrency(bal.saldo)}</div></div>
+                    document.getElementById('balanceCards').innerHTML = `
+                        <div class="balance-card bc-cash"><div class="bc-label">💵 Uang Tunai</div><div class="bc-value">${App.Utils.formatCurrency(bal.cash)}</div></div>
+                        <div class="balance-card bc-saldo"><div class="bc-label">🪪 Saldo Bank / E-Wallet</div><div class="bc-value">${App.Utils.formatCurrency(bal.saldo)}</div></div>
                     `;
-                    // Monthly income/expense stats
-                    const now = new Date(); const thisYM = now.toISOString().slice(0,7);
-                    let monthIn = 0, monthOut = 0;
-                    App.State.transactions.forEach(t => { if(t.tanggal && t.tanggal.startsWith(thisYM)) { monthIn += (t.pemasukan||0); monthOut += (t.pengeluaran||0); } });
-                    const inEl = document.getElementById('homeMonthIn'); const outEl = document.getElementById('homeMonthOut');
-                    if(inEl) inEl.textContent = App.Utils.formatCurrency(monthIn);
-                    if(outEl) outEl.textContent = App.Utils.formatCurrency(monthOut);
-                    // Greeting
-                    const greetEl = document.getElementById('homeGreeting');
-                    if(greetEl && App.State.user) {
-                        const name = (App.State.user.displayName || App.State.user.email.split('@')[0]).split(' ')[0];
-                        const h = now.getHours();
-                        const salam = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam';
-                        greetEl.textContent = `${salam}, ${name} 👋`;
-                    }
                 },
-                renderPaylaters() {
-                    const list = document.getElementById('paylaterList'); const totalEl = document.getElementById('paylaterTotalAmount');
-                    if (App.State.isLoading) return;
-                    if (!App.State.paylaters.length) { list.innerHTML = `<div class="text-center" style="padding:2rem;"><p class="text-sm text-muted">Belum ada tagihan / pinjaman tercatat.</p></div>`; if(totalEl) totalEl.textContent = 'Rp 0'; return; }
-                    let total = 0;
-                    list.innerHTML = App.State.paylaters.map(p => {
-                        total += p.amount;
-                        const orig = p.originalAmount || p.amount;
-                        const paid = orig - p.amount;
-                        const perc = orig > 0 ? Math.round((paid / orig) * 100) : 0;
-                        const hasProgress = paid > 0;
-                        return `<div class="list-item" style="padding: 1rem; cursor: default;">
-                            <div style="flex:1; min-width:0;">
-                                <div style="font-weight:700; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${p.name}</div>
-                                <div style="margin-top:0.2rem; display: flex; align-items: baseline; gap: 0.4rem;">
-                                    <span class="text-danger" style="font-weight:800; font-size:1.05rem;">${App.Utils.formatCurrency(p.amount)}</span>
-                                    ${hasProgress ? `<span class="text-muted" style="font-size:0.7rem;">dari ${App.Utils.formatCurrency(orig)}</span>` : ''}
+                renderHomeSummary() {
+                    if(App.State.isLoading) return;
+                    const now      = new Date();
+                    const monthStr = now.toISOString().substring(0,7);
+                    const prevDate = new Date(now.getFullYear(), now.getMonth()-1, 1);
+                    const prevStr  = prevDate.toISOString().substring(0,7);
+                    const txAll    = App.State.transactions.filter(t => !t._source || t._source === 'paylater' || t._source === 'bill');
+                    const txMonth  = txAll.filter(t => (t.tanggal||'').startsWith(monthStr));
+                    const txPrev   = txAll.filter(t => (t.tanggal||'').startsWith(prevStr));
+                    const income   = txMonth.reduce((s,t) => s+(t.pemasukan||0), 0);
+                    const expense  = txMonth.reduce((s,t) => s+(t.pengeluaran||0), 0);
+                    const prevInc  = txPrev.reduce((s,t)  => s+(t.pemasukan||0), 0);
+                    const prevExp  = txPrev.reduce((s,t)  => s+(t.pengeluaran||0), 0);
+                    const save     = income - expense;
+                    const saveRate = income > 0 ? Math.round((save/income)*100) : 0;
+                    // Total saldo semua akun
+                    let balCash = 0, balSaldo = 0;
+                    App.State.transactions.forEach(t => { const amt = (t.pemasukan||0)-(t.pengeluaran||0); if(t.jenisAkun==='cash') balCash+=amt; else balSaldo+=amt; });
+                    (App.State.transfers||[]).forEach(tf => { balCash += (tf.dari==='cash'?-tf.jumlah:0) + (tf.ke==='cash'?tf.jumlah:0); balSaldo += (tf.dari==='saldo'?-tf.jumlah:0) + (tf.ke==='saldo'?tf.jumlah:0); });
+                    const totalBal = balCash + balSaldo;
+                    // Greeting
+                    const h = now.getHours();
+                    const greetWord = h < 11 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam';
+                    const name = App.State.user?.displayName || App.State.user?.username || '';
+                    const el = (id) => document.getElementById(id);
+                    if(el('homeGreeting')) el('homeGreeting').textContent = `${greetWord}${name ? ', '+name : ''} 👋`;
+                    if(el('homeTotalBalance')) el('homeTotalBalance').textContent = App.Utils.formatCurrency(totalBal);
+                    if(el('homeBalanceSub')) el('homeBalanceSub').textContent = `Saldo total · ${now.toLocaleDateString('id-ID',{month:'long', year:'numeric'})}`;
+                    if(el('homeMonthIn'))  el('homeMonthIn').textContent  = App.Utils.formatCurrency(income);
+                    if(el('homeMonthOut')) el('homeMonthOut').textContent = App.Utils.formatCurrency(expense);
+                    if(el('homeMonthSave')) el('homeMonthSave').textContent = App.Utils.formatCurrency(Math.abs(save));
+                    if(el('homeMonthSave')) el('homeMonthSave').style.color = save >= 0 ? '#6ee7b7' : '#fca5a5';
+                    // Vs last month
+                    const vsPct = (curr, prev) => { if(!prev) return ''; const d = Math.round(((curr-prev)/prev)*100); return (d>=0?'↑':'↓') + Math.abs(d) + '% vs bln lalu'; };
+                    if(el('homeMonthInVs'))    el('homeMonthInVs').textContent    = vsPct(income, prevInc);
+                    if(el('homeMonthOutVs'))   el('homeMonthOutVs').textContent   = vsPct(expense, prevExp);
+                    if(el('homeMonthSaveRate')) el('homeMonthSaveRate').textContent = income > 0 ? `Tabungan ${saveRate}%` : '';
+                    // Quick stats
+                    const expMap = {};
+                    const allCats = [...App.Config.DefaultCategories, ...App.State.customCategories];
+                    txMonth.filter(t=>t.pengeluaran>0).forEach(t => { expMap[t.kategori] = (expMap[t.kategori]||0) + t.pengeluaran; });
+                    const topCat = Object.entries(expMap).sort((a,b)=>b[1]-a[1])[0];
+                    const topCatObj = topCat ? (allCats.find(c=>c.id===topCat[0])||{icon:'📦',name:topCat[0]}) : null;
+                    if(el('statTopCat')) el('statTopCat').textContent = topCatObj ? `${topCatObj.icon} ${topCatObj.name}` : '—';
+                    if(el('statTxCount')) el('statTxCount').textContent = txMonth.length;
+                    // Budget health
+                    const budgets = App.State.budgets || [];
+                    if(budgets.length > 0) {
+                        const overCount = budgets.filter(b => { const s = txMonth.filter(t=>t.kategori===b.category).reduce((x,t)=>x+(t.pengeluaran||0),0); return s>=b.amount; }).length;
+                        if(el('statBudgetHealth')) el('statBudgetHealth').textContent = overCount > 0 ? `${overCount} Lewat` : '✅ Aman';
+                    } else { if(el('statBudgetHealth')) el('statBudgetHealth').textContent = '—'; }
+                    // Recent transactions
+                    const recent = App.State.transactions.slice().sort((a,b)=>(b.tanggal||'').localeCompare(a.tanggal||'')).slice(0,5);
+                    const rEl = el('homeRecentTx');
+                    if(rEl) {
+                        if(!recent.length) { rEl.innerHTML = `<p class="text-xs text-muted text-center" style="padding:1rem 0;">Belum ada transaksi. Yuk catat yang pertama!</p>`; }
+                        else rEl.innerHTML = recent.map(t => {
+                            const isInc = (t.pemasukan||0) > 0;
+                            const catObj = allCats.find(c=>c.id===t.kategori) || {icon:'📝'};
+                            return `<div class="home-recent-row" onclick="App.Handlers.openEdit(${t.id})" style="cursor:pointer;">
+                                <div class="home-recent-icon" style="${isInc?'background:var(--success-light);color:var(--success-dark);':'background:var(--danger-light);color:var(--danger-dark);'}">${catObj.icon}</div>
+                                <div class="home-recent-info">
+                                    <div class="name">${t.keterangan || catObj.name || '—'}</div>
+                                    <div class="meta">${App.Utils.formatDateStr(t.tanggal)}</div>
                                 </div>
-                                ${hasProgress ? `<div class="progress-track" style="margin-top:0.5rem;"><div class="progress-fill" style="width:${perc}%; background:var(--success);"></div></div>
-                                <div style="font-size:0.65rem; color:var(--text-muted); margin-top:0.2rem;">${perc}% sudah dibayar</div>` : ''}
-                            </div>
-                            <div class="paylater-actions" style="display:flex; gap:0.4rem; align-items:center; margin-left:1rem;">
-                                <button class="btn btn-sm" style="background:var(--success-light); color:var(--success-dark); padding:0.4rem 0.75rem; font-size:0.75rem; font-weight:700; border-radius:8px;" onclick="App.Handlers.openPayoffModal(${p.id})" title="Bayar / Lunas">💳 Bayar</button>
-                                <button class="btn btn-icon" style="background:var(--danger-light); color:var(--danger-dark); width:32px; height:32px; font-size:0.8rem;" onclick="App.Handlers.deletePaylater(${p.id})" title="Hapus tanpa mencatat pembayaran">🗑️</button>
-                            </div>
-                        </div>`;
-                    }).join('');
-                    if(totalEl) totalEl.textContent = App.Utils.formatCurrency(total);
+                                <span class="home-recent-amt ${isInc?'text-success':'text-danger'}">${isInc?'+':'-'}${App.Utils.formatNumber(isInc?t.pemasukan:t.pengeluaran)}</span>
+                            </div>`;
+                        }).join('');
+                    }
                 },
                 renderDebts() {
                     const list = document.getElementById('debtList'); if(!list || App.State.isLoading) return;
@@ -2228,35 +2198,116 @@
                     const tu = document.getElementById('debtTotalUtang'); const tp = document.getElementById('debtTotalPiutang');
                     if(tu) tu.textContent = App.Utils.formatCurrency(totalUtang);
                     if(tp) tp.textContent = App.Utils.formatCurrency(totalPiutang);
-                    if(!debts.length) { list.innerHTML = `<div class="text-center" style="padding:2rem;"><p class="text-sm text-muted">Belum ada catatan utang atau piutang.</p></div>`; return; }
+                    if(!debts.length) { list.innerHTML = '<p class="text-xs text-muted" style="text-align:center;padding:1rem 0;">Belum ada catatan utang atau piutang.</p>'; return; }
                     list.innerHTML = debts.map(d => {
                         const orig = d.originalAmount || d.sisa;
                         const paid = orig - d.sisa;
                         const perc = orig > 0 ? Math.round((paid/orig)*100) : 0;
                         const isUtang = d.tipe === 'utang';
-                        const color   = isUtang ? 'var(--danger)' : 'var(--success)';
-                        const settleLabel = isUtang ? '💸 Bayar' : '✅ Terima';
-                        return `<div class="list-item" style="padding: 1rem; cursor: default;">
-                            <div style="flex:1; min-width:0;">
-                                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
-                                    <span class="badge" style="background:${isUtang ? 'var(--danger-light)' : 'var(--success-light)'}; color:${isUtang ? 'var(--danger-dark)' : 'var(--success-dark)'};">${isUtang ? '🔴 HUTANG' : '🟢 PIUTANG'}</span>
-                                    <span style="font-weight:700; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px; color:var(--text-main);">${d.nama}</span>
+                        const color = isUtang ? 'var(--danger)' : 'var(--success-dark)';
+                        const bgColor = isUtang ? 'var(--danger-light)' : 'var(--success-light)';
+                        const settleLabel = isUtang ? '&#128184; Bayar' : '&#9989; Terima';
+                        const progressBar = paid > 0 ? '<div style="height:3px;background:var(--border-light);border-radius:99px;margin-top:0.4rem;overflow:hidden;"><div style="height:100%;width:' + perc + '%;background:' + color + ';border-radius:99px;"></div></div><div style="font-size:0.63rem;color:var(--text-muted);margin-top:0.15rem;">' + perc + '% ' + (isUtang ? 'sudah dibayar' : 'sudah diterima') + '</div>' : '';
+                        const paidFrom = paid > 0 ? ' <span style="color:var(--text-muted);font-size:0.68rem;">dari ' + App.Utils.formatCurrency(orig) + '</span>' : '';
+                        const catatan = d.catatan ? '<div style="color:var(--text-muted);font-size:0.7rem;margin-top:0.15rem;">' + d.catatan + '</div>' : '';
+                        return '<div style="display:flex;justify-content:space-between;align-items:flex-start;background:var(--bg-body);padding:0.9rem 1rem;border-radius:var(--radius-md);border-left:4px solid ' + color + ';margin-bottom:0.65rem;">'
+                            + '<div style="flex:1;min-width:0;">'
+                            + '<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:0.2rem;">'
+                            + '<span style="font-size:0.62rem;font-weight:800;padding:0.12rem 0.45rem;border-radius:99px;background:' + bgColor + ';color:' + color + ';">' + (isUtang ? '&#128308; HUTANG' : '&#128994; PIUTANG') + '</span>'
+                            + '<span style="font-weight:700;font-size:0.875rem;color:var(--text-main);">' + d.nama + '</span>'
+                            + '</div>'
+                            + '<div><span style="color:' + color + ';font-weight:800;font-size:1rem;">' + App.Utils.formatCurrency(d.sisa) + '</span>' + paidFrom + '</div>'
+                            + catatan + progressBar
+                            + '</div>'
+                            + '<div style="display:flex;gap:0.35rem;align-items:center;flex-shrink:0;margin-left:0.75rem;">'
+                            + '<button class="btn btn-sm" style="background:' + bgColor + ';color:' + color + ';padding:0.35rem 0.6rem;font-size:0.72rem;font-weight:700;border-radius:8px;" onclick="App.Handlers.openSettleDebt(' + d.id + ')">' + settleLabel + '</button>'
+                            + '<button class="btn btn-icon" style="background:var(--danger-light);color:var(--danger);width:28px;height:28px;font-size:0.7rem;" onclick="App.Handlers.deleteDebt(' + d.id + ')">&#128465;</button>'
+                            + '</div></div>';
+                    }).join('');
+                },
+                renderBills() {
+                    const list  = document.getElementById('billsList');
+                    const total = document.getElementById('billsTotalAmount');
+                    if(!list || App.State.isLoading) return;
+                    const bills = App.State.bills || [];
+                    if(!bills.length) {
+                        list.innerHTML = `<p class="text-xs" style="color:rgba(255,255,255,0.4);text-align:center;padding:0.75rem 0;">Belum ada tagihan rutin. Tambahkan tagihan seperti listrik, air, internet.</p>`;
+                        if(total) total.textContent = 'Rp 0'; return;
+                    }
+                    const now = new Date();
+                    const monthKey = now.toISOString().substring(0,7);
+                    let totalAmt = 0;
+                    list.innerHTML = bills.map(b => {
+                        const isPaid = (b.paidMonths||[]).includes(monthKey);
+                        if(!isPaid) totalAmt += (b.amount||0);
+                        let dueBadge = '';
+                        if(b.dueDay) {
+                            if(isPaid) {
+                                dueBadge = `<span class="bill-due-badge paid">✓ Lunas</span>`;
+                            } else {
+                                const dueDate = new Date(now.getFullYear(), now.getMonth(), b.dueDay);
+                                const daysLeft = Math.round((dueDate - now) / 86400000);
+                                if(daysLeft < 0)       dueBadge = `<span class="bill-due-badge urgent">Lewat ${Math.abs(daysLeft)}h</span>`;
+                                else if(daysLeft <= 3) dueBadge = `<span class="bill-due-badge soon">Tgl ${b.dueDay} · ${daysLeft}h lagi</span>`;
+                                else                   dueBadge = `<span class="bill-due-badge ok">Tgl ${b.dueDay}</span>`;
+                            }
+                        }
+                        return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg-body);padding:0.75rem 0.9rem;border-radius:var(--radius-md);border-left:3px solid ${isPaid?'var(--success-dark)':'var(--primary)'};margin-bottom:0.6rem;">
+                            <div style="display:flex;align-items:center;gap:0.65rem;flex:1;min-width:0;">
+                                <div style="width:34px;height:34px;border-radius:8px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">${b.icon}</div>
+                                <div>
+                                    <div style="font-weight:700;font-size:0.82rem;color:var(--text-main);">${b.name} ${dueBadge}</div>
+                                    <div style="font-size:0.63rem;color:var(--text-muted);margin-top:0.1rem;">${b.amount ? App.Utils.formatCurrency(b.amount) : 'Estimasi belum diisi'} · ${b.akun==='cash'?'💵 Cash':'🪪 Saldo'}</div>
                                 </div>
-                                <div style="display:flex; align-items:baseline; gap:0.4rem;">
-                                    <span style="color:${color}; font-weight:800; font-size:1rem;">${App.Utils.formatCurrency(d.sisa)}</span>
-                                    ${paid > 0 ? `<span class="text-muted" style="font-size:0.7rem;">dari ${App.Utils.formatCurrency(orig)}</span>` : ''}
-                                </div>
-                                ${d.catatan ? `<div class="text-muted" style="font-size:0.75rem; margin-top:0.15rem;">${d.catatan}</div>` : ''}
-                                ${paid > 0 ? `<div class="progress-track" style="margin-top:0.5rem;"><div class="progress-fill" style="width:${perc}%; background:${color};"></div></div>
-                                <div style="font-size:0.65rem; color:var(--text-muted); margin-top:0.15rem;">${perc}% ${isUtang ? 'sudah dibayar' : 'sudah diterima'}</div>` : ''}
                             </div>
-                            <div class="debt-actions" style="display:flex; gap:0.4rem; align-items:center; margin-left:1rem;">
-                                <button class="btn btn-sm" style="background:var(--primary-light); color:var(--primary-dark); padding:0.4rem 0.75rem; font-size:0.75rem; font-weight:700; border-radius:8px;" onclick="App.Handlers.openSettleDebt(${d.id})">${settleLabel}</button>
-                                <button class="btn btn-icon" style="background:var(--bg-body); border: 1px solid var(--border-medium); color:var(--text-muted); width:32px; height:32px; font-size:0.8rem;" onclick="App.Handlers.deleteDebt(${d.id})" title="Hapus">🗑️</button>
+                            <div style="display:flex;gap:0.3rem;align-items:center;flex-shrink:0;margin-left:0.5rem;">
+                                <button class="btn btn-sm" style="background:${isPaid?'var(--bg-body)':'var(--success-light)'};color:${isPaid?'var(--text-muted)':'var(--success-dark)'};padding:0.3rem 0.55rem;font-size:0.7rem;border-radius:8px;font-weight:700;border:1px solid var(--border-light);" onclick="App.Handlers.payBill(${b.id})">${isPaid?'Batal':'✓ Bayar'}</button>
+                                <button class="btn btn-icon" style="background:var(--primary-light);color:var(--primary);width:26px;height:26px;font-size:0.65rem;" onclick="App.Handlers.openEditBill(${b.id})">✏️</button>
+                                <button class="btn btn-icon" style="background:var(--danger-light);color:var(--danger);width:26px;height:26px;font-size:0.65rem;" onclick="App.Handlers.deleteBill(${b.id})">🗑️</button>
                             </div>
                         </div>`;
                     }).join('');
+                    if(total) total.textContent = App.Utils.formatCurrency(totalAmt);
                 },
+                renderPaylaters() {
+                    const list = document.getElementById('paylaterList'); const totalEl = document.getElementById('paylaterTotalAmount');
+                    if (App.State.isLoading) return;
+                    if (!App.State.paylaters.length) { list.innerHTML = `<p class="text-xs text-muted" style="text-align:center;padding:0.75rem 0;">Belum ada paylater / cicilan aktif.</p>`; if(totalEl) totalEl.textContent = 'Rp 0'; return; }
+                    let total = 0;
+                    const today = new Date(); today.setHours(0,0,0,0);
+                    list.innerHTML = App.State.paylaters.map(p => {
+                        total += p.amount;
+                        const orig = p.originalAmount || p.amount;
+                        const paid = orig - p.amount;
+                        const perc = orig > 0 ? Math.round((paid / orig) * 100) : 0;
+                        let dueBadge = '';
+                        if(p.dueDate) {
+                            const due = new Date(p.dueDate + 'T00:00:00'); due.setHours(0,0,0,0);
+                            const dL = Math.round((due - today) / 86400000);
+                            if(dL < 0)      dueBadge = `<span style="font-size:0.6rem;background:rgba(239,68,68,0.25);color:#fca5a5;padding:0.1rem 0.4rem;border-radius:99px;margin-left:0.35rem;font-weight:700;">Lewat ${Math.abs(dL)}h</span>`;
+                            else if(dL<=3)  dueBadge = `<span style="font-size:0.6rem;background:rgba(245,158,11,0.25);color:#fcd34d;padding:0.1rem 0.4rem;border-radius:99px;margin-left:0.35rem;font-weight:700;">${dL}h lagi</span>`;
+                            else            dueBadge = `<span style="font-size:0.6rem;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.45);padding:0.1rem 0.4rem;border-radius:99px;margin-left:0.35rem;">${App.Utils.formatDateStr(p.dueDate)}</span>`;
+                        }
+                        return `<div style="display:flex;justify-content:space-between;align-items:flex-start;background:var(--bg-body);padding:0.9rem 1rem;border-radius:var(--radius-md);border-left:4px solid var(--danger);margin-bottom:0.65rem;">
+                            <div style="flex:1;min-width:0;">
+                                <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.25rem;">
+                                    <span style="font-weight:700;font-size:0.875rem;color:var(--text-main);">${p.name}</span>${dueBadge}
+                                </div>
+                                <div style="margin-top:0.2rem;">
+                                    <span style="color:var(--danger-dark);font-weight:800;font-size:1.05rem;">${App.Utils.formatCurrency(p.amount)}</span>
+                                    ${paid > 0 ? `<span style="color:var(--text-muted);font-size:0.7rem;margin-left:0.4rem;">dari ${App.Utils.formatCurrency(orig)}</span>` : ''}
+                                </div>
+                                ${paid > 0 ? `<div class="paylater-progress"><div class="paylater-progress-fill" style="width:${perc}%"></div></div><div style="font-size:0.65rem;color:var(--text-muted);margin-top:0.2rem;">${perc}% sudah dibayar</div>` : ''}
+                            </div>
+                            <div style="display:flex;gap:0.35rem;align-items:center;flex-shrink:0;margin-left:0.75rem;">
+                                <button class="btn btn-sm" style="background:var(--success-light);color:var(--success-dark);padding:0.35rem 0.65rem;font-size:0.75rem;font-weight:700;border-radius:8px;" onclick="App.Handlers.openPayoffModal(${p.id})">💳 Bayar</button>
+                                <button class="btn btn-icon" style="background:var(--danger-light);color:var(--danger);width:30px;height:30px;font-size:0.75rem;" onclick="App.Handlers.deletePaylater(${p.id})">🗑️</button>
+                            </div>
+                        </div>`;
+                    }).join('');
+                    if(totalEl) totalEl.textContent = App.Utils.formatCurrency(total);
+                },
+                
                 renderHistory() {
                     const list = document.getElementById('historyList'); if (App.State.isLoading) return;
                     const q = document.getElementById('filterSearch').value.toLowerCase(); const cat = document.getElementById('filterCategory').value;
@@ -2374,6 +2425,7 @@
                                 </div>
                                 <div style="display:flex;gap:0.35rem;align-items:center;">
                                     <button class="btn btn-sm" style="background:var(--success-light);color:var(--success-dark);font-size:0.75rem;padding:0.3rem 0.65rem;border-radius:8px;font-weight:700;" onclick="App.Handlers.openAddFundModal(${g.id})">+ Tabung</button>
+                                    <button class="btn btn-icon" style="background:var(--primary-light);color:var(--primary);width:28px;height:28px;font-size:0.7rem;" onclick="App.Handlers.openEditGoal(${g.id})" title="Edit">✏️</button>
                                     <button class="btn btn-icon text-danger" style="background:none;" onclick="App.Handlers.deleteGoal(${g.id})">🗑️</button>
                                 </div>
                             </div>
@@ -2436,7 +2488,9 @@
                 },
                 renderAnalytics() {
                     if (App.State.isLoading) return; App.Insights.generate();
-                    const tData = App.State.transactions; const d = new Date(); const currentMonth = d.toISOString().substring(0,7);
+                    // Filter: hanya transaksi reguler (exclude transfer, debt settlement, bill payment)
+                    const tData = App.State.transactions.filter(t => !t._source || t._source === 'recurring');
+                    const d = new Date(); const currentMonth = d.toISOString().substring(0,7);
                     const textColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'; const gridColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#334155' : '#e2e8f0';
                     
                     let expMap = {}; tData.forEach(t => { if(t.pengeluaran > 0 && t.tanggal.substring(0,7) === currentMonth) { expMap[t.kategori] = (expMap[t.kategori]||0) + t.pengeluaran; } });
@@ -2477,8 +2531,8 @@
                 addTransaction(e) {
                     e.preventDefault();
                     const p = App.Utils.parseCurrency(document.getElementById('txIn').value); const out = App.Utils.parseCurrency(document.getElementById('txOut').value); const errorEl = document.getElementById('err-tx');
-                    if (p === 0 && out === 0) { const amtDisp = document.getElementById('txAmountDisplay'); if(amtDisp) amtDisp.style.outline = '2px solid var(--danger)'; errorEl.classList.add('show'); return; }
-                    const amtDisp2 = document.getElementById('txAmountDisplay'); if(amtDisp2) amtDisp2.style.outline = ''; errorEl.classList.remove('show');
+                    if (p === 0 && out === 0) { document.getElementById('txIn').classList.add('input-error'); errorEl.classList.add('show'); return; }
+                    document.getElementById('txIn').classList.remove('input-error'); errorEl.classList.remove('show');
                     if (document.getElementById('txRecurring').checked && !App.State.isPremium && App.State.recurring.length >= App.Config.FreeLimits.recurring) { App.UI.showToast(`Batas otomatisasi (${App.Config.FreeLimits.recurring}) tercapai.`, 'error'); App.UI.showModal('premiumModal'); return; }
 
                     const tx = { id: Date.now(), tanggal: document.getElementById('txDate').value, jenisAkun: document.getElementById('txAccount').value, pemasukan: p, pengeluaran: out, kategori: document.getElementById('txCategory').value, keterangan: document.getElementById('txNote').value.trim() };
@@ -2489,13 +2543,8 @@
                         if(type === 'daily') nextDate.setDate(nextDate.getDate() + 1); else if(type === 'weekly') nextDate.setDate(nextDate.getDate() + 7); else if(type === 'monthly') nextDate.setMonth(nextDate.getMonth() + 1);
                         App.State.recurring.push({ id: Date.now(), type, template: tx, lastExecuted: tx.tanggal, nextExecution: nextDate.toISOString().split('T')[0], status: 'active' });
                     }
-                    App.DB.save(); App.UI.renderAll(); e.target.reset(); App.UI.init(); App.UI.setTxType('in'); document.getElementById('txRecurring').checked = false; document.getElementById('recurringOpts').style.display = 'none'; App.UI.showToast('Transaksi Berhasil Dicatat!', 'success');
+                    App.DB.save(); App.UI.renderAll(); e.target.reset(); App.UI.init(); document.getElementById('txRecurring').checked = false; document.getElementById('recurringOpts').style.display = 'none'; App.UI.showToast('Transaksi Berhasil Dicatat!', 'success');
                     App.Handlers.syncSWState(); App.Handlers.checkBudgetSW();
-                },
-                addPaylater(e) {
-                    e.preventDefault(); const name = document.getElementById('plName').value.trim(); const amt = App.Utils.parseCurrency(document.getElementById('plAmount').value);
-                    if(!name || amt <= 0) return App.UI.showToast('Form tidak valid', 'error');
-                    App.State.paylaters.push({id: Date.now(), name, amount: amt, originalAmount: amt}); App.DB.save(); App.UI.renderPaylaters(); App.UI.closeModal('paylaterModal'); e.target.reset(); App.UI.showToast('Tagihan berhasil disimpan!', 'success');
                 },
                 async deletePaylater(id) {
                     const yes = await App.UI.confirm('Hapus tagihan ini tanpa mencatat pembayaran?');
@@ -2565,7 +2614,26 @@
                 async deleteBudget(id) { const yes = await App.UI.confirm('Hapus limit budget ini?'); if(!yes) return; App.State.budgets = App.State.budgets.filter(b => b.id !== id); App.DB.save(); App.UI.renderBudgets(); },
                 
                 openGoalModal() { if (!App.State.isPremium && App.State.goals.length >= App.Config.FreeLimits.goal) { App.UI.showModal('premiumModal'); return; } App.UI.showModal('goalModal'); },
-                addGoal(e) { e.preventDefault(); const name = document.getElementById('gName').value.trim(); const icon = document.getElementById('gIcon').value.trim(); const target = App.Utils.parseCurrency(document.getElementById('gTarget').value); const current = App.Utils.parseCurrency(document.getElementById('gCurrent').value); const date = document.getElementById('gDate').value; if(!name || target <= 0) return App.UI.showToast('Form tidak valid', 'error'); App.State.goals.push({ id: Date.now(), name, icon, target, current, date }); App.DB.save(); App.UI.renderGoals(); App.UI.closeModal('goalModal'); e.target.reset(); App.UI.showToast('Target Impian Dibuat! 🎯', 'success'); },
+                addGoal(e) {
+                    e.preventDefault();
+                    const editId = document.getElementById('gName').dataset.editId;
+                    const name   = document.getElementById('gName').value.trim();
+                    const icon   = document.getElementById('gIcon').value.trim() || '🎯';
+                    const target = App.Utils.parseCurrency(document.getElementById('gTarget').value);
+                    const curr   = App.Utils.parseCurrency(document.getElementById('gCurrent').value) || 0;
+                    const date   = document.getElementById('gDate').value;
+                    if(!name || target <= 0) return App.UI.showToast('Form tidak valid', 'error');
+                    if(editId) {
+                        const g = App.State.goals.find(x => x.id === parseInt(editId));
+                        if(g) Object.assign(g, {name, icon, target, current: curr, date});
+                        delete document.getElementById('gName').dataset.editId;
+                        App.UI.showToast('Target berhasil diperbarui! ✏️', 'success');
+                    } else {
+                        App.State.goals.push({id: Date.now(), name, icon, target, current: curr, date});
+                        App.UI.showToast('Target Impian Dibuat! 🎯', 'success');
+                    }
+                    App.DB.save(); App.UI.renderGoals(); App.UI.closeModal('goalModal'); e.target.reset();
+                },
                 async deleteGoal(id) { const yes = await App.UI.confirm('Hapus target ini? Saldo tabungan tidak akan hilang dari transaksi.'); if(!yes) return; App.State.goals = App.State.goals.filter(g => g.id !== id); App.DB.save(); App.UI.renderGoals(); },
                 openAddFundModal(id) {
                     const goal = App.State.goals.find(g => g.id === id); if(!goal) return;
@@ -2737,6 +2805,149 @@
                 },
 
                 addCategory() { const name = document.getElementById('catName').value.trim(); const icon = document.getElementById('catIcon').value.trim(); const id = name.toLowerCase().replace(/\s+/g, '-'); if(!name || !icon) return App.UI.showToast('Isi form!', 'error'); App.State.customCategories.push({id, name, icon}); App.DB.save(); App.UI.renderCategoriesSelect(); App.UI.renderSettings(); App.UI.closeModal('catModal'); },
+
+                // ── Paylater dengan due date ──
+                addPaylater() {
+                    const name    = document.getElementById('plName').value.trim();
+                    const amt     = App.Utils.parseCurrency(document.getElementById('plAmount').value);
+                    const dueDate = document.getElementById('plDueDate').value;
+                    if(!name) return App.UI.showToast('Nama wajib diisi!', 'error');
+                    if(!amt || amt <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
+                    App.State.paylaters.push({id: Date.now(), name, amount: amt, originalAmount: amt, dueDate: dueDate || null});
+                    App.DB.save(); App.UI.renderPaylaters(); App.UI.closeModal('paylaterModal');
+                    document.getElementById('plName').value = '';
+                    document.getElementById('plAmount').value = '';
+                    document.getElementById('plDueDate').value = '';
+                    App.UI.showToast('Paylater berhasil disimpan!', 'success');
+                },
+
+                // ── Bills (Tagihan Rutin) ──
+                saveBill() {
+                    const editId = document.getElementById('billEditId').value;
+                    const icon   = document.getElementById('billIcon').value.trim();
+                    const name   = document.getElementById('billName').value.trim();
+                    const amount = App.Utils.parseCurrency(document.getElementById('billAmount').value) || 0;
+                    const dueDay = parseInt(document.getElementById('billDueDay').value) || 0;
+                    const akun   = document.getElementById('billAkun').value;
+                    if(!icon || !name) return App.UI.showToast('Ikon dan nama wajib diisi!', 'error');
+                    if(editId) {
+                        const b = App.State.bills.find(x => x.id === parseInt(editId));
+                        if(b) Object.assign(b, {icon, name, amount, dueDay, akun});
+                    } else {
+                        App.State.bills.push({id: Date.now(), icon, name, amount, dueDay, akun, paidMonths: []});
+                    }
+                    App.DB.save(); App.UI.renderBills(); App.UI.closeModal('billModal');
+                    document.getElementById('billEditId').value = '';
+                    App.UI.showToast(`${editId ? 'Tagihan diperbarui' : 'Tagihan ditambahkan'}!`, 'success');
+                },
+                openEditBill(id) {
+                    const b = App.State.bills.find(x => x.id === id); if(!b) return;
+                    document.getElementById('billEditId').value = id;
+                    document.getElementById('billModalTitle').textContent = '✏️ Edit Tagihan';
+                    document.getElementById('billIcon').value   = b.icon;
+                    document.getElementById('billName').value   = b.name;
+                    document.getElementById('billAmount').value = b.amount ? b.amount.toLocaleString('id-ID') : '';
+                    document.getElementById('billDueDay').value = b.dueDay || '';
+                    document.getElementById('billAkun').value   = b.akun || 'saldo';
+                    App.UI.showModal('billModal');
+                },
+                async payBill(id) {
+                    const b = App.State.bills.find(x => x.id === id); if(!b) return;
+                    const monthKey = new Date().toISOString().substring(0,7);
+                    if((b.paidMonths||[]).includes(monthKey)) {
+                        const ok = await App.UI.confirm(`${b.name} sudah dibayar bulan ini. Tandai belum bayar?`);
+                        if(!ok) return;
+                        b.paidMonths = (b.paidMonths||[]).filter(m => m !== monthKey);
+                    } else {
+                        if(b.amount > 0) {
+                            const today = new Date().toISOString().split('T')[0];
+                            App.State.transactions.push({id: Date.now(), tanggal: today, jenisAkun: b.akun||'saldo', pemasukan:0, pengeluaran: b.amount, kategori:'lainnya', keterangan: `Bayar ${b.name}`, _source: 'bill'});
+                        }
+                        if(!b.paidMonths) b.paidMonths = [];
+                        b.paidMonths.push(monthKey);
+                        App.UI.showToast(`✅ ${b.name} dibayar dan masuk riwayat!`, 'success');
+                    }
+                    App.DB.save(); App.UI.renderAll();
+                },
+                async deleteBill(id) {
+                    const ok = await App.UI.confirm('Hapus tagihan rutin ini?'); if(!ok) return;
+                    App.State.bills = App.State.bills.filter(b => b.id !== id);
+                    App.DB.save(); App.UI.renderBills(); App.UI.showToast('Tagihan dihapus.', 'success');
+                },
+
+                // ── Goals Edit ──
+                openEditGoal(id) {
+                    const g = App.State.goals.find(x => x.id === id); if(!g) return;
+                    document.getElementById('gName').value    = g.name;
+                    document.getElementById('gIcon').value    = g.icon || '🎯';
+                    document.getElementById('gTarget').value  = g.target ? g.target.toLocaleString('id-ID') : '';
+                    document.getElementById('gCurrent').value = g.current ? g.current.toLocaleString('id-ID') : '';
+                    document.getElementById('gDate').value    = g.date || '';
+                    // Store edit id temporarily
+                    document.getElementById('gName').dataset.editId = id;
+                    App.UI.showModal('goalModal');
+                },
+
+                // ── Onboarding ──
+                _obStep: 1,
+                onboardingStart() {
+                    if(localStorage.getItem('kp_onboarded')) return;
+                    if(App.State.transactions.length > 0) return;
+                    this._obStep = 1;
+                    this.renderOnboardingStep(1);
+                    document.getElementById('onboardingModal').style.display = 'flex';
+                },
+                renderOnboardingStep(step) {
+                    const pct = step === 1 ? 33 : step === 2 ? 66 : 100;
+                    document.getElementById('obProgress').style.width = pct + '%';
+                    const bodies = {
+                        1: `<span class="onboarding-step-icon">👋</span>
+                            <h2 class="font-bold" style="margin-bottom:0.5rem;">Selamat Datang!</h2>
+                            <p class="text-sm text-muted" style="margin-bottom:1.5rem;">Keuangan Pro bantu kamu catat & pantau keuangan dengan mudah.</p>
+                            <div class="form-group"><label>Siapa nama kamu?</label><input type="text" id="obName" placeholder="Nama kamu..." style="text-align:center;font-size:1.1rem;" value="${App.State.user?.displayName||''}"></div>`,
+                        2: `<span class="onboarding-step-icon">💰</span>
+                            <h2 class="font-bold" style="margin-bottom:0.5rem;">Saldo Awal</h2>
+                            <p class="text-sm text-muted" style="margin-bottom:1.5rem;">Masukkan saldo yang kamu punya sekarang (opsional).</p>
+                            <div class="form-group"><label>💵 Cash / Tunai (Rp)</label><input type="text" id="obCash" inputmode="numeric" oninput="App.Utils.formatInput(this)" placeholder="0"></div>
+                            <div class="form-group"><label>🪪 Saldo Bank / E-Wallet (Rp)</label><input type="text" id="obSaldo" inputmode="numeric" oninput="App.Utils.formatInput(this)" placeholder="0"></div>`,
+                        3: `<span class="onboarding-step-icon">🔔</span>
+                            <h2 class="font-bold" style="margin-bottom:0.5rem;">Pengingat Harian</h2>
+                            <p class="text-sm text-muted" style="margin-bottom:1.5rem;">Aktifkan notifikasi agar tidak lupa catat transaksi.</p>
+                            <div class="form-group"><label>Jam pengingat malam</label><input type="time" id="obTime" value="20:00" style="text-align:center;font-size:1.2rem;"></div>
+                            <p class="text-xs text-muted">Bisa diubah kapanpun di Setelan.</p>`
+                    };
+                    document.getElementById('obBody').innerHTML = bodies[step] || '';
+                    document.getElementById('obBtnNext').textContent = step === 3 ? 'Mulai! 🚀' : 'Lanjut →';
+                },
+                async onboardingNext() {
+                    const step = this._obStep;
+                    if(step === 1) {
+                        const name = document.getElementById('obName')?.value.trim();
+                        if(name && App.DB.dbInstance && !App.Auth.isDummy) {
+                            try { await import("https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js").then(m => m.update(m.ref(App.DB.dbInstance, `users/${App.State.user.uid}/profile`), {displayName: name})); } catch(e){}
+                        }
+                        this._obStep = 2; this.renderOnboardingStep(2);
+                    } else if(step === 2) {
+                        const cash  = App.Utils.parseCurrency(document.getElementById('obCash')?.value||'0');
+                        const saldo = App.Utils.parseCurrency(document.getElementById('obSaldo')?.value||'0');
+                        const today = new Date().toISOString().split('T')[0];
+                        if(cash > 0)  App.State.transactions.push({id:Date.now(),   tanggal:today, jenisAkun:'cash',  pemasukan:cash,  pengeluaran:0, kategori:'lainnya', keterangan:'Saldo awal'});
+                        if(saldo > 0) App.State.transactions.push({id:Date.now()+1, tanggal:today, jenisAkun:'saldo', pemasukan:saldo, pengeluaran:0, kategori:'lainnya', keterangan:'Saldo awal'});
+                        if(cash > 0 || saldo > 0) App.DB.save();
+                        this._obStep = 3; this.renderOnboardingStep(3);
+                    } else {
+                        const time = document.getElementById('obTime')?.value || '20:00';
+                        App.State.settings.reminderEnabled = true;
+                        App.State.settings.reminderTime    = time;
+                        App.DB.save();
+                        this.onboardingSkip();
+                    }
+                },
+                onboardingSkip() {
+                    localStorage.setItem('kp_onboarded', '1');
+                    document.getElementById('onboardingModal').style.display = 'none';
+                    App.UI.renderAll();
+                },
                 async deleteCategory(id) { const yes = await App.UI.confirm('Hapus kategori kustom ini?'); if(!yes) return; App.State.customCategories = App.State.customCategories.filter(c => c.id !== id); App.DB.save(); App.UI.renderCategoriesSelect(); App.UI.renderSettings(); },
                 
                 toggleRecurring(id) { const r = App.State.recurring.find(x => x.id === id); if(r) { r.status = r.status === 'paused' ? 'active' : 'paused'; App.DB.save(); App.UI.renderSettings(); } },
@@ -2816,241 +3027,447 @@
                     // Harus dipanggil langsung dari user click — jangan di dalam setTimeout/promise chain
                     Notification.requestPermission().then(permission => {
                         App.Handlers.updateNotifStatus();
-                        if(permission === 'granted' && App.State.user) {
-                            App.Handlers.subscribeFCM(App.State.user.uid);
-                            App.UI.showToast('Notifikasi diizinkan! ✅', 'success');
+                        if(permission === 'granted') {
+                            App.Handlers.syncSWState();
+                            // Subscribe FCM setelah izin diberikan
+                            if(App.State.user && App.DB.dbInstance && !App.Auth.isDummy)
+                                App.Handlers.subscribeFCM(App.State.user.uid);
+                            App.UI.showToast('✅ Notifikasi berhasil diaktifkan!', 'success');
                         } else if(permission === 'denied') {
-                            App.UI.showToast('Notifikasi diblokir. Harap izinkan melalui pengaturan browser.', 'error');
+                            App.UI.showToast('Notifikasi diblokir. Aktifkan manual di pengaturan browser.', 'error');
                         }
                     });
                 },
+                saveReminder() {
+                    const s = App.State.settings;
+                    s.reminderEnabled    = document.getElementById('setReminder').checked;
+                    s.reminderTime       = document.getElementById('setReminderTime').value;
+                    s.morningEnabled     = document.getElementById('setMorning')?.checked || false;
+                    s.morningTime        = document.getElementById('setMorningTime')?.value || '08:00';
+                    s.budgetAlertEnabled = document.getElementById('setBudgetAlert')?.checked || false;
+                    if(App.DB.dbInstance) App.DB.save();
+                    // Cek apakah izin sudah ada — kalau belum, arahkan ke tombol Izinkan
+                    if(!('Notification' in window)) return App.UI.showToast('Browser tidak mendukung notifikasi', 'error');
+                    if(Notification.permission !== 'granted') {
+                        App.UI.showToast('Klik tombol "Izinkan" dulu untuk mengaktifkan notifikasi.', 'error');
+                        return;
+                    }
+                    App.Handlers.syncSWState();
+                    App.UI.showToast('Pengaturan notifikasi disimpan!', 'success');
+                },
                 testNotification() {
                     if(!('Notification' in window)) return App.UI.showToast('Browser tidak mendukung notifikasi', 'error');
-                    if(Notification.permission === 'granted') {
-                        navigator.serviceWorker.ready.then(reg => {
-                            reg.showNotification('Keuangan Pro', {
-                                body: 'Halo! Ini notifikasi percobaan. Semuanya berjalan lancar. 🎉',
-                                icon: 'https://i.ibb.co.com/0RGKc1CF/only-logo-192.png',
-                                badge: 'https://i.ibb.co.com/0RGKc1CF/only-logo-192.png'
-                            });
-                        });
-                    } else {
-                        this.requestNotifPermission();
+                    if(Notification.permission !== 'granted') {
+                        App.UI.showToast('Izinkan notifikasi dulu sebelum test.', 'error');
+                        App.Handlers.updateNotifStatus();
+                        return;
                     }
-                },
-                saveReminder() {
-                    App.State.settings.reminderEnabled = document.getElementById('setReminder').checked;
-                    App.State.settings.reminderTime    = document.getElementById('setReminderTime').value;
-                    App.State.settings.morningEnabled  = document.getElementById('setMorning').checked;
-                    App.State.settings.morningTime     = document.getElementById('setMorningTime').value;
-                    App.State.settings.budgetAlertEnabled = document.getElementById('setBudgetAlert').checked;
-                    App.DB.save();
-                    this.syncSWState();
+                    navigator.serviceWorker.ready.then(reg => {
+                        if(!reg.active) return App.UI.showToast('Service Worker belum aktif, coba refresh halaman.', 'error');
+                        reg.active.postMessage({ type: 'TEST_NOTIFICATION' });
+                        App.UI.showToast('✅ Test notifikasi terkirim!', 'success');
+                    });
                 },
                 syncSWState() {
-                    // Cek permission, kalau belum/denied, uncheck UI
-                    if(Notification.permission !== 'granted') {
-                        document.getElementById('setReminder').checked = false;
-                        document.getElementById('setMorning').checked = false;
-                        document.getElementById('setBudgetAlert').checked = false;
-                        document.getElementById('setReminderTimeWrap').style.display = 'none';
-                        document.getElementById('setMorningTimeWrap').style.display = 'none';
-                        // Paksa save state bahwa disabled
-                        App.State.settings.reminderEnabled = false;
-                        App.State.settings.morningEnabled = false;
-                        App.State.settings.budgetAlertEnabled = false;
-                        // Jangan return dulu, kirim state ke SW
-                    }
-
-                    document.getElementById('setReminder').checked = App.State.settings.reminderEnabled;
-                    document.getElementById('setMorning').checked  = App.State.settings.morningEnabled;
-                    document.getElementById('setBudgetAlert').checked = App.State.settings.budgetAlertEnabled;
-                    document.getElementById('setReminderTimeWrap').style.display = App.State.settings.reminderEnabled ? 'block' : 'none';
-                    document.getElementById('setMorningTimeWrap').style.display = App.State.settings.morningEnabled ? 'block' : 'none';
-                    if(App.State.settings.reminderTime) document.getElementById('setReminderTime').value = App.State.settings.reminderTime;
-                    if(App.State.settings.morningTime) document.getElementById('setMorningTime').value = App.State.settings.morningTime;
-
-                    this.updateNotifStatus();
-
-                    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.controller.postMessage({
-                            type: 'SYNC_SETTINGS',
-                            settings: App.State.settings
+                    if(!('serviceWorker' in navigator)) return;
+                    navigator.serviceWorker.ready.then(reg => {
+                        if(!reg.active) return;
+                        const s      = App.State.settings;
+                        const today  = new Date().toISOString().split('T')[0];
+                        const hasTx  = App.State.transactions.some(t => t.tanggal === today);
+                        const allCats = [...App.Config.DefaultCategories, ...App.State.customCategories];
+                        reg.active.postMessage({
+                            type: 'SYNC_STATE',
+                            payload: {
+                                reminderEnabled:    s.reminderEnabled,
+                                reminderTime:       s.reminderTime,
+                                morningEnabled:     s.morningEnabled,
+                                morningTime:        s.morningTime,
+                                budgetAlertEnabled: s.budgetAlertEnabled,
+                                hasTransactionToday: hasTx,
+                                username:           App.State.user?.displayName || App.State.user?.username || '',
+                                budgets:            App.State.budgets,
+                                transactions:       App.State.transactions,
+                                categories:         allCats,
+                                debts:              App.State.debts || [],
+                                paylaters:          App.State.paylaters,
+                                goals:              App.State.goals || [],
+                            }
                         });
-                    }
+                    });
                 },
                 checkBudgetSW() {
-                    if(App.State.settings.budgetAlertEnabled && 'serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.controller.postMessage({
+                    if(!App.State.settings.budgetAlertEnabled) return;
+                    if(!('serviceWorker' in navigator)) return;
+                    navigator.serviceWorker.ready.then(reg => {
+                        if(!reg.active) return;
+                        const allCats = [...App.Config.DefaultCategories, ...App.State.customCategories];
+                        reg.active.postMessage({
                             type: 'CHECK_BUDGET',
-                            budgets: App.State.budgets,
-                            transactions: App.State.transactions
+                            budgets:      App.State.budgets,
+                            transactions: App.State.transactions,
+                            categories:   allCats,
                         });
-                    }
+                    });
                 },
                 checkDueSW() {
-                    if('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.controller.postMessage({
+                    if(!('serviceWorker' in navigator)) return;
+                    navigator.serviceWorker.ready.then(reg => {
+                        if(!reg.active) return;
+                        reg.active.postMessage({
                             type: 'CHECK_DUE',
+                            debts:     App.State.debts || [],
                             paylaters: App.State.paylaters,
-                            debts: App.State.debts
                         });
-                    }
+                    });
                 },
-
                 exportData(type) {
-                    if (type === 'json') {
-                        if (!App.State.isPremium) return App.UI.showModal('premiumModal');
-                        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(App.State));
-                        const dn = document.createElement('a'); dn.setAttribute("href", dataStr); dn.setAttribute("download", `KeuanganPro_Backup_${new Date().toISOString().split('T')[0]}.json`); document.body.appendChild(dn); dn.click(); dn.remove(); App.UI.showToast('Backup JSON berhasil diunduh.', 'success');
-                    } else if (type === 'csv') {
-                        const replacer = (key, value) => value === null ? '' : value; const header = ['id', 'tanggal', 'jenisAkun', 'pemasukan', 'pengeluaran', 'kategori', 'keterangan'];
-                        const csv = [header.join(','), ...App.State.transactions.map(row => header.map(fieldName => JSON.stringify(row[fieldName] || '', replacer)).join(','))].join('\r\n');
-                        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const url = URL.createObjectURL(blob);
-                        const a = document.createElement("a"); a.href = url; a.setAttribute("download", `KeuanganPro_Transaksi_${new Date().toISOString().split('T')[0]}.csv`); a.click(); App.UI.showToast('Data CSV berhasil diexport.', 'success');
+                    if(type === 'json' && !App.State.isPremium) { App.UI.showModal('premiumModal'); return; }
+                    let text = '', filename = '';
+                    if(type === 'json') {
+                        const dataToExport = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, settings: App.State.settings };
+                        text = JSON.stringify(dataToExport, null, 2); filename = `Backup_KeuanganPro_${new Date().toISOString().split('T')[0]}.json`;
+                    } else {
+                        const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+                        const lines = [];
+                        lines.push(`## KEUANGAN PRO FULL BACKUP`);
+                        lines.push(`## Tanggal Export: ${new Date().toLocaleDateString('id-ID')}`);
+                        lines.push('');
+                        lines.push('[TRANSACTIONS]');
+                        lines.push('Tanggal,Akun,KategoriID,Keterangan,Pemasukan,Pengeluaran');
+                        App.State.transactions.forEach(t => lines.push(`${t.tanggal},${t.jenisAkun},${t.kategori},${esc(t.keterangan||'')},${t.pemasukan||0},${t.pengeluaran||0}`));
+                        lines.push('');
+                        lines.push('[CUSTOM_CATEGORIES]');
+                        lines.push('ID,Nama,Ikon');
+                        App.State.customCategories.forEach(c => lines.push(`${c.id},${esc(c.name)},${c.icon}`));
+                        lines.push('');
+                        lines.push('[BUDGETS]');
+                        lines.push('ID,KategoriID,Jumlah,Periode');
+                        App.State.budgets.forEach(b => lines.push(`${b.id},${b.category},${b.amount},${b.period}`));
+                        lines.push('');
+                        lines.push('[GOALS]');
+                        lines.push('ID,Nama,Ikon,Target,Terkumpul,Tenggat');
+                        App.State.goals.forEach(g => lines.push(`${g.id},${esc(g.name)},${g.icon||'🎯'},${g.target},${g.current||0},${g.date||''}`));
+                        lines.push('');
+                        lines.push('[PAYLATERS]');
+                        lines.push('ID,Nama,Jumlah');
+                        App.State.paylaters.forEach(p => lines.push(`${p.id},${esc(p.name)},${p.amount}`));
+                        lines.push('');
+                        lines.push('[TRANSFERS]');
+                        lines.push('ID,Dari,Ke,Jumlah,Tanggal,Catatan');
+                        App.State.transfers.forEach(tf => lines.push(`${tf.id},${tf.dari},${tf.ke},${tf.jumlah},${tf.tanggal},${esc(tf.catatan||'')}`));
+                        lines.push('');
+                        lines.push('[DEBTS]');
+                        lines.push('ID,Tipe,Nama,Sisa,OriginalAmount,Tanggal,Catatan');
+                        (App.State.debts || []).forEach(d => lines.push(`${d.id},${d.tipe},${esc(d.nama)},${d.sisa},${d.originalAmount||d.sisa},${d.tanggal||''},${esc(d.catatan||'')}`));
+                        text = lines.join('\n');
+                        filename = `Backup_KeuanganPro_${new Date().toISOString().split('T')[0]}.csv`;
                     }
+                    const blob = new Blob(['\uFEFF' + text], {type: type==='json'?'application/json':'text/csv;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click();
                 },
                 importFile(e) {
-                    const file = e.target.files[0]; if (!file) return; const reader = new FileReader();
+                    const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
                     reader.onload = async (ev) => {
-                        const txt = ev.target.result;
-                        if (file.name.endsWith('.json')) {
-                            const yes = await App.UI.confirm('Import data JSON akan menimpa seluruh data Anda saat ini. Lanjutkan?'); if(!yes) return;
-                            try { const parsed = JSON.parse(txt); App.State.transactions = parsed.transactions || []; App.State.recurring = parsed.recurring || []; App.State.customCategories = parsed.customCategories || []; App.State.goals = parsed.goals || []; App.State.budgets = parsed.budgets || []; App.State.paylaters = parsed.paylaters || []; App.State.transfers = parsed.transfers || []; App.State.debts = parsed.debts || []; App.DB.save(); App.UI.renderAll(); App.UI.showToast('Import JSON Berhasil!', 'success'); } catch(e) { App.UI.showToast('File JSON tidak valid.', 'error'); }
-                        } else if (file.name.endsWith('.csv')) {
-                            const lines = txt.split('\n'); if(lines.length < 2) return App.UI.showToast('CSV Kosong', 'error');
-                            const yes = await App.UI.confirm(`Ditemukan ${lines.length - 1} baris transaksi di CSV. Tambahkan ke data saat ini?`); if(!yes) return;
-                            const headers = lines[0].split(',').map(h => h.replace(/['"]+/g, '').trim());
-                            for (let i = 1; i < lines.length; i++) { if(!lines[i].trim()) continue; const obj = {}; const curline = lines[i].split(','); headers.forEach((h, j) => { obj[h] = curline[j] ? curline[j].replace(/['"]+/g, '').trim() : ''; }); obj.pemasukan = parseInt(obj.pemasukan) || 0; obj.pengeluaran = parseInt(obj.pengeluaran) || 0; obj.id = Date.now() + i; if(obj.tanggal && obj.kategori && (obj.pemasukan > 0 || obj.pengeluaran > 0)) { App.State.transactions.push(obj); } }
-                            App.DB.save(); App.UI.renderAll(); App.UI.showToast('Import CSV Berhasil ditambahkan!', 'success');
-                        }
-                    }; reader.readAsText(file); e.target.value = '';
+                        try {
+                            if(file.name.endsWith('.json')) {
+                                const data = JSON.parse(ev.target.result);
+                                if(data.transactions) {
+                                    const yes = await App.UI.confirm('Menimpa data saat ini dengan data Backup?'); if(!yes) return;
+                                    App.State.isPremium = data.isPremium || App.State.isPremium; App.State.transactions = data.transactions; if(data.customCategories) App.State.customCategories = data.customCategories; if(data.goals) App.State.goals = data.goals; if(data.budgets) App.State.budgets = data.budgets; if(data.recurring) App.State.recurring = data.recurring; if(data.paylaters) App.State.paylaters = data.paylaters; if(data.transfers) App.State.transfers = data.transfers; if(data.debts) App.State.debts = data.debts; App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect(); App.UI.showToast('Backup berhasil dipulihkan!', 'success');
+                                }
+                            } else if (file.name.endsWith('.csv')) {
+                                const content = ev.target.result;
+                                const parseCSVLine = (line) => {
+                                    const result = []; let cur = ''; let inQ = false;
+                                    for(let i = 0; i < line.length; i++) {
+                                        if(line[i] === '"') { if(inQ && line[i+1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
+                                        else if(line[i] === ',' && !inQ) { result.push(cur); cur = ''; }
+                                        else cur += line[i];
+                                    }
+                                    result.push(cur); return result;
+                                };
+
+                                // Deteksi format baru (multi-section) vs lama (transaksi saja)
+                                if(content.includes('[TRANSACTIONS]') || content.includes('[CUSTOM_CATEGORIES]')) {
+                                    const yes = await App.UI.confirm('Import semua data (Transaksi, Kategori Kustom, Budget, Target, Tagihan)?\nData saat ini akan ditimpa.'); if(!yes) { e.target.value=''; return; }
+                                    const sections = {}; let sec = null; let sLines = [];
+                                    content.split('\n').forEach(rawLine => {
+                                        const line = rawLine.trim();
+                                        if(line.startsWith('##') || line === '') return;
+                                        if(line.startsWith('[') && line.endsWith(']')) {
+                                            if(sec) sections[sec] = sLines; sec = line.slice(1,-1); sLines = [];
+                                        } else if(sec) sLines.push(line);
+                                    });
+                                    if(sec) sections[sec] = sLines;
+
+                                    if(sections.TRANSACTIONS) {
+                                        App.State.transactions = [];
+                                        sections.TRANSACTIONS.slice(1).forEach((line, i) => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 6) App.State.transactions.push({ id: Date.now()+i, tanggal:p[0], jenisAkun:p[1], kategori:p[2], keterangan:p[3], pemasukan:parseInt(p[4])||0, pengeluaran:parseInt(p[5])||0 });
+                                        });
+                                    }
+                                    if(sections.CUSTOM_CATEGORIES) {
+                                        App.State.customCategories = [];
+                                        sections.CUSTOM_CATEGORIES.slice(1).forEach(line => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 3) App.State.customCategories.push({ id:p[0], name:p[1], icon:p[2] });
+                                        });
+                                    }
+                                    if(sections.BUDGETS) {
+                                        App.State.budgets = [];
+                                        sections.BUDGETS.slice(1).forEach(line => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 4) App.State.budgets.push({ id:parseInt(p[0])||Date.now(), category:p[1], amount:parseInt(p[2])||0, period:p[3] });
+                                        });
+                                    }
+                                    if(sections.GOALS) {
+                                        App.State.goals = [];
+                                        sections.GOALS.slice(1).forEach(line => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 6) App.State.goals.push({ id:parseInt(p[0])||Date.now(), name:p[1], icon:p[2]||'🎯', target:parseInt(p[3])||0, current:parseInt(p[4])||0, date:p[5] });
+                                        });
+                                    }
+                                    if(sections.PAYLATERS) {
+                                        App.State.paylaters = [];
+                                        sections.PAYLATERS.slice(1).forEach(line => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 3) App.State.paylaters.push({ id:parseInt(p[0])||Date.now(), name:p[1], amount:parseInt(p[2])||0 });
+                                        });
+                                    }
+                                    if(sections.TRANSFERS) {
+                                        App.State.transfers = [];
+                                        sections.TRANSFERS.slice(1).forEach(line => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 5) App.State.transfers.push({ id:parseInt(p[0])||Date.now(), dari:p[1], ke:p[2], jumlah:parseInt(p[3])||0, tanggal:p[4], catatan:p[5]||'' });
+                                        });
+                                    }
+                                    if(sections.DEBTS) {
+                                        App.State.debts = [];
+                                        sections.DEBTS.slice(1).forEach(line => {
+                                            if(!line.trim()) return;
+                                            const p = parseCSVLine(line);
+                                            if(p.length >= 5) App.State.debts.push({ id:parseInt(p[0])||Date.now(), tipe:p[1], nama:p[2], sisa:parseInt(p[3])||0, originalAmount:parseInt(p[4])||parseInt(p[3])||0, tanggal:p[5]||'', catatan:p[6]||'' });
+                                        });
+                                    }
+                                    App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect();
+                                    App.UI.showToast(`✅ Backup CSV lengkap dipulihkan!`, 'success');
+                                } else {
+                                    // Format lama: transaksi saja
+                                    const lines = content.split('\n').slice(1); let added = 0;
+                                    lines.forEach(line => {
+                                        if(!line.trim()) return; const parts = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                                        if(parts && parts.length >= 6) { App.State.transactions.push({ id: Date.now() + added, tanggal: parts[0], jenisAkun: parts[1], kategori: parts[2], keterangan: parts[3].replace(/"/g, ''), pemasukan: parseInt(parts[4])||0, pengeluaran: parseInt(parts[5])||0 }); added++; }
+                                    }); App.DB.save(); App.UI.renderAll(); App.UI.showToast(`${added} Transaksi diimpor`, 'success');
+                                }
+                            }
+                        } catch(err) { console.error(err); App.UI.showToast('Gagal memproses file', 'error'); } e.target.value = '';
+                    }; reader.readAsText(file);
                 },
                 exportPDF() {
-                    if (!App.State.isPremium) return App.UI.showModal('premiumModal');
-                    const { jsPDF } = window.jspdf; const doc = new jsPDF();
-                    doc.setFontSize(22); doc.text('Laporan Keuangan', 14, 22); doc.setFontSize(11); doc.setTextColor(100); doc.text(`Dicetak pada: ${new Date().toLocaleDateString('id-ID')}`, 14, 30);
-                    const head = [['Tanggal', 'Akun', 'Kategori', 'Keterangan', 'Pemasukan', 'Pengeluaran']];
-                    const body = App.State.transactions.slice().sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal)).map(t => [App.Utils.formatDateStr(t.tanggal), t.jenisAkun.toUpperCase(), t.kategori, t.keterangan || '-', t.pemasukan > 0 ? App.Utils.formatNumber(t.pemasukan) : '-', t.pengeluaran > 0 ? App.Utils.formatNumber(t.pengeluaran) : '-']);
-                    doc.autoTable({ startY: 40, head, body, theme: 'striped', headStyles: { fillColor: [79, 70, 229] } }); doc.save(`Laporan_Keuangan_${new Date().toISOString().split('T')[0]}.pdf`);
-                    App.UI.showToast('PDF Berhasil Diunduh!', 'success');
+                    if(!App.State.isPremium) { App.UI.showModal('premiumModal'); return; }
+                    if(!window.jspdf || !window.jspdf.jsPDF) return App.UI.showToast('Library gagal dimuat.', 'error'); App.UI.showToast('Menyiapkan Laporan PDF...', 'info');
+                    setTimeout(() => {
+                        const doc = new window.jspdf.jsPDF(); doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.text("Laporan Keuangan Pro", 14, 20); doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); doc.text(`Dicetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 28);
+                        const tableRows = []; let totIn=0, totOut=0; const sortedTx = [...App.State.transactions].sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
+                        sortedTx.forEach(t => { const cat = ([...App.Config.DefaultCategories, ...App.State.customCategories].find(c=>c.id===t.kategori)||{}).name || t.kategori; totIn += (t.pemasukan||0); totOut += (t.pengeluaran||0); tableRows.push([ t.tanggal, cat, t.keterangan || '-', t.pemasukan ? App.Utils.formatNumber(t.pemasukan) : '-', t.pengeluaran ? App.Utils.formatNumber(t.pengeluaran) : '-' ]); });
+                        doc.setTextColor(0); doc.setFont("helvetica", "bold"); doc.text(`Total Pemasukan: Rp ${App.Utils.formatNumber(totIn)}`, 14, 40); doc.text(`Total Pengeluaran: Rp ${App.Utils.formatNumber(totOut)}`, 14, 46); doc.text(`Saldo Tersisa: Rp ${App.Utils.formatNumber(totIn - totOut)}`, 14, 52);
+                        doc.autoTable({ head: [["Tanggal", "Kategori", "Keterangan", "Pemasukan", "Pengeluaran"]], body: tableRows, startY: 60, theme: 'grid', headStyles: { fillColor: [79, 70, 229] } }); doc.save(`Laporan_KeuanganPro_${Date.now()}.pdf`);
+                    }, 500);
                 }
             },
 
             Insights: {
                 generate() {
-                    const c = document.getElementById('insightsContainer'); const tData = App.State.transactions; if (!tData.length) { c.innerHTML = '<p class="text-sm text-muted">Belum ada cukup data.</p>'; return; }
-                    const d = new Date(); const mStr = d.toISOString().substring(0,7); d.setMonth(d.getMonth()-1); const pStr = d.toISOString().substring(0,7);
-                    let mIn=0, mOut=0, pIn=0, pOut=0;
-                    tData.forEach(t => { if(t.tanggal.startsWith(mStr)) { mIn += (t.pemasukan||0); mOut += (t.pengeluaran||0); } else if(t.tanggal.startsWith(pStr)) { pIn += (t.pemasukan||0); pOut += (t.pengeluaran||0); } });
-                    
+                    const c = document.getElementById('insightsContainer'); const tx = App.State.transactions;
+                    if(tx.length < 5) return c.innerHTML = `<div class="insight-card"><p class="text-sm">Catat lebih banyak transaksi agar sistem dapat menganalisis polamu.</p></div>`;
+                    const d = new Date(); const thisMonthStr = d.toISOString().substring(0,7); const lastMonthStr = new Date(d.getFullYear(), d.getMonth()-1, 1).toISOString().substring(0,7);
+                    let outThis = 0, outLast = 0, inThis = 0; let catMap = {};
+                    tx.forEach(t => { const m = t.tanggal.substring(0,7); if(m === thisMonthStr) { outThis += (t.pengeluaran||0); inThis += (t.pemasukan||0); if(t.pengeluaran>0) catMap[t.kategori] = (catMap[t.kategori]||0) + t.pengeluaran; } else if(m === lastMonthStr) { outLast += (t.pengeluaran||0); } });
                     let html = '';
-                    const mDiff = mOut - pOut;
-                    if(mOut > pOut && pOut > 0) html += this.card('⚠️ Peringatan Pengeluaran', `Pengeluaran bulan ini naik <b>${App.Utils.formatCurrency(mDiff)}</b> dibanding bulan lalu. Cek budgetmu!`, 'var(--danger-light)', 'var(--danger-dark)');
-                    else if (mOut < pOut && pOut > 0) html += this.card('🎉 Kerja Bagus!', `Pengeluaran bulan ini turun <b>${App.Utils.formatCurrency(Math.abs(mDiff))}</b> dibanding bulan lalu.`, 'var(--success-light)', 'var(--success-dark)');
-                    
-                    if(mOut > mIn && mIn > 0) html += this.card('🚨 Defisit Terdeteksi', `Pengeluaranmu melebihi pemasukan bulan ini. Segera evaluasi.`, 'var(--danger-light)', 'var(--danger-dark)');
-                    else if(mIn > mOut && mOut > 0) { const s = mIn - mOut; html += this.card('💡 Potensi Menabung', `Kamu punya sisa <b>${App.Utils.formatCurrency(s)}</b> bulan ini. Jangan lupa dialokasikan ke Target Impian!`, 'var(--primary-light)', 'var(--primary-dark)'); }
-                    
                     if(App.State.isPremium) {
-                        let expMap = {}; tData.forEach(t => { if(t.pengeluaran > 0 && t.tanggal.startsWith(mStr)) expMap[t.kategori] = (expMap[t.kategori]||0) + t.pengeluaran; });
-                        const topCat = Object.keys(expMap).reduce((a,b) => expMap[a] > expMap[b] ? a : b, '');
-                        if(topCat) html += this.card('🔍 Kategori Terbesar', `Bulan ini kamu paling banyak habis di kategori <b>${topCat}</b> (${App.Utils.formatCurrency(expMap[topCat])}).`, '#fef3c7', '#b45309');
                         document.getElementById('insightLock').classList.remove('show');
-                    } else {
-                        document.getElementById('insightLock').classList.add('show');
-                    }
-
-                    if(!html) html = '<p class="text-sm text-muted">Aktivitas keuanganmu stabil bulan ini.</p>';
+                        if (outLast > 0) { const diff = outThis - outLast; const perc = Math.abs((diff / outLast) * 100).toFixed(1); if(diff > 0) html += `<div class="insight-card" style="border-left-color: var(--danger);"><div class="font-bold text-sm mb-1">🚨 Pengeluaran Naik</div><p class="text-xs">Naik <b>${perc}%</b> dibanding bulan lalu.</p></div>`; else html += `<div class="insight-card" style="border-left-color: var(--success);"><div class="font-bold text-sm mb-1">🎉 Lebih Hemat</div><p class="text-xs">Turun <b>${perc}%</b> dibanding bulan lalu.</p></div>`; }
+                    } else { document.getElementById('insightLock').classList.add('show'); }
+                    let maxCat = '', maxAmt = 0; Object.keys(catMap).forEach(k => { if(catMap[k]>maxAmt){ maxAmt=catMap[k]; maxCat=k; } });
+                    if(maxCat && outThis > 0) { const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c=>c.id===maxCat) || {name:maxCat}; const percCat = ((maxAmt / outThis)*100).toFixed(1); html += `<div class="insight-card"><div class="font-bold text-sm mb-1">🔍 Kategori Boros</div><p class="text-xs"><b>${percCat}%</b> habis untuk <b>${catObj.name}</b>.</p></div>`; }
+                    if (inThis > 0) { const saved = inThis - outThis; if(saved < (inThis * 0.1)) html += `<div class="insight-card" style="border-left-color: var(--warning);"><div class="font-bold text-sm mb-1">💡 Saran Keuangan</div><p class="text-xs">Tabungan bulan ini <10% pendapatan. Sisihkan di awal!</p></div>`; else html += `<div class="insight-card" style="border-left-color: var(--primary);"><div class="font-bold text-sm mb-1">✅ Rasio Sehat</div><p class="text-xs">Arus kas positif! Alokasikan sisa ke Target Impian.</p></div>`; }
                     c.innerHTML = html;
-                },
-                card(title, desc, bg, color) { return `<div style="background:${bg}; border-left:4px solid ${color}; padding:1rem; border-radius:var(--radius-md);"><div class="font-bold text-sm" style="color:${color}; margin-bottom:0.25rem;">${title}</div><div class="text-xs" style="color:var(--text-main);">${desc}</div></div>`; }
+                }
+            },
+
+            Init() {
+                this.UI.init();
+                if (typeof __firebase_config !== 'undefined') { const canvasConfig = JSON.parse(__firebase_config); this.Config.Firebase.apiKey = canvasConfig.apiKey; this.Config.Firebase.authDomain = canvasConfig.authDomain; this.Config.Firebase.projectId = canvasConfig.projectId; this.Config.Firebase.storageBucket = canvasConfig.storageBucket; this.Config.Firebase.messagingSenderId = canvasConfig.messagingSenderId; this.Config.Firebase.appId = canvasConfig.appId; }
+                const fApp = initializeApp(this.Config.Firebase); this.Auth.init(fApp); this.DB.dbInstance = getDatabase(fApp);
+                // Init Firebase Messaging untuk FCM push
+                try { App.State.fcmMessaging = getMessaging(fApp); } catch(e) { console.warn('FCM not supported:', e.message); }
+                const savedSet = localStorage.getItem('backup_v6'); if(savedSet) { try { const parsed = JSON.parse(savedSet); if(parsed.settings) this.State.settings = {...this.State.settings, ...parsed.settings}; } catch(e){} }
+                document.getElementById('setReminder').checked = this.State.settings.reminderEnabled; document.getElementById('setReminderTime').value = this.State.settings.reminderTime || "20:00"; if(this.State.settings.reminderEnabled) document.getElementById('setReminderTimeWrap').style.display = 'block';
+                setTimeout(() => App.Handlers.updateNotifStatus(), 200);
+                if('serviceWorker' in navigator) {
+                    // Deteksi base path otomatis (penting untuk GitHub Pages subdirectory)
+                    const swPath = new URL('firebase-messaging-sw.js', window.location.href).pathname;
+                    const swScope = swPath.substring(0, swPath.lastIndexOf('/') + 1);
+                    navigator.serviceWorker.register('firebase-messaging-sw.js', { scope: swScope }).then(reg => {
+                        reg.update().catch(()=>{});
+                        // Tunggu SW benar-benar aktif
+                        const waitActive = (r) => r.active ? r : new Promise(resolve => {
+                            const sw = r.installing || r.waiting;
+                            if(sw) sw.addEventListener('statechange', () => { if(sw.state === 'activated') resolve(r); });
+                            else resolve(r);
+                        });
+                       waitActive(reg).then(() => { setTimeout(() => App.Handlers.syncSWState(), 2000); }); // tunggu DB load
+                    }).catch(err => console.warn('SW register failed:', err));
+                    // Dengarkan pesan dari SW
+                    navigator.serviceWorker.addEventListener('message', (e) => {
+                        if(e.data && e.data.type === 'SW_READY') App.Handlers.syncSWState();
+                        // SW restart → kirim ulang state agar reminder terjadwal kembali
+                        if(e.data && e.data.type === 'SW_WAKE') {
+                            setTimeout(() => App.Handlers.syncSWState(), 300);
+                        }
+                    });
+                }
+          // ✅ Re-sync SW setiap kali tab aktif kembali (atasi SW suspend saat tab switch)
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && App.State.user) {
+        setTimeout(() => App.Handlers.syncSWState(), 300);
+    }
+});
             }
         };
 
-        // Initialize App
-        window.onload = () => {
-            const fbApp = initializeApp(App.Config.Firebase);
-            try { App.DB.dbInstance = getDatabase(fbApp); } catch(e) { console.warn("Lokal mode fallback active"); App.Auth.isDummy = true; }
-            try { App.State.fcmMessaging = getMessaging(fbApp); } catch(e) { console.warn("FCM disabled"); }
-            App.UI.init(); App.Auth.init(fbApp);
-            
-            // Render backup awal kalau ada
-            try {
-                const b = localStorage.getItem('backup_v6');
-                if(b) {
-                    const parsed = JSON.parse(b);
-                    if(parsed.settings) {
-                        App.State.settings = {...App.State.settings, ...parsed.settings};
-                        App.Theme.init();
-                    }
-                }
-            } catch(e) {}
-        };
+        window.App = App;
+        document.addEventListener('DOMContentLoaded', () => App.Init());
 
-        // Service Worker
-        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').then(r => console.log('SW Registered')).catch(e => console.log('SW Error:', e)); }); }
+        // ── PWA Install Prompt ──
+        let _deferredInstall = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            _deferredInstall = e;
+            // Tampilkan banner setelah 3 detik (beri waktu app load)
+            if(!localStorage.getItem('pwa_install_dismissed')) {
+                setTimeout(() => {
+                    const b = document.getElementById('installBanner');
+                    if(b) b.classList.add('show');
+                }, 3000);
+            }
+        });
+        document.getElementById('installBtn')?.addEventListener('click', async () => {
+            const b = document.getElementById('installBanner');
+            if(_deferredInstall) {
+                _deferredInstall.prompt();
+                const { outcome } = await _deferredInstall.userChoice;
+                if(outcome === 'accepted') { if(b) b.classList.remove('show'); }
+                _deferredInstall = null;
+            }
+        });
+        document.getElementById('installClose')?.addEventListener('click', () => {
+            document.getElementById('installBanner')?.classList.remove('show');
+            localStorage.setItem('pwa_install_dismissed', '1');
+        });
+        window.addEventListener('appinstalled', () => {
+            document.getElementById('installBanner')?.classList.remove('show');
+            _deferredInstall = null;
+        });
 
-        // Install PWA UI
-        let defPrompt; window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); defPrompt = e; document.getElementById('installBanner').classList.add('show'); });
-        document.getElementById('installBtn').addEventListener('click', () => { if(defPrompt) { defPrompt.prompt(); defPrompt.userChoice.then(r => { if(r.outcome==='accepted') console.log('PWA Installed'); defPrompt = null; document.getElementById('installBanner').classList.remove('show'); }); } });
-        document.getElementById('installClose').addEventListener('click', () => { document.getElementById('installBanner').classList.remove('show'); });
-        
-        // Popup history listener
+        // ── History Premium Popup handlers ──
         document.getElementById('historyPopupClose')?.addEventListener('click', () => {
-            document.getElementById('historyPremiumPopup').classList.remove('show');
-            if(document.getElementById('historyPopupDontShow').checked) {
-                localStorage.setItem('history_popup_hide', 'true');
+            if(document.getElementById('historyPopupDontShow')?.checked)
+                localStorage.setItem('history_popup_hide', '1');
+            document.getElementById('historyPremiumPopup')?.classList.remove('show');
+        });
+        document.getElementById('historyPremiumPopup')?.addEventListener('click', (e) => {
+            if(e.target === e.currentTarget) {
+                if(document.getElementById('historyPopupDontShow')?.checked)
+                    localStorage.setItem('history_popup_hide', '1');
+                e.currentTarget.classList.remove('show');
             }
         });
 
-        // Intro / Splash Screen Logic
+        // ── Handle shortcut URL params (?action=add / ?action=history) ──
+        window.addEventListener('load', () => {
+            const action = new URLSearchParams(window.location.search).get('action');
+            if(action === 'add') setTimeout(() => App.UI.showModal('txModal'), 800);
+            else if(action === 'history') setTimeout(() => App.UI.switchTab('history', document.getElementById('navHistory')), 600);
+        });
+
+        // ── Intro / Loading Screen ──
         (function() {
-            const intro   = document.getElementById('introScreen');
-            const video   = document.getElementById('introVideo');
-            const fallback= document.getElementById('introFallback');
-            const skipBtn = document.getElementById('introSkip');
-            const loadingFill = document.getElementById('introLoadingFill');
-            const loadingPct  = document.getElementById('introLoadingPct');
+            const screen   = document.getElementById('introScreen');
+            const video    = document.getElementById('introVideo');
+            const skipBtn  = document.getElementById('introSkip');
+            const fill     = document.getElementById('introLoadingFill');
+            const pctLabel = document.getElementById('introLoadingPct');
+            const fallback = document.getElementById('introFallback');
+            if(!screen || !video) return;
 
-            if(!intro || !video) return;
+            let dismissed  = false;
+            let appReady   = false;   // sinyal dari App.Init bahwa data sudah load
+            let vidPct     = 0;       // 0-80 dari video
+            let appPct     = 0;       // 0-20 dari app init
+            let rafId      = null;
 
-            let dismissed = false;
-            let vidPct = 0; // max 80%
-            let appPct = 0; // max 20%
-            let appReady = false;
-
-            // Global hook untuk dipanggil dari App.DB.listen saat data siap
-            window._introAppReady = function() {
-                appPct = 20;
-                appReady = true;
-                setBar(vidPct + appPct);
-            };
-
+            // Update bar gabungan video (80%) + app init (20%)
             function setBar(pct) {
-                loadingFill.style.width = pct + '%';
-                loadingPct.textContent  = Math.floor(pct) + '%';
+                pct = Math.min(100, Math.round(pct));
+                if(fill)     fill.style.width = pct + '%';
+                if(pctLabel) pctLabel.textContent = pct + '%';
             }
+
+            // Animasi bar fake saat buffering (0→30% dalam 1.5 detik)
+            let fakeStart = Date.now();
+            function fakeProgress() {
+                const elapsed = Date.now() - fakeStart;
+                vidPct = Math.min(30, (elapsed / 1500) * 30);
+                setBar(vidPct + appPct);
+                if(vidPct < 30) rafId = requestAnimationFrame(fakeProgress);
+            }
+            fakeProgress();
+
+            // Progress nyata dari video buffer
+            video.addEventListener('progress', () => {
+                if(!video.duration || !video.buffered.length) return;
+                const buf = video.buffered.end(video.buffered.length - 1);
+                vidPct = Math.min(80, (buf / video.duration) * 80);
+                setBar(vidPct + appPct);
+            });
+
+            // Update bar dari timeupdate (progress pemutaran)
+            video.addEventListener('timeupdate', () => {
+                if(!video.duration) return;
+                const playPct = (video.currentTime / video.duration) * 80;
+                if(playPct > vidPct) {
+                    vidPct = playPct;
+                    setBar(vidPct + appPct);
+                }
+            });
 
             function dismiss() {
                 if(dismissed) return;
                 dismissed = true;
+                cancelAnimationFrame(rafId);
                 setBar(100);
                 setTimeout(() => {
-                    intro.classList.add('fade-out');
-                    video.pause(); // stop video
-                    setTimeout(() => intro.remove(), 800); // buang dari DOM
-                }, 200);
+                    screen.classList.add('fade-out');
+                    setTimeout(() => screen.classList.add('hidden'), 850);
+                }, 250);
             }
 
-            // Sync loading bar dengan durasi video
-            video.addEventListener('timeupdate', () => {
-                if(video.duration > 0 && !dismissed) {
-                    const p = (video.currentTime / video.duration) * 80;
-                    vidPct = Math.min(80, p);
-                    setBar(vidPct + appPct);
-                }
-            });
+            // Sinyal dari App: data selesai dimuat → bar naik ke 100%
+            window._introAppReady = function() {
+                appPct = 20;
+                setBar(vidPct + appPct);
+                appReady = true;
+                // Jika video sudah selesai, dismiss sekarang
+                if(video.ended || video.paused) dismiss();
+            };
 
             // Tampilkan tombol skip setelah 2.5 detik
             setTimeout(() => skipBtn?.classList.add('visible'), 2500);
