@@ -1,6 +1,8 @@
 // ================================================================
 // Keuangan Pro â€” app.js
 // Logika dipertahankan apa adanya (dibersihkan dari korupsi paste).
+// FIX: intro screen kini selalu hilang setelah init (baik login
+// maupun belum), supaya tidak mentok di "Memuat aplikasi...".
 // ================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -38,6 +40,8 @@ const App = {
         App.State.user = user; App.UI.toggleAuthView(false); App.DB.listen(user.uid);
       } else {
         App.State.user = null; App.UI.toggleAuthView(true);
+        // Belum login: tetap sembunyikan intro supaya tidak mentok loading.
+        App.UI.hideIntro();
       }
     },
     async handleLogin(e) {
@@ -71,13 +75,7 @@ const App = {
         // Populate rest here
       } else { this.save(); }
       App.State.isLoading = false; App.Handlers.processRecurring(); App.UI.renderAll();
-      setTimeout(() => {
-        const loadingScreen = document.getElementById('introScreen');
-        if (loadingScreen) {
-          loadingScreen.classList.add('fade-out');
-          setTimeout(() => loadingScreen.style.display = 'none', 800);
-        }
-      }, 500);
+      setTimeout(() => App.UI.hideIntro(), 500);
     },
     save() {
       if (!App.State.user) return;
@@ -116,6 +114,14 @@ const App = {
       const today = new Date().toISOString().split('T')[0]; document.getElementById('txDate').value = today;
       if (document.getElementById('debtTanggal')) document.getElementById('debtTanggal').value = today;
       this._txType = 'in'; this.renderCategoriesSelect();
+    },
+    // Sembunyikan intro screen dengan aman (idempotent).
+    hideIntro() {
+      const loadingScreen = document.getElementById('introScreen');
+      if (!loadingScreen || loadingScreen.dataset.hidden === '1') return;
+      loadingScreen.dataset.hidden = '1';
+      loadingScreen.classList.add('fade-out');
+      setTimeout(() => { loadingScreen.style.display = 'none'; }, 800);
     },
     setTxType(type) {
       this._txType = type;
@@ -263,6 +269,8 @@ const App = {
 
   Init() {
     this.Theme.apply(); this.UI.init(); this.Auth.init(null);
+    // Jaring pengaman: apapun yang terjadi, intro tidak boleh nyangkut > 4 detik.
+    setTimeout(() => App.UI.hideIntro(), 4000);
   }
 };
 
