@@ -24,8 +24,11 @@ if (!serviceAccount.clientEmail || !serviceAccount.privateKey || !serviceAccount
 // Inisialisasi Firebase Admin SDK dengan kredensial tersebut
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://bygf-6f77-default-rtdb.asia-southeast1.firebasedatabase.app",
 });
 
+const db = admin.database();
+const messaging = admin.messaging();
 // ── Waktu sekarang dalam zona Jakarta (UTC+7) ──
 function getJakartaTime() {
   const now     = new Date();
