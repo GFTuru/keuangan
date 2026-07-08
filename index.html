@@ -3299,6 +3299,18 @@ document.addEventListener('visibilitychange', () => {
             // Paksa dismiss max 15 detik
             setTimeout(() => { if(!dismissed) dismiss(); }, 15000);
         })();
+
+        <!-- Tombol pindah ke app Tugas -->
+<a href="todo-pro.html" id="btnGoToTugas" title="Buka Tugas"
+   style="position:fixed;right:1rem;bottom:5.5rem;z-index:200;
+          display:flex;align-items:center;gap:.4rem;
+          padding:.7rem 1.1rem;border-radius:9999px;
+          background:linear-gradient(135deg,#4f46e5,#6366f1);
+          color:#fff;font-weight:700;font-size:.85rem;text-decoration:none;
+          box-shadow:0 8px 20px -4px rgba(79,70,229,.5);
+          font-family:'Plus Jakarta Sans',sans-serif;">
+  ✅ <span>Tugas</span>
+</a>
     </script>
 </body>
 </html>
