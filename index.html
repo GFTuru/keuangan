@@ -2452,7 +2452,7 @@
                    localStorage.setItem('backup_v6', JSON.stringify({ settings: App.State.settings }));
     
                    if (App.Auth.isDummy) { localStorage.setItem('dummy_db_' + App.State.user.uid, JSON.stringify(dataToSave)); return; }
-                   if (this.dbInstance) { set(ref(this.dbInstance, `users/${App.State.user.uid}/appData`), dataToSave); }
+                   if (this.dbInstance) { try { set(ref(this.dbInstance, `users/${App.State.user.uid}/appData`), dataToSave); } catch(e){ console.warn('Gagal sync ke akun (diabaikan):', e); } }
               }
             },
 
@@ -3457,7 +3457,7 @@
     try { const raw = localStorage.getItem(LS); if(raw) return JSON.parse(raw); } catch(e){}
     return seed();
   }
-  function save(){ try { localStorage.setItem(LS, JSON.stringify(state)); } catch(e){} if(window.TugasProBridge && window.TugasProBridge.notifyChange) window.TugasProBridge.notifyChange(); }
+  function save(){ try { localStorage.setItem(LS, JSON.stringify(state)); } catch(e){} try { if(window.TugasProBridge && window.TugasProBridge.notifyChange) window.TugasProBridge.notifyChange(); } catch(e){ console.warn('TugasProBridge sync gagal (diabaikan):', e); } }
 
   function seed(){
     const p1 = uid(), p2 = uid(), p3 = uid();
@@ -4007,8 +4007,10 @@
         // ── Jembatan ke sistem simpan/sync akun Keuangan Pro ──
         window.TugasProBridge = window.TugasProBridge || {};
         window.TugasProBridge.notifyChange = function(){
-            updateNavBadge();
-            if(window.App && App.DB && typeof App.DB.save === 'function') App.DB.save();
+            try {
+                updateNavBadge();
+                if(window.App && App.DB && typeof App.DB.save === 'function') App.DB.save();
+            } catch(e){ console.warn('Gagal sync data Tugas Pro ke akun (diabaikan):', e); }
         };
         // Dipanggil saat data tugas datang dari akun (login / sinkron real-time)
         window.TugasProBridge.applyExternalTodos = function(todosObj){
