@@ -3509,7 +3509,7 @@
       base=new Date(today); stepDate(base, r);
     }
     t.due=isoOf(base);
-    t.subtasks.forEach(s=>s.done=false);
+    (t.subtasks||[]).forEach(s=>s.done=false);
     t.done=false;
   }
   // hitung preview tanggal berikutnya untuk form
@@ -3545,7 +3545,7 @@
     }
     if(search){
       const q=search.toLowerCase();
-      list=list.filter(t=> t.title.toLowerCase().includes(q) || (t.notes||'').toLowerCase().includes(q) || t.tags.some(tg=>tg.toLowerCase().includes(q)));
+      list=list.filter(t=> t.title.toLowerCase().includes(q) || (t.notes||'').toLowerCase().includes(q) || (t.tags||[]).some(tg=>tg.toLowerCase().includes(q)));
     }
     const s=sortBy;
     list.sort((a,b)=>{
@@ -3644,15 +3644,15 @@
     if(t.repeat) checkCls+=' is-loop';
     const proj=state.projects.find(p=>p.id===t.project);
     const dc=dueClass(t.due,t.done);
-    const subDone=t.subtasks.filter(s=>s.done).length;
+    const subDone=(t.subtasks||[]).filter(s=>s.done).length;
     let meta='';
     if(t.due){ const ico=dc==='due-over'?'alert-circle':'calendar'; meta+=`<span class="badge ${dc}"><i data-lucide="${ico}" class="ico"></i>${fmtDate(t.due)}</span>`; }
     if(t.repeat) meta+=`<span class="badge loop"><i data-lucide="repeat" class="ico"></i>${repeatLabel(t.repeat)}</span>`;
     if(t.priority!=='none'){ const m={high:['hi','Tinggi'],med:['md','Sedang'],low:['lo','Rendah']}; meta+=`<span class="badge pri ${m[t.priority][0]}">${m[t.priority][1]}</span>`; }
     if(proj) meta+=`<span class="badge proj"><span class="proj-dot" style="background:${proj.color}"></span>${esc(proj.name)}</span>`;
-    if(t.subtasks.length) meta+=`<span class="badge sub"><i data-lucide="list-checks" class="ico"></i>${subDone}/${t.subtasks.length}</span>`;
+    if((t.subtasks||[]).length) meta+=`<span class="badge sub"><i data-lucide="list-checks" class="ico"></i>${subDone}/${t.subtasks.length}</span>`;
     if(t.notes) meta+=`<span class="badge"><i data-lucide="align-left" class="ico"></i></span>`;
-    t.tags.forEach(tg=> meta+=`<span class="badge tag">#${esc(tg)}</span>`);
+    (t.tags||[]).forEach(tg=> meta+=`<span class="badge tag">#${esc(tg)}</span>`);
     el.innerHTML=`
       <span class="drag-h" title="Geser untuk urutkan"><i data-lucide="grip-vertical" style="width:16px;height:16px"></i></span>
       <button class="check ${checkCls}" type="button" aria-label="Tandai selesai"><i data-lucide="check"></i></button>
@@ -3689,11 +3689,11 @@
   function toggleDone(id,el){
     const t=state.tasks.find(x=>x.id===id); if(!t) return;
     if(t.repeat && !t.done){
-      const prevDue=t.due, prevSubs=t.subtasks.map(s=>s.done);
+      const prevDue=t.due, prevSubs=(t.subtasks||[]).map(s=>s.done);
       advanceRepeat(t); save(); renderSide();
       if(el) el.classList.add('looping');
       setTimeout(render,220);
-      toast(`Diulang. Berikutnya: ${fmtDate(t.due)}`,'Urungkan',()=>{ t.due=prevDue; t.subtasks.forEach((s,i)=>s.done=prevSubs[i]); t.done=false; save(); render(); });
+      toast(`Diulang. Berikutnya: ${fmtDate(t.due)}`,'Urungkan',()=>{ t.due=prevDue; (t.subtasks||[]).forEach((s,i)=>s.done=prevSubs[i]); t.done=false; save(); render(); });
       return;
     }
     t.done=!t.done; save(); setTimeout(render, t.done?180:0); renderSide();
@@ -3755,7 +3755,7 @@
 
   function openEdit(id){
     const t=state.tasks.find(x=>x.id===id); if(!t) return;
-    editingId=id; draftSubs=t.subtasks.map(s=>({...s}));
+    editingId=id; draftSubs=(t.subtasks||[]).map(s=>({...s}));
     $('#tModalTitle').textContent='Edit Tugas';
     $('#tSaveLbl').textContent='Simpan';
     const chk=$('#tCheck'); chk.style.display='grid'; chk.classList.toggle('done',t.done);
@@ -3764,7 +3764,7 @@
     $('#tPri').value=t.priority;
     $('#tDate').value=t.due||'';
     $('#tProj').value=t.project||'';
-    $('#tTags').value=t.tags.join(', ');
+    $('#tTags').value=(t.tags||[]).join(', ');
     $('#tNotes').value=t.notes||'';
     if(t.repeat){
       $('#tLoopOn').checked=true; $('#loopPanel').classList.remove('hide');
@@ -4014,6 +4014,17 @@
         window.TugasProBridge.applyExternalTodos = function(todosObj){
             if(!todosObj) return;
             try {
+                // Firebase Realtime Database membuang array kosong ([]) saat disimpan.
+                // Pulihkan field yang hilang biar render tugas gak crash (penyebab tugas lain "ikut hilang").
+                if(Array.isArray(todosObj.tasks)){
+                    todosObj.tasks.forEach(t => {
+                        if(!Array.isArray(t.subtasks)) t.subtasks = [];
+                        if(!Array.isArray(t.tags)) t.tags = [];
+                        else t.tags = t.tags.filter(Boolean);
+                        t.subtasks.forEach(s => { if(typeof s.title !== 'string') s.title = ''; });
+                    });
+                }
+                if(!Array.isArray(todosObj.projects)) todosObj.projects = [];
                 localStorage.setItem(LS_KEY, JSON.stringify(todosObj));
                 updateNavBadge();
                 if(window.TugasProBridge.refresh) window.TugasProBridge.refresh();
