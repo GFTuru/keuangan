@@ -870,6 +870,16 @@
         #tabTodo { display:block; }
         /* Pastikan popup tambah/edit tugas & popup proyek selalu di tengah layar */
         #tabTodo dialog { margin: auto !important; }
+        /* Sidebar proyek/filter Tugas Pro dijadikan popup mengambang (bukan kolom kiri-kanan) */
+        #tabTodo .app { grid-template-columns: 1fr !important; }
+        #tabTodo .side {
+            position: fixed !important; top: 0; left: 0; bottom: 0; width: 280px; max-width: 82vw;
+            z-index: calc(var(--z-drawer) + 1);
+            transform: translateX(-100%); transition: transform .32s var(--ease-out);
+            box-shadow: var(--sh-lg) !important; border-right: 1px solid var(--border-light);
+        }
+        #tabTodo .side.open { transform: none; }
+        #tabTodo .menu-btn { display: grid !important; }
         #tabTodo .app {
             height: min(680px, 72vh);
             min-height: 440px;
@@ -1462,7 +1472,7 @@
     <div class="topbar">
       <div class="top-row">
         <div class="view-meta" style="display:flex;align-items:center;gap:12px">
-          <button class="icon-btn menu-btn" id="menuBtn" type="button"><i data-lucide="menu" style="width:18px;height:18px"></i></button>
+          <button class="icon-btn menu-btn" id="menuBtn" type="button"><i data-lucide="settings" style="width:18px;height:18px"></i></button>
           <div>
             <h1 class="view-title" id="viewTitle">Hari Ini</h1>
             <div class="view-date" id="viewDate"></div>
