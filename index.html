@@ -1156,21 +1156,6 @@
                 </div>
             </div>
             
-            <div style="display:flex; align-items:center; gap:0.5rem;">
-            <div style="position: relative;">
-                <button class="profile-btn" id="topMenuBtn" onclick="App.UI.toggleTopMenu()" type="button" style="padding:0.65rem;">
-                    <span style="font-size:1.15rem; line-height:1;">⋮</span>
-                    <span class="tp-nav-badge" id="todoNavBadge"></span>
-                </button>
-                <div class="profile-dropdown" id="topMenuDropdown" style="width:190px;">
-                    <div class="pd-body" style="padding-top:0.5rem;">
-                        <button class="pd-menu-item" id="menuItemTodo" onclick="App.UI.closeTopMenu(); App.UI.switchTab('todo', this);">
-                            <div class="pd-menu-icon" style="background: var(--primary-light);">✅</div>
-                            Tugas
-                        </button>
-                    </div>
-                </div>
-            </div>
             <div style="position: relative;">
                 <button class="profile-btn" id="profileBtn" onclick="App.UI.toggleProfileDropdown()" type="button">
                     <div class="user-avatar" id="userAvatar">U</div>
@@ -1211,7 +1196,6 @@
                         </button>
                     </div>
                 </div>
-            </div>
             </div>
         </header>
 
@@ -1531,21 +1515,7 @@
                     </div>
                 </div>
 
-                <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
-                    <h3 class="font-bold" style="margin-bottom: 0.5rem;">🎨 Aksen Warna</h3>
-                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:0.5rem; margin-top:0.5rem;">
-                        <button class="theme-swatch" onclick="App.Theme.changeAccent(244)" title="Indigo" style="--sw-a:hsl(244,75%,59%); --sw-b:hsl(244,75%,72%);"><span>Indigo</span></button>
-                        <button class="theme-swatch" onclick="App.Theme.changeAccent(160)" title="Emerald" style="--sw-a:hsl(160,75%,40%); --sw-b:hsl(160,75%,55%);"><span>Emerald</span></button>
-                        <button class="theme-swatch" onclick="App.Theme.changeAccent(38)"  title="Amber"   style="--sw-a:hsl(38,90%,50%);  --sw-b:hsl(38,90%,65%);"><span>Amber</span></button>
-                        <button class="theme-swatch" onclick="App.Theme.changeAccent(347)" title="Rose"    style="--sw-a:hsl(347,80%,55%); --sw-b:hsl(347,80%,70%);"><span>Rose</span></button>
-                        <button class="theme-swatch" onclick="App.Theme.changeAccent(258)" title="Violet"  style="--sw-a:hsl(258,75%,62%); --sw-b:hsl(258,75%,75%);"><span>Violet</span></button>
-                        <button class="theme-swatch" onclick="App.Theme.changeAccent(200)" title="Sky"     style="--sw-a:hsl(200,85%,45%); --sw-b:hsl(200,85%,60%);"><span>Sky</span></button>
-                        <button class="theme-swatch" onclick="App.Theme.changeAccent(176)" title="Teal"    style="--sw-a:hsl(176,70%,38%); --sw-b:hsl(176,70%,53%);"><span>Teal</span></button>
-                        <button class="theme-swatch" onclick="App.Theme.changeAccent(15)"  title="Coral"   style="--sw-a:hsl(15,85%,55%);  --sw-b:hsl(15,85%,68%);"><span>Coral</span></button>
-                    </div>
-                </div>
 
-                
                 <div class="form-group" style="padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-light);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <div><h3 class="font-bold">Kategori Kustom</h3></div><button class="btn btn-outline btn-sm" onclick="App.UI.showModal('catModal')">+ Tambah</button>
@@ -1803,6 +1773,7 @@
                 <button class="nav-item" onclick="App.UI.switchTab('history', this)"><div class="nav-icon">🕰️</div><span class="nav-label">Riwayat</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('analytics', this)"><div class="nav-icon">📈</div><span class="nav-label">Analisis</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('planning', this)"><div class="nav-icon">🗂️</div><span class="nav-label">Kelola</span></button>
+                <button class="nav-item" id="navTodoTab" onclick="App.UI.switchTab('todo', this)"><div class="nav-icon nav-icon-wrap">✅<span class="tp-nav-badge" id="todoNavBadge"></span></div><span class="nav-label">Tugas</span></button>
                 <button class="nav-item" id="navSettingsTab" onclick="App.UI.switchTab('settings', this)"><div class="nav-icon">⚙️</div><span class="nav-label">Setelan</span></button>
                 <button class="nav-item" id="navAdminTab" style="display: none;" onclick="App.UI.switchTab('admin', this)"><div class="nav-icon">🛡️</div><span class="nav-label">Admin</span></button>
             </div>
@@ -2583,11 +2554,6 @@
                     dd.classList.add('open'); setTimeout(() => { document.addEventListener('click', function handler(e) { if (!e.target.closest('#profileBtn') && !e.target.closest('#profileDropdown')) { dd.classList.remove('open'); document.removeEventListener('click', handler); } }); }, 10);
                 },
                 closeProfileDropdown() { const dd = document.getElementById('profileDropdown'); if (dd) dd.classList.remove('open'); },
-                toggleTopMenu() {
-                    const dd = document.getElementById('topMenuDropdown'); if (!dd) return; const isOpen = dd.classList.contains('open'); if (isOpen) { dd.classList.remove('open'); return; }
-                    dd.classList.add('open'); setTimeout(() => { document.addEventListener('click', function handler(e) { if (!e.target.closest('#topMenuBtn') && !e.target.closest('#topMenuDropdown')) { dd.classList.remove('open'); document.removeEventListener('click', handler); } }); }, 10);
-                },
-                closeTopMenu() { const dd = document.getElementById('topMenuDropdown'); if (dd) dd.classList.remove('open'); },
                 showLogoutModal() { const user = App.State.user; if (!user) return; const name = user.displayName || user.email.split('@')[0]; const initials = name.charAt(0).toUpperCase(); const avatarEl = document.getElementById('logoutAvatar'); const nameEl = document.getElementById('logoutName'); if (avatarEl) avatarEl.textContent = initials; if (nameEl) nameEl.textContent = name; this.showModal('logoutModal'); },
                 switchTabByName(tabName) { const navItems = document.querySelectorAll('.nav-item'); navItems.forEach(item => { if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(`'${tabName}'`)) { item.click(); } }); },
                 updateSyncStatus(status) {
@@ -4090,7 +4056,7 @@
         }
 
         function openTodoTab(){
-            const btn = document.getElementById('menuItemTodo');
+            const btn = document.getElementById('navTodoTab');
             if(btn && window.App && App.UI && App.UI.switchTab) App.UI.switchTab('todo', btn);
         }
 
