@@ -903,7 +903,7 @@
   }#tabTodo .task.drop-above::before { top: -1px; }#tabTodo .task.drop-below::after { bottom: -1px; }#tabTodo .task.looping .check { animation: spin .5s var(--ease-out); }
   @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }#tabTodo .drag-h {
     opacity: 0; color: var(--faint); cursor: grab; padding-top: 3px;
-    transition: opacity .12s; touch-action: none; margin-left: -6px;
+    transition: opacity .12s; margin-left: -6px;
   }#tabTodo .task:hover .drag-h { opacity: 1; }#tabTodo .drag-h:active { cursor: grabbing; }#tabTodo .check {
     width: 22px; height: 22px; border: 2px solid var(--faint); border-radius: 7px;
     flex-shrink: 0; margin-top: 1px; display: grid; place-items: center;
@@ -2086,8 +2086,6 @@
 
                         App.UI.toggleAuthView(false);
                         App.DB.listen(user.uid);
-                        // Subscribe FCM push setelah login berhasil
-                        setTimeout(() => App.Handlers.subscribeFCM(user.uid), 2500);
 
                         if(App.DB.dbInstance && !this.isDummy) {
                             update(ref(App.DB.dbInstance, `users/${user.uid}/profile`), {
@@ -3665,9 +3663,14 @@
     el.querySelector('.t-body').onclick=()=>openEdit(t.id);
     el.querySelector('.edit').onclick=(e)=>{ e.stopPropagation(); openEdit(t.id); };
     el.querySelector('.del').onclick=(e)=>{ e.stopPropagation(); deleteTask(t.id); };
+    // Fallback: tap di mana pun di baris (selain tombol aksi) tetap buka detail tugas.
+    // Ini jaga-jaga kalau event pada elemen anak gagal ke-trigger di beberapa browser HP.
+    el.addEventListener('click',(e)=>{ if(!e.target.closest('.check,.edit,.del,.drag-h')) openEdit(t.id); });
     const h=el.querySelector('.drag-h');
+    // Drag-and-drop native HTML5 hanya diaktifkan lewat mouse (desktop).
+    // TIDAK diaktifkan lewat touchstart karena kombinasi touch-action:none + draggable=true
+    // bikin gesture tap di layar sentuh kadang "nyangkut" dan tidak terdeteksi sebagai klik.
     h.addEventListener('mousedown',()=>el.draggable=true);
-    h.addEventListener('touchstart',()=>el.draggable=true,{passive:true});
     el.addEventListener('dragend',()=>el.draggable=false);
     return el;
   }
