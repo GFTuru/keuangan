@@ -2694,20 +2694,40 @@
                     if (/\+\s?Rp/i.test(text)) type = 'in';
                     out.type = type;
 
-                    // --- Keterangan (baris pertama yang cukup masuk akal) ---
+                    // --- Keterangan: prioritaskan "Ke [tujuan]" daripada "Dari [asal]" ---
                     const skipWords = ['berhasil', 'transaksi', 'rincian', 'detail', 'struk', 'bukti', 'notifikasi', 'status', 'lihat', 'bagikan', 'simpan', 'unduh', 'riwayat', 'saldo',
                         'gopay', 'dana', 'ovo', 'shopeepay', 'linkaja', 'bca', 'mobile banking', 'm-banking', 'mandiri', 'livin', 'jenius', 'bri', 'bni', 'flip', 'jago', 'blu', 'seabank', 'permata', 'cimb', 'octo'];
                     const connectorOnly = /^(terkirim|kirim|transfer|dikirim|pembayaran|bayar)\s*(ke|kepada)?$|^(diterima|terima|masuk)\s*(dari)?$/i;
                     const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
                     let note = '';
+
+                    // 1) Cari pola eksplisit "Ke ..." / "Kepada ..." / "Terkirim ke ..." dulu (tujuan lebih penting)
                     for (const line of lines) {
-                        const l = line.toLowerCase();
-                        if (line.length < 3) continue;
-                        if (/^rp/i.test(line) || /^\d/.test(line)) continue;
-                        if (connectorOnly.test(line)) continue;
-                        if (skipWords.some(w => l === w || l.startsWith(w + ' ') || l.includes(' ' + w))) continue;
-                        note = line; break;
+                        const m = line.match(/(?:^|terkirim\s+|dikirim\s+|kirim\s+)(?:ke|kepada)\s*[:\-]?\s*(.+)/i);
+                        if (m && m[1] && m[1].trim().length >= 2) { note = 'Ke ' + m[1].trim(); break; }
                     }
+
+                    // 2) Kalau belum ketemu, ambil baris pertama yang masuk akal — tapi lewati baris "Dari ..." (asal), bukan tujuan
+                    if (!note) {
+                        for (const line of lines) {
+                            const l = line.toLowerCase();
+                            if (line.length < 3) continue;
+                            if (/^rp/i.test(line) || /^\d/.test(line)) continue;
+                            if (connectorOnly.test(line)) continue;
+                            if (/^dari\b/i.test(line)) continue; // skip "Dari: ..." — bukan tujuan
+                            if (skipWords.some(w => l === w || l.startsWith(w + ' ') || l.includes(' ' + w))) continue;
+                            note = line; break;
+                        }
+                    }
+
+                    // 3) Kalau tetap kosong (misal transaksi masuk yang cuma punya info "Dari"), baru pakai itu sebagai fallback terakhir
+                    if (!note) {
+                        for (const line of lines) {
+                            const m = line.match(/^dari\s*[:\-]?\s*(.+)/i);
+                            if (m && m[1] && m[1].trim().length >= 2) { note = line.trim(); break; }
+                        }
+                    }
+
                     out.note = note.slice(0, 60);
 
                     return out;
