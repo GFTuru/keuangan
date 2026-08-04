@@ -673,6 +673,46 @@
             justify-content: space-between;
             margin-bottom: 1.25rem;
         }
+
+        /* ===== Quick Scan (Input Cepat dari Screenshot) ===== */
+        #scanModal .modal-content { max-width: 560px; }
+        .scan-drop {
+            border: 2px dashed var(--border-medium); border-radius: var(--radius-lg);
+            padding: 2rem 1rem; text-align: center; cursor: pointer;
+            background: var(--bg-body); transition: all var(--transition-normal);
+        }
+        .scan-drop:hover, .scan-drop.dragover { border-color: var(--primary); background: var(--primary-light); }
+        .scan-drop-icon { font-size: 2.25rem; margin-bottom: 0.5rem; }
+        .scan-progress-overall {
+            display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem;
+            background: var(--primary-light); border-radius: var(--radius-md); margin-bottom: 1rem;
+            font-size: 0.85rem; font-weight: 600; color: var(--primary-dark);
+        }
+        .scan-spinner {
+            width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+            border: 3px solid var(--primary-light); border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+        }
+        .scan-draft-card {
+            border: 1px solid var(--border-light); border-radius: var(--radius-md);
+            padding: 1rem; margin-bottom: 0.85rem; background: var(--bg-body);
+            display: flex; gap: 0.75rem; align-items: flex-start;
+        }
+        .scan-draft-card.excluded { opacity: 0.45; }
+        .scan-draft-thumb { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border-light); }
+        .scan-draft-body { flex: 1; min-width: 0; }
+        .scan-draft-status { font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 99px; display: inline-block; margin-bottom: 0.5rem; }
+        .scan-draft-status.ok { background: var(--success-light); color: var(--success-dark); }
+        .scan-draft-status.warn { background: var(--warning-light); color: var(--warning-dark); }
+        .scan-draft-status.processing { background: var(--bg-surface-hover); color: var(--text-muted); }
+        .scan-draft-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
+        .scan-draft-grid input, .scan-draft-grid select { font-size: 0.82rem; padding: 0.5rem 0.6rem; }
+        .scan-draft-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.1rem; padding: 0.2rem 0.4rem; flex-shrink: 0; }
+        .scan-draft-remove:hover { color: var(--danger); }
+        .scan-type-mini { display: flex; gap: 0.4rem; margin-top: 0.5rem; }
+        .scan-type-mini button { flex: 1; padding: 0.4rem; border-radius: 8px; border: 1px solid var(--border-light); background: var(--bg-surface); font-size: 0.78rem; font-weight: 700; cursor: pointer; color: var(--text-muted); }
+        .scan-type-mini button.active.in { background: var(--success-light); color: var(--success-dark); border-color: var(--success-light); }
+        .scan-type-mini button.active.out { background: var(--danger-light); color: var(--danger-dark); border-color: var(--danger-light); }
         .home-tx-title {
             display: flex;
             align-items: center;
@@ -1306,6 +1346,7 @@
                         <div class="home-tx-icon-wrap">✍️</div>
                         <span>Catat Transaksi</span>
                     </div>
+                    <button type="button" class="btn btn-sm" style="background: var(--primary-light); color: var(--primary-dark); font-weight: 700;" onclick="App.QuickScan.open()">📸 Scan Mutasi</button>
                 </div>
                 <form id="txForm" onsubmit="App.Handlers.addTransaction(event)">
                     <!-- Type Toggle -->
@@ -1783,6 +1824,35 @@
     <!-- =======================================================================
          MODALS
          ======================================================================= -->
+
+    <!-- Quick Scan Modal (Input Cepat dari Screenshot Mutasi) -->
+    <div id="scanModal" class="modal-overlay" onclick="if(event.target===this) App.QuickScan.close()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📸 Input Cepat dari Screenshot</h2>
+                <button class="modal-close" onclick="App.QuickScan.close()">&times;</button>
+            </div>
+
+            <div id="scanDropZone" class="scan-drop" onclick="document.getElementById('scanFileInput').click()">
+                <div class="scan-drop-icon">🧾</div>
+                <div class="font-bold text-sm">Ketuk untuk pilih screenshot mutasi</div>
+                <div class="text-xs text-muted" style="margin-top:0.25rem;">Bisa pilih lebih dari 1 sekaligus. Hasilnya tetap bisa direvisi dulu sebelum disimpan.</div>
+            </div>
+            <input type="file" id="scanFileInput" accept="image/*" multiple style="display:none;" onchange="App.QuickScan.handleFiles(this.files)">
+
+            <div id="scanOverallProgress" class="scan-progress-overall" style="display:none;">
+                <div class="scan-spinner"></div>
+                <span id="scanOverallProgressText">Membaca gambar...</span>
+            </div>
+
+            <div id="scanDraftList" style="margin-top:1rem;"></div>
+
+            <div id="scanFooter" style="display:none; margin-top:0.5rem; gap:0.6rem;">
+                <button type="button" class="btn btn-outline" style="flex:1;" onclick="document.getElementById('scanFileInput').click()">+ Foto Lagi</button>
+                <button type="button" class="btn btn-primary" style="flex:2;" onclick="App.QuickScan.commitAll()">✅ Tambahkan <span id="scanCommitCount">0</span> Transaksi</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Edit Transaction Modal -->
     <div id="editModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('editModal')">
@@ -2484,6 +2554,246 @@
                 changeAccent(hue, save = true) {
                     document.documentElement.style.setProperty('--hue-primary', hue);
                     if(save) { App.State.settings.accentHue = hue; App.DB.save(); }
+                }
+            },
+
+            // ----------------------------------------------------------------------
+            // QUICK SCAN — Input cepat dari screenshot mutasi (OCR + review manual)
+            // ----------------------------------------------------------------------
+            QuickScan: {
+                drafts: [],
+                _tesseractLoading: null,
+                _uidCounter: 0,
+
+                open() {
+                    this.drafts = [];
+                    document.getElementById('scanDraftList').innerHTML = '';
+                    document.getElementById('scanFooter').style.display = 'none';
+                    document.getElementById('scanOverallProgress').style.display = 'none';
+                    document.getElementById('scanFileInput').value = '';
+                    App.UI.showModal('scanModal');
+                },
+                close() { App.UI.closeModal('scanModal'); },
+
+                loadTesseract() {
+                    if (window.Tesseract) return Promise.resolve();
+                    if (this._tesseractLoading) return this._tesseractLoading;
+                    this._tesseractLoading = new Promise((resolve, reject) => {
+                        const s = document.createElement('script');
+                        s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+                        s.onload = () => resolve();
+                        s.onerror = () => reject(new Error('Gagal memuat pustaka OCR. Cek koneksi internet.'));
+                        document.head.appendChild(s);
+                    });
+                    return this._tesseractLoading;
+                },
+
+                async handleFiles(fileList) {
+                    const files = Array.from(fileList || []);
+                    if (!files.length) return;
+
+                    const overall = document.getElementById('scanOverallProgress');
+                    const overallText = document.getElementById('scanOverallProgressText');
+                    overall.style.display = 'flex';
+
+                    try {
+                        overallText.textContent = 'Menyiapkan mesin pembaca teks...';
+                        await this.loadTesseract();
+                    } catch (e) {
+                        overall.style.display = 'none';
+                        App.UI.showToast(e.message || 'Gagal memuat OCR', 'error');
+                        return;
+                    }
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        overallText.textContent = `Membaca gambar ${i + 1} dari ${files.length}...`;
+                        const draftId = 'sd' + (this._uidCounter++);
+                        const imgUrl = URL.createObjectURL(file);
+                        const draft = {
+                            _id: draftId, active: true, status: 'processing',
+                            imgUrl, type: 'out', amount: 0, date: App.Utils.todayISO ? App.Utils.todayISO() : new Date().toISOString().split('T')[0],
+                            account: 'saldo', category: 'lainnya', note: ''
+                        };
+                        this.drafts.push(draft);
+                        this.renderDrafts();
+
+                        try {
+                            const result = await window.Tesseract.recognize(file, 'eng');
+                            const text = (result && result.data && result.data.text) || '';
+                            const parsed = this.parseReceiptText(text);
+                            Object.assign(draft, parsed, { status: parsed.amount > 0 ? 'ok' : 'warn' });
+                        } catch (e) {
+                            draft.status = 'warn';
+                            draft.note = draft.note || '(Gagal membaca otomatis, isi manual)';
+                        }
+                        this.renderDrafts();
+                    }
+
+                    overall.style.display = 'none';
+                    document.getElementById('scanFooter').style.display = 'flex';
+                    document.getElementById('scanFileInput').value = '';
+                },
+
+                parseAmountStr(s) {
+                    s = (s || '').replace(/[^\d.,]/g, '');
+                    if (/,\d{1,2}$/.test(s)) s = s.replace(/\./g, '').replace(',', '.');
+                    else s = s.replace(/[.,]/g, '');
+                    const n = parseInt(s, 10);
+                    return isNaN(n) ? 0 : n;
+                },
+
+                parseReceiptText(rawText) {
+                    const text = (rawText || '').replace(/\r/g, '');
+                    const lower = text.toLowerCase();
+                    const out = { amount: 0, date: null, type: 'out', note: '' };
+
+                    // --- Nominal ---
+                    let amount = 0;
+                    const rpMatches = [...text.matchAll(/Rp\.?\s?([\d.,]{4,})/gi)];
+                    if (rpMatches.length) {
+                        const nums = rpMatches.map(m => this.parseAmountStr(m[1])).filter(n => n > 0);
+                        if (nums.length) amount = Math.max(...nums);
+                    }
+                    if (!amount) {
+                        const numMatches = [...text.matchAll(/\b\d{1,3}(?:[.,]\d{3})+\b/g)];
+                        const nums = numMatches.map(m => this.parseAmountStr(m[0])).filter(n => n >= 1000);
+                        if (nums.length) amount = Math.max(...nums);
+                    }
+                    out.amount = amount;
+
+                    // --- Tanggal ---
+                    const months = { jan: '01', feb: '02', mar: '03', apr: '04', mei: '05', may: '05', jun: '06', jul: '07', agu: '08', aug: '08', sep: '09', okt: '10', oct: '10', nov: '11', des: '12', dec: '12' };
+                    let dateStr = null;
+                    let m = lower.match(/(\d{1,2})\s+(jan\w*|feb\w*|mar\w*|apr\w*|mei|may|jun\w*|jul\w*|agu\w*|aug\w*|sep\w*|okt\w*|oct\w*|nov\w*|des\w*|dec\w*)\s+(\d{4})/);
+                    if (m) {
+                        const mm = months[m[2].slice(0, 3)];
+                        if (mm) dateStr = `${m[3]}-${mm}-${m[1].padStart(2, '0')}`;
+                    }
+                    if (!dateStr) {
+                        m = text.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+                        if (m) {
+                            let yr = m[3].length === 2 ? '20' + m[3] : m[3];
+                            let day = parseInt(m[1], 10), mon = parseInt(m[2], 10);
+                            // sebagian format Barat DD/MM/YYYY, tapi jaga-jaga kalau ketuker
+                            if (mon > 12 && day <= 12) { const tmp = day; day = mon; mon = tmp; }
+                            dateStr = `${yr}-${String(mon).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        }
+                    }
+                    if (!dateStr && /hari ini|today/i.test(lower)) dateStr = new Date().toISOString().split('T')[0];
+                    if (!dateStr && /kemarin|yesterday/i.test(lower)) { const d = new Date(); d.setDate(d.getDate() - 1); dateStr = d.toISOString().split('T')[0]; }
+                    out.date = dateStr || new Date().toISOString().split('T')[0];
+
+                    // --- Jenis (pemasukan/pengeluaran) ---
+                    const inKeywords = ['diterima', 'terima dari', 'top up berhasil', 'top-up berhasil', 'masuk', 'kredit', 'received', 'pengembalian dana', 'refund', 'gaji', 'cashback'];
+                    const outKeywords = ['terkirim', 'kirim ke', 'transfer ke', 'pembelian', 'bayar', 'pembayaran', 'debit', 'membayar', 'tarik tunai', 'beli'];
+                    let type = 'out';
+                    if (inKeywords.some(k => lower.includes(k))) type = 'in';
+                    if (outKeywords.some(k => lower.includes(k))) type = 'out';
+                    if (/[-−]\s?Rp/i.test(text)) type = 'out';
+                    if (/\+\s?Rp/i.test(text)) type = 'in';
+                    out.type = type;
+
+                    // --- Keterangan (baris pertama yang cukup masuk akal) ---
+                    const skipWords = ['berhasil', 'transaksi', 'rincian', 'detail', 'struk', 'bukti', 'notifikasi', 'status', 'lihat', 'bagikan', 'simpan', 'unduh', 'riwayat', 'saldo',
+                        'gopay', 'dana', 'ovo', 'shopeepay', 'linkaja', 'bca', 'mobile banking', 'm-banking', 'mandiri', 'livin', 'jenius', 'bri', 'bni', 'flip', 'jago', 'blu', 'seabank', 'permata', 'cimb', 'octo'];
+                    const connectorOnly = /^(terkirim|kirim|transfer|dikirim|pembayaran|bayar)\s*(ke|kepada)?$|^(diterima|terima|masuk)\s*(dari)?$/i;
+                    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+                    let note = '';
+                    for (const line of lines) {
+                        const l = line.toLowerCase();
+                        if (line.length < 3) continue;
+                        if (/^rp/i.test(line) || /^\d/.test(line)) continue;
+                        if (connectorOnly.test(line)) continue;
+                        if (skipWords.some(w => l === w || l.startsWith(w + ' ') || l.includes(' ' + w))) continue;
+                        note = line; break;
+                    }
+                    out.note = note.slice(0, 60);
+
+                    return out;
+                },
+
+                renderDrafts() {
+                    const list = document.getElementById('scanDraftList');
+                    document.getElementById('scanCommitCount').textContent = this.drafts.filter(d => d.active).length;
+                    list.innerHTML = this.drafts.map((d, i) => {
+                        if (d.status === 'processing') {
+                            return `<div class="scan-draft-card" id="draft-${d._id}">
+                                <img class="scan-draft-thumb" src="${d.imgUrl}">
+                                <div class="scan-draft-body">
+                                    <span class="scan-draft-status processing">⏳ Membaca...</span>
+                                    <div class="text-xs text-muted">Mohon tunggu sebentar</div>
+                                </div>
+                            </div>`;
+                        }
+                        const statusBadge = d.status === 'ok' ? `<span class="scan-draft-status ok">✅ Terdeteksi</span>` : `<span class="scan-draft-status warn">⚠️ Cek manual</span>`;
+                        return `<div class="scan-draft-card ${d.active ? '' : 'excluded'}" id="draft-${d._id}">
+                            <img class="scan-draft-thumb" src="${d.imgUrl}">
+                            <div class="scan-draft-body">
+                                <div style="display:flex; align-items:center; justify-content:space-between;">
+                                    <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+                                        <input type="checkbox" ${d.active ? 'checked' : ''} onchange="App.QuickScan.updateDraft(${i},'active',this.checked)">
+                                        ${statusBadge}
+                                    </label>
+                                    <button type="button" class="scan-draft-remove" onclick="App.QuickScan.removeDraft(${i})" title="Hapus">🗑️</button>
+                                </div>
+                                <div class="scan-type-mini">
+                                    <button type="button" class="${d.type === 'in' ? 'active in' : ''}" onclick="App.QuickScan.updateDraft(${i},'type','in')">⬆ Pemasukan</button>
+                                    <button type="button" class="${d.type === 'out' ? 'active out' : ''}" onclick="App.QuickScan.updateDraft(${i},'type','out')">⬇ Pengeluaran</button>
+                                </div>
+                                <div class="scan-draft-grid">
+                                    <input type="text" inputmode="numeric" placeholder="Nominal" value="${d.amount ? d.amount.toLocaleString('id-ID') : ''}" onchange="App.QuickScan.updateDraft(${i},'amount',App.QuickScan.parseAmountStr(this.value))">
+                                    <input type="date" value="${d.date}" onchange="App.QuickScan.updateDraft(${i},'date',this.value)">
+                                    <select onchange="App.QuickScan.updateDraft(${i},'account',this.value)">
+                                        <option value="saldo" ${d.account === 'saldo' ? 'selected' : ''}>🪪 Saldo Bank/E-Wallet</option>
+                                        <option value="cash" ${d.account === 'cash' ? 'selected' : ''}>💵 Cash / Tunai</option>
+                                    </select>
+                                    <select onchange="App.QuickScan.updateDraft(${i},'category',this.value)">
+                                        ${[...App.Config.DefaultCategories, ...App.State.customCategories].map(c => `<option value="${c.id}" ${d.category === c.id ? 'selected' : ''}>${c.icon} ${c.name}</option>`).join('')}
+                                    </select>
+                                    <input type="text" placeholder="Keterangan" value="${(d.note || '').replace(/"/g, '&quot;')}" style="grid-column: 1 / -1;" onchange="App.QuickScan.updateDraft(${i},'note',this.value)">
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                },
+
+                updateDraft(idx, field, value) {
+                    const d = this.drafts[idx]; if (!d) return;
+                    d[field] = value;
+                    if (field === 'active') this.renderDrafts();
+                    else {
+                        document.getElementById('scanCommitCount').textContent = this.drafts.filter(x => x.active).length;
+                        // hindari render ulang penuh biar fokus input tidak lepas, kecuali ganti tipe (butuh update tombol aktif)
+                        if (field === 'type') this.renderDrafts();
+                    }
+                },
+
+                removeDraft(idx) {
+                    this.drafts.splice(idx, 1);
+                    this.renderDrafts();
+                },
+
+                commitAll() {
+                    const chosen = this.drafts.filter(d => d.active);
+                    if (!chosen.length) return App.UI.showToast('Tidak ada transaksi yang dipilih', 'error');
+                    const invalid = chosen.filter(d => !d.amount || d.amount <= 0);
+                    if (invalid.length) return App.UI.showToast(`${invalid.length} transaksi belum ada nominal, isi dulu ya`, 'error');
+
+                    chosen.forEach((d, n) => {
+                        const tx = {
+                            id: Date.now() + n, tanggal: d.date, jenisAkun: d.account,
+                            pemasukan: d.type === 'in' ? d.amount : 0,
+                            pengeluaran: d.type === 'out' ? d.amount : 0,
+                            kategori: d.category, keterangan: d.note || '(dari scan mutasi)'
+                        };
+                        App.State.transactions.push(tx);
+                    });
+                    App.DB.save();
+                    App.UI.renderAll();
+                    App.UI.showToast(`${chosen.length} transaksi berhasil ditambahkan!`, 'success');
+                    this.close();
+                    this.drafts = [];
                 }
             },
 
@@ -3452,8 +3762,15 @@
   let selectedSwatch = PROJ_COLORS[0];
 
   function load(){
-    try { const raw = localStorage.getItem(LS); if(raw) return JSON.parse(raw); } catch(e){}
-    return seed();
+    let s = null;
+    try { const raw = localStorage.getItem(LS); if(raw) s = JSON.parse(raw); } catch(e){}
+    if(!s || typeof s !== 'object') return seed();
+    // Firebase Realtime Database membuang array kosong ([]) saat disimpan — kalau semua
+    // tugas/proyek dihapus, field ini bisa jadi undefined. Pulihkan supaya gak crash.
+    if(!Array.isArray(s.tasks)) s.tasks = [];
+    if(!Array.isArray(s.projects)) s.projects = [];
+    s.tasks.forEach(t => { if(!Array.isArray(t.subtasks)) t.subtasks = []; if(!Array.isArray(t.tags)) t.tags = []; });
+    return s;
   }
   function save(){ try { localStorage.setItem(LS, JSON.stringify(state)); } catch(e){} try { if(window.TugasProBridge && window.TugasProBridge.notifyChange) window.TugasProBridge.notifyChange(); } catch(e){ console.warn('TugasProBridge sync gagal (diabaikan):', e); } }
 
@@ -4020,8 +4337,10 @@
             if(!todosObj) return;
             try {
                 // Firebase Realtime Database membuang array kosong ([]) saat disimpan.
-                // Pulihkan field yang hilang biar render tugas gak crash (penyebab tugas lain "ikut hilang").
-                if(Array.isArray(todosObj.tasks)){
+                // Pulihkan field yang hilang biar render tugas gak crash (penyebab tugas lain "ikut hilang"
+                // atau error "Cannot read properties of undefined" saat menambah tugas baru).
+                if(!Array.isArray(todosObj.tasks)) todosObj.tasks = [];
+                else {
                     todosObj.tasks.forEach(t => {
                         if(!Array.isArray(t.subtasks)) t.subtasks = [];
                         if(!Array.isArray(t.tags)) t.tags = [];
