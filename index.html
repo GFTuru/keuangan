@@ -61,6 +61,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.383.0/dist/umd/lucide.min.js" integrity="sha384-wHFvAtjmgnkA2PJcMsDaCgdipf7X7YV44X/igbLHpvGiq6T5/PvFKl93grpvtbQT" crossorigin="anonymous"></script>
+    <script>
+        // Antrian popup/notifikasi otomatis: setiap popup cuma boleh tampil 1x per reload halaman,
+        // dan kalau ada beberapa yang mau muncul, ditampilkan GANTIAN (satu ketutup baru yang lain muncul), bukan numpuk.
+        window.AppNotifyQueue = {
+            queue: [], activeId: null, resolved: new Set(),
+            register(id, checkAndShowFn) {
+                if (this.resolved.has(id)) return; // sudah pernah muncul/ditutup sesi ini, gak diulang sampai reload
+                this.queue.push({ id, checkAndShowFn });
+                this._tryNext();
+            },
+            _tryNext() {
+                if (this.activeId) return; // masih ada yang tampil, tunggu ditutup dulu
+                const next = this.queue.shift();
+                if (!next) return;
+                this.resolved.add(next.id);
+                const shown = next.checkAndShowFn();
+                if (shown) this.activeId = next.id; else this._tryNext();
+            },
+            closed(id) {
+                if (this.activeId === id) this.activeId = null;
+                this._tryNext();
+            }
+        };
+    </script>
     
     <style>
         /* ==========================================================================
@@ -2527,7 +2551,7 @@
                             if(data.todos && window.TugasProBridge) window.TugasProBridge.applyExternalTodos(data.todos);
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
-                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.UI.renderAll(); setTimeout(() => App.Handlers.checkStartupAlerts(), 700);
+                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.UI.renderAll(); setTimeout(() => { if(window.AppNotifyQueue) window.AppNotifyQueue.register('finance-alert', () => App.Handlers.checkStartupAlerts()); else App.Handlers.checkStartupAlerts(); }, 700);
                         return;
                     }
 
@@ -2543,7 +2567,7 @@
                             if(data.todos && window.TugasProBridge) window.TugasProBridge.applyExternalTodos(data.todos);
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
-                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.UI.renderAll(); setTimeout(() => App.Handlers.checkStartupAlerts(), 700);
+                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.UI.renderAll(); setTimeout(() => { if(window.AppNotifyQueue) window.AppNotifyQueue.register('finance-alert', () => App.Handlers.checkStartupAlerts()); else App.Handlers.checkStartupAlerts(); }, 700);
                     }, (error) => { console.error("Firebase DB Error:", error); App.UI.updateSyncStatus('error'); });
                 },
                 save() {
@@ -3245,7 +3269,7 @@
                     const wasOpen = document.getElementById('financeAlertPopup').classList.contains('show');
                     if(wasOpen) App.Handlers.checkStartupAlerts(true);
                 },
-                closeStartupAlertPopup() { this.closeModal('financeAlertPopup'); },
+                closeStartupAlertPopup() { this.closeModal('financeAlertPopup'); if(window.AppNotifyQueue) window.AppNotifyQueue.closed('finance-alert'); },
                 closeModal(id) { document.getElementById(id).classList.remove('show'); },
                 showToast(msg, type='success') {
                     const c = document.getElementById('toastContainer'); const t = document.createElement('div'); t.className = `toast ${type}`;
@@ -3583,8 +3607,12 @@
                     const budgetAlerts = this.getBudgetAlerts(80);
                     const pendingRecurring = this.getPendingRecurring();
                     if(!budgetAlerts.length && !pendingRecurring.length) {
-                        if(isRefresh) { App.UI.closeModal('financeAlertPopup'); App.UI.showToast('Semua sudah beres ✅', 'success'); }
-                        return;
+                        if(isRefresh) {
+                            App.UI.closeModal('financeAlertPopup');
+                            App.UI.showToast('Semua sudah beres ✅', 'success');
+                            if(window.AppNotifyQueue) window.AppNotifyQueue.closed('finance-alert');
+                        }
+                        return false;
                     }
 
                     const fmt = App.Utils.formatCurrency;
@@ -3627,6 +3655,7 @@
 
                     document.getElementById('fapBody').innerHTML = html;
                     App.UI.showModal('financeAlertPopup');
+                    return true;
                 },
                 processRecurring() { /* dipertahankan agar kompatibel; penjadwalan sekarang lewat checkStartupAlerts() + konfirmasi manual */ },
 
@@ -4575,21 +4604,30 @@
             const dismissedDate = localStorage.getItem(DISMISS_KEY);
             if(dismissedDate === todayISO()) return; // sudah ditutup hari ini
 
-            const hasAgenda = renderPopup();
-            if(!hasAgenda) return; // tidak ada yg perlu diingatkan, tidak usah muncul
-
-            setTimeout(() => popup.classList.add('show'), 500);
-
             const dontShow = document.getElementById('trpDontShowToday');
             document.getElementById('trpClose').onclick = () => {
                 if(dontShow && dontShow.checked) localStorage.setItem(DISMISS_KEY, todayISO());
                 closePopup();
+                if(window.AppNotifyQueue) window.AppNotifyQueue.closed('todo-reminder');
             };
             document.getElementById('trpOpenTodo').onclick = () => {
                 if(dontShow && dontShow.checked) localStorage.setItem(DISMISS_KEY, todayISO());
                 closePopup();
                 openTodoTab();
+                if(window.AppNotifyQueue) window.AppNotifyQueue.closed('todo-reminder');
             };
+
+            const showFn = () => {
+                const hasAgenda = renderPopup();
+                if(!hasAgenda) return false;
+                popup.classList.add('show');
+                return true;
+            };
+
+            setTimeout(() => {
+                if(window.AppNotifyQueue) window.AppNotifyQueue.register('todo-reminder', showFn);
+                else showFn();
+            }, 500);
         }
 
         if(document.readyState === 'loading'){
