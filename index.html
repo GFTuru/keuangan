@@ -1917,9 +1917,15 @@
     <div id="editModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('editModal')">
         <div class="modal-content">
             <div class="modal-header"><h2>Ubah Transaksi</h2><button class="modal-close" onclick="App.UI.closeModal('editModal')">&times;</button></div>
-            <div id="editRunningBalanceBox" style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-body); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:0.75rem 1rem; margin-bottom:1rem;">
-                <span class="text-xs text-muted">Sisa saldo saat itu</span>
-                <span class="font-bold text-sm" id="editRunningBalance">—</span>
+            <div id="editRunningBalanceBox" style="background:var(--bg-body); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:0.75rem 1rem; margin-bottom:1rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="text-xs text-muted" id="editRunningBalanceLabel">Sisa saldo saat itu</span>
+                    <div style="display:flex; align-items:center; gap:0.45rem;">
+                        <span class="font-bold text-sm" id="editRunningBalance">—</span>
+                        <button type="button" id="editRunningBalanceInfoBtn" onclick="App.UI.toggleRunningBalanceDetail()" title="Lihat rincian saldo" style="width:20px; height:20px; border-radius:50%; border:none; background:var(--warning-light); color:var(--warning-dark); font-size:0.7rem; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">!</button>
+                    </div>
+                </div>
+                <div id="editRunningBalanceDetail" style="display:none; margin-top:0.7rem; padding-top:0.7rem; border-top:1px dashed var(--border-medium);"></div>
             </div>
             <form onsubmit="App.Handlers.saveEdit(event)">
                 <input type="hidden" id="edit-id">
@@ -3265,6 +3271,10 @@
                     if(id === 'admin' && App.State.isAdmin) App.Admin.loadData();
                 },
                 showModal(id) { document.getElementById(id).classList.add('show'); },
+                toggleRunningBalanceDetail() {
+                    const el = document.getElementById('editRunningBalanceDetail');
+                    if (el) el.style.display = (el.style.display === 'none' || !el.style.display) ? 'block' : 'none';
+                },
                 refreshStartupAlertPopup() {
                     const wasOpen = document.getElementById('financeAlertPopup').classList.contains('show');
                     if(wasOpen) App.Handlers.checkStartupAlerts(true);
@@ -3362,9 +3372,31 @@
                     const t = App.State.transactions.find(x => x.id === id); if(!t) return;
                     document.getElementById('edit-id').value = id; document.getElementById('edit-tanggal').value = t.tanggal; document.getElementById('edit-jenis-akun').value = t.jenisAkun; document.getElementById('edit-pemasukan').value = t.pemasukan ? t.pemasukan.toLocaleString('id-ID') : ''; document.getElementById('edit-pengeluaran').value = t.pengeluaran ? t.pengeluaran.toLocaleString('id-ID') : ''; document.getElementById('edit-kategori').value = t.kategori; document.getElementById('edit-keterangan').value = t.keterangan || '';
                     const sorted = App.State.transactions.map((tx, idx) => ({ tx, idx })).sort((a, b) => (a.tx.tanggal < b.tx.tanggal ? -1 : a.tx.tanggal > b.tx.tanggal ? 1 : a.idx - b.idx));
-                    let running = 0;
-                    for (const { tx } of sorted) { running += (tx.pemasukan || 0) - (tx.pengeluaran || 0); if (tx.id === id) break; }
-                    const runEl = document.getElementById('editRunningBalance'); if(runEl) runEl.textContent = App.Utils.formatCurrency(running);
+                    let cashBal = 0, saldoBal = 0, cashBefore = 0, saldoBefore = 0, cashAfter = 0, saldoAfter = 0;
+                    for (const { tx } of sorted) {
+                        if (tx.id === id) { cashBefore = cashBal; saldoBefore = saldoBal; }
+                        const amt = (tx.pemasukan || 0) - (tx.pengeluaran || 0);
+                        if (tx.jenisAkun === 'cash') cashBal += amt; else saldoBal += amt;
+                        if (tx.id === id) { cashAfter = cashBal; saldoAfter = saldoBal; break; }
+                    }
+                    const isCash = t.jenisAkun === 'cash';
+                    const labelEl = document.getElementById('editRunningBalanceLabel');
+                    const runEl = document.getElementById('editRunningBalance');
+                    if (labelEl) labelEl.textContent = isCash ? '💵 Sisa Cash saat itu' : '🏦 Sisa Saldo Bank/E-Wallet saat itu';
+                    if (runEl) runEl.textContent = App.Utils.formatCurrency(isCash ? cashAfter : saldoAfter);
+                    const detailEl = document.getElementById('editRunningBalanceDetail');
+                    if (detailEl) {
+                        detailEl.style.display = 'none';
+                        detailEl.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.55rem;">
+                                <span class="text-xs text-muted">💵 Cash</span>
+                                <span class="text-xs font-semibold">${App.Utils.formatCurrency(cashBefore)} → <span class="text-main">${App.Utils.formatCurrency(cashAfter)}</span></span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <span class="text-xs text-muted">🏦 Saldo Bank/E-Wallet</span>
+                                <span class="text-xs font-semibold">${App.Utils.formatCurrency(saldoBefore)} → <span class="text-main">${App.Utils.formatCurrency(saldoAfter)}</span></span>
+                            </div>`;
+                    }
                     const btnDel = document.getElementById('btnDeleteTx'); const newBtnDel = btnDel.cloneNode(true); btnDel.parentNode.replaceChild(newBtnDel, btnDel); newBtnDel.onclick = () => this.deleteTx(id); App.UI.showModal('editModal');
                 },
                 saveEdit(e) {
