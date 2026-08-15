@@ -3371,14 +3371,21 @@
                 openEdit(id) {
                     const t = App.State.transactions.find(x => x.id === id); if(!t) return;
                     document.getElementById('edit-id').value = id; document.getElementById('edit-tanggal').value = t.tanggal; document.getElementById('edit-jenis-akun').value = t.jenisAkun; document.getElementById('edit-pemasukan').value = t.pemasukan ? t.pemasukan.toLocaleString('id-ID') : ''; document.getElementById('edit-pengeluaran').value = t.pengeluaran ? t.pengeluaran.toLocaleString('id-ID') : ''; document.getElementById('edit-kategori').value = t.kategori; document.getElementById('edit-keterangan').value = t.keterangan || '';
-                    const sorted = App.State.transactions.map((tx, idx) => ({ tx, idx })).sort((a, b) => (a.tx.tanggal < b.tx.tanggal ? -1 : a.tx.tanggal > b.tx.tanggal ? 1 : a.idx - b.idx));
-                    let cashBal = 0, saldoBal = 0, cashBefore = 0, saldoBefore = 0, cashAfter = 0, saldoAfter = 0;
-                    for (const { tx } of sorted) {
-                        if (tx.id === id) { cashBefore = cashBal; saldoBefore = saldoBal; }
-                        const amt = (tx.pemasukan || 0) - (tx.pengeluaran || 0);
-                        if (tx.jenisAkun === 'cash') cashBal += amt; else saldoBal += amt;
-                        if (tx.id === id) { cashAfter = cashBal; saldoAfter = saldoBal; break; }
+                    // Gabungkan transaksi & transfer jadi satu garis waktu kronologis,
+                    // supaya hasilnya konsisten sama total di dashboard (yang juga menghitung transfer antar cash↔saldo).
+                    const events = [
+                        ...App.State.transactions.map((tx, idx) => ({ date: tx.tanggal, idx, kind: 'tx', tx })),
+                        ...(App.State.transfers || []).map((tf, idx) => ({ date: tf.tanggal, idx, kind: 'transfer', tf }))
+                    ];
+                    events.sort((a, b) => a.date !== b.date ? (a.date < b.date ? -1 : 1) : (a.kind !== b.kind ? (a.kind === 'tx' ? -1 : 1) : a.idx - b.idx));
+                    let bal = { cash: 0, saldo: 0 }, before = { cash: 0, saldo: 0 }, after = { cash: 0, saldo: 0 };
+                    for (const ev of events) {
+                        if (ev.kind === 'tx' && ev.tx.id === id) before = { ...bal };
+                        if (ev.kind === 'tx') { const amt = (ev.tx.pemasukan || 0) - (ev.tx.pengeluaran || 0); bal[ev.tx.jenisAkun] += amt; }
+                        else { bal[ev.tf.dari] -= ev.tf.jumlah; bal[ev.tf.ke] += ev.tf.jumlah; }
+                        if (ev.kind === 'tx' && ev.tx.id === id) { after = { ...bal }; break; }
                     }
+                    const cashBefore = before.cash, saldoBefore = before.saldo, cashAfter = after.cash, saldoAfter = after.saldo;
                     const isCash = t.jenisAkun === 'cash';
                     const labelEl = document.getElementById('editRunningBalanceLabel');
                     const runEl = document.getElementById('editRunningBalance');
