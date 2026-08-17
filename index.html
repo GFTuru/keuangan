@@ -2065,16 +2065,38 @@
             <div class="grid-2">
                 <div class="form-group">
                     <label>Dari</label>
-                    <select id="tfDari">
+                    <select id="tfDari" onchange="document.getElementById('tfDariSubWrap').style.display = this.value === 'saldo' ? 'block' : 'none';">
                         <option value="saldo">🪪 Saldo Bank</option>
                         <option value="cash">💵 Cash / Tunai</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Ke</label>
-                    <select id="tfKe">
+                    <select id="tfKe" onchange="document.getElementById('tfKeSubWrap').style.display = this.value === 'saldo' ? 'block' : 'none';">
                         <option value="cash">💵 Cash / Tunai</option>
                         <option value="saldo">🪪 Saldo Bank</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group" id="tfDariSubWrap">
+                    <label>👛 Dompet Asal</label>
+                    <select id="tfDariSub">
+                        <option value="">Umum / Lainnya</option>
+                        <option value="gopay">🟢 GoPay</option>
+                        <option value="dana">🔵 DANA</option>
+                        <option value="shopeepay">🧡 ShopeePay</option>
+                        <option value="seabank">🌊 SeaBank</option>
+                    </select>
+                </div>
+                <div class="form-group" id="tfKeSubWrap" style="display:none;">
+                    <label>👛 Dompet Tujuan</label>
+                    <select id="tfKeSub">
+                        <option value="">Umum / Lainnya</option>
+                        <option value="gopay">🟢 GoPay</option>
+                        <option value="dana">🔵 DANA</option>
+                        <option value="shopeepay">🧡 ShopeePay</option>
+                        <option value="seabank">🌊 SeaBank</option>
                     </select>
                 </div>
             </div>
@@ -3136,6 +3158,8 @@
                     (App.State.transfers || []).forEach(tf => {
                         bal[tf.dari] -= tf.jumlah;
                         bal[tf.ke] += tf.jumlah;
+                        if (tf.dari === 'saldo') { const k = tf.dariSubWallet && subWallets.hasOwnProperty(tf.dariSubWallet) ? tf.dariSubWallet : 'lainnya'; subWallets[k] -= tf.jumlah; }
+                        if (tf.ke === 'saldo') { const k = tf.keSubWallet && subWallets.hasOwnProperty(tf.keSubWallet) ? tf.keSubWallet : 'lainnya'; subWallets[k] += tf.jumlah; }
                     });
                     // Net balance
                     const netEl = document.getElementById('homeNetBalance');
@@ -3349,10 +3373,11 @@
                     const transfers = (App.State.transfers || []).slice().sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
                     if (!transfers.length) { list.innerHTML = `<div class="text-center" style="padding:2rem;"><p>Belum ada riwayat transfer.</p></div>`; return; }
                     list.innerHTML = transfers.map(tf => {
+                        const subLabel = { gopay: 'GoPay', dana: 'DANA', shopeepay: 'ShopeePay', seabank: 'SeaBank' };
                         const fromIcon = tf.dari === 'cash' ? '💵' : '🪪';
                         const toIcon   = tf.ke   === 'cash' ? '💵' : '🪪';
-                        const fromName = tf.dari === 'cash' ? 'Cash' : 'Saldo Bank';
-                        const toName   = tf.ke   === 'cash' ? 'Cash' : 'Saldo Bank';
+                        const fromName = tf.dari === 'cash' ? 'Cash' : ('Saldo' + (tf.dariSubWallet && subLabel[tf.dariSubWallet] ? ' ' + subLabel[tf.dariSubWallet] : ''));
+                        const toName   = tf.ke   === 'cash' ? 'Cash' : ('Saldo' + (tf.keSubWallet && subLabel[tf.keSubWallet] ? ' ' + subLabel[tf.keSubWallet] : ''));
                         return `<div class="list-item" style="padding:0.8rem 1rem;">
                             <div class="item-left">
                                 <div class="item-icon" style="width:42px;height:42px;font-size:1.2rem;background:var(--primary-light);color:var(--primary);">⇄</div>
@@ -3591,13 +3616,15 @@
                 saveTransfer() {
                     const dari   = document.getElementById('tfDari').value;
                     const ke     = document.getElementById('tfKe').value;
+                    const dariSubWallet = dari === 'saldo' ? (document.getElementById('tfDariSub').value || null) : null;
+                    const keSubWallet   = ke === 'saldo' ? (document.getElementById('tfKeSub').value || null) : null;
                     const jumlah = App.Utils.parseCurrency(document.getElementById('tfJumlah').value);
                     const tgl    = document.getElementById('tfTanggal').value;
                     const cat    = document.getElementById('tfCatatan').value.trim();
                     if(dari === ke) return App.UI.showToast('Pilih akun yang berbeda!', 'error');
                     if(!jumlah || jumlah <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
                     if(!tgl) return App.UI.showToast('Pilih tanggal transfer', 'error');
-                    App.State.transfers.push({ id: Date.now(), dari, ke, jumlah, tanggal: tgl, catatan: cat });
+                    App.State.transfers.push({ id: Date.now(), dari, ke, dariSubWallet, keSubWallet, jumlah, tanggal: tgl, catatan: cat });
                     App.DB.save(); App.UI.renderTransfers(); App.UI.renderBalances(); App.UI.closeModal('transferModal');
                     document.getElementById('tfJumlah').value = '';
                     document.getElementById('tfCatatan').value = '';
@@ -3879,8 +3906,8 @@
                         App.State.paylaters.forEach(p => lines.push(`${p.id},${esc(p.name)},${p.amount}`));
                         lines.push('');
                         lines.push('[TRANSFERS]');
-                        lines.push('ID,Dari,Ke,Jumlah,Tanggal,Catatan');
-                        App.State.transfers.forEach(tf => lines.push(`${tf.id},${tf.dari},${tf.ke},${tf.jumlah},${tf.tanggal},${esc(tf.catatan||'')}`));
+                        lines.push('ID,Dari,DariDompet,Ke,KeDompet,Jumlah,Tanggal,Catatan');
+                        App.State.transfers.forEach(tf => lines.push(`${tf.id},${tf.dari},${tf.dariSubWallet||''},${tf.ke},${tf.keSubWallet||''},${tf.jumlah},${tf.tanggal},${esc(tf.catatan||'')}`));
                         lines.push('');
                         lines.push('[DEBTS]');
                         lines.push('ID,Tipe,Nama,Sisa,OriginalAmount,Tanggal,Catatan');
@@ -3966,7 +3993,8 @@
                                         sections.TRANSFERS.slice(1).forEach(line => {
                                             if(!line.trim()) return;
                                             const p = parseCSVLine(line);
-                                            if(p.length >= 5) App.State.transfers.push({ id:parseInt(p[0])||Date.now(), dari:p[1], ke:p[2], jumlah:parseInt(p[3])||0, tanggal:p[4], catatan:p[5]||'' });
+                                            if(p.length >= 7) App.State.transfers.push({ id:parseInt(p[0])||Date.now(), dari:p[1], dariSubWallet:p[2]||null, ke:p[3], keSubWallet:p[4]||null, jumlah:parseInt(p[5])||0, tanggal:p[6], catatan:p[7]||'' });
+                                            else if(p.length >= 5) App.State.transfers.push({ id:parseInt(p[0])||Date.now(), dari:p[1], ke:p[2], jumlah:parseInt(p[3])||0, tanggal:p[4], catatan:p[5]||'' });
                                         });
                                     }
                                     if(sections.DEBTS) {
