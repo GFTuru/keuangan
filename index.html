@@ -3621,7 +3621,6 @@
                     const jumlah = App.Utils.parseCurrency(document.getElementById('tfJumlah').value);
                     const tgl    = document.getElementById('tfTanggal').value;
                     const cat    = document.getElementById('tfCatatan').value.trim();
-                    if(dari === ke) return App.UI.showToast('Pilih akun yang berbeda!', 'error');
                     if(!jumlah || jumlah <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
                     if(!tgl) return App.UI.showToast('Pilih tanggal transfer', 'error');
                     App.State.transfers.push({ id: Date.now(), dari, ke, dariSubWallet, keSubWallet, jumlah, tanggal: tgl, catatan: cat });
