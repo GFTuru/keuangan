@@ -701,6 +701,23 @@
         /* ===== Quick Scan (Input Cepat dari Screenshot) ===== */
         /* ===== Finance Alert Popup (budget & konfirmasi transaksi otomatis) ===== */
         .fap-section-title { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--text-muted); margin-bottom: 0.65rem; }
+        .subwallet-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-light); }
+        .subwallet-item:last-child { border-bottom: none; }
+        .subwallet-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; }
+        .subwallet-value { font-size: 0.85rem; font-weight: 800; color: var(--text-main); }
+
+        .qt-chip {
+            flex-shrink: 0; display: flex; align-items: center; gap: 0.4rem;
+            padding: 0.55rem 0.9rem; border-radius: 99px; border: 1px solid var(--border-light);
+            background: var(--bg-body); cursor: pointer; font-size: 0.82rem; font-weight: 700; color: var(--text-main);
+            transition: all var(--transition-fast); white-space: nowrap;
+        }
+        .qt-chip:hover { border-color: var(--primary); background: var(--primary-light); }
+        .qt-chip-add { color: var(--primary); border-style: dashed; }
+        .qt-manage-item {
+            display: flex; align-items: center; gap: 0.65rem; padding: 0.7rem 0.85rem;
+            border: 1px solid var(--border-light); border-radius: var(--radius-md); margin-bottom: 0.5rem; background: var(--bg-body);
+        }
         .fap-item {
             display: flex; gap: 0.75rem; align-items: center;
             border: 1px solid var(--border-light); border-radius: var(--radius-md);
@@ -1253,8 +1270,8 @@
                                 <div class="pd-stat-lbl">Transaksi</div>
                             </div>
                             <div class="pd-stat">
-                                <div class="pd-stat-val" id="pdGoalCount">0</div>
-                                <div class="pd-stat-lbl">Target Aktif</div>
+                                <div class="pd-stat-val" id="pdBudgetCount">0</div>
+                                <div class="pd-stat-lbl">Budget Aktif</div>
                             </div>
                         </div>
                         <button class="pd-menu-item" id="btnPdSettings" onclick="App.UI.closeProfileDropdown(); App.UI.switchTabByName('settings');">
@@ -1353,6 +1370,15 @@
                 </div>
             </div>
 
+            <!-- Rincian Sub-Dompet -->
+            <div class="card" style="padding: 0.9rem 1.1rem; margin-bottom: 1rem;">
+                <button type="button" onclick="App.UI.toggleSubWalletBreakdown()" style="width:100%; background:none; border:none; padding:0; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <span class="font-bold text-sm">👛 Rincian Saldo per Dompet</span>
+                    <span id="subWalletToggleIcon" class="text-muted" style="transition: transform 0.2s;">▾</span>
+                </button>
+                <div id="subWalletBreakdown" style="display:none; margin-top:0.75rem; padding-top:0.75rem; border-top:1px dashed var(--border-medium);"></div>
+            </div>
+
             <!-- Quick Stats Row -->
             <div class="home-stats-row">
                 <div class="home-stat-pill income">
@@ -1369,6 +1395,15 @@
                         <div class="home-stat-lbl">Keluar bulan ini</div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Quick Respons (Template Transaksi Cepat) -->
+            <div class="card" style="padding: 0.9rem 1.1rem; margin-bottom: 1rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.65rem;">
+                    <span class="font-bold text-sm">⚡ Quick Respons</span>
+                    <button type="button" class="text-xs text-primary font-semibold" style="background:none; border:none; cursor:pointer;" onclick="App.QuickTemplate.openManage()">Kelola</button>
+                </div>
+                <div id="quickTemplateChips" style="display:flex; gap:0.5rem; overflow-x:auto; padding-bottom:0.25rem;"></div>
             </div>
 
             <!-- Catat Transaksi Card - Modern Redesign -->
@@ -1404,11 +1439,21 @@
                     <div class="grid-2" style="margin-top:1rem;">
                         <div class="form-group"><label>📅 Tanggal</label><input type="date" id="txDate" required></div>
                         <div class="form-group"><label>🏦 Akun</label>
-                            <select id="txAccount" required>
+                            <select id="txAccount" required onchange="document.getElementById('txSubWalletWrap').style.display = this.value === 'saldo' ? 'block' : 'none';">
                                 <option value="cash">💵 Cash / Tunai</option>
                                 <option value="saldo">🪪 Saldo Bank / E-Wallet</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="form-group" id="txSubWalletWrap" style="display:none;">
+                        <label>👛 Dompet</label>
+                        <select id="txSubWallet">
+                            <option value="">Umum / Lainnya</option>
+                            <option value="gopay">🟢 GoPay</option>
+                            <option value="dana">🔵 DANA</option>
+                            <option value="shopeepay">🧡 ShopeePay</option>
+                            <option value="seabank">🌊 SeaBank</option>
+                        </select>
                     </div>
                     <div class="form-group"><label>📂 Kategori</label><select id="txCategory" required></select></div>
                     <div class="form-group"><label>📝 Keterangan</label><input type="text" id="txNote" placeholder="Cth: Gaji bulanan, Bensin, dll"></div>
@@ -1535,13 +1580,6 @@
                 <div class="section-title"><span>💸 Rencana Budget</span><button class="btn btn-primary btn-sm" onclick="App.Handlers.openBudgetModal()">+ Buat Budget</button></div>
                 <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Batasi pengeluaranmu per kategori agar tidak boros.</p>
                 <div id="budgetList" class="list-group"><div class="skeleton" style="height: 100px;"></div></div>
-            </div>
-
-            <!-- Target (Goals) -->
-            <div class="card">
-                <div class="section-title"><span>🎯 Target Impian</span><button class="btn btn-primary btn-sm" onclick="App.Handlers.openGoalModal()">+ Buat Target</button></div>
-                <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">Pisahkan dan pantau uang untuk impian finansialmu.</p>
-                <div id="goalsList" class="list-group"><div class="skeleton" style="height: 100px;"></div></div>
             </div>
 
             <!-- Transfer Antar Akun -->
@@ -1884,6 +1922,56 @@
         </div>
     </div>
 
+    <!-- Quick Respons: isi nominal & keterangan lalu auto-kirim -->
+    <div id="quickAddModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('quickAddModal')">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 id="qaModalTitle">⚡ Quick Respons</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('quickAddModal')">&times;</button>
+            </div>
+            <form onsubmit="App.QuickTemplate.submitQuickAdd(event)">
+                <input type="hidden" id="qaTemplateId">
+                <div class="form-group">
+                    <label>Nominal</label>
+                    <input type="text" id="qaAmount" inputmode="numeric" placeholder="0" oninput="App.Utils.formatInput(this)" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label>Keterangan</label>
+                    <input type="text" id="qaNote">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%; padding:0.85rem;">✅ Kirim</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Kelola Template Quick Respons -->
+    <div id="manageTemplatesModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('manageTemplatesModal')">
+        <div class="modal-content" style="max-width: 460px;">
+            <div class="modal-header">
+                <h2>⚡ Kelola Quick Respons</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('manageTemplatesModal')">&times;</button>
+            </div>
+            <div id="qtManageList" style="margin-bottom:1.25rem;"></div>
+            <div style="border-top:1px dashed var(--border-medium); padding-top:1.1rem;">
+                <p class="font-bold text-sm" style="margin-bottom:0.75rem;">+ Tambah Template Baru</p>
+                <div class="grid-2">
+                    <div class="form-group"><label>Ikon (emoji)</label><input type="text" id="qtIcon" placeholder="🍔" maxlength="4" value="⚡"></div>
+                    <div class="form-group"><label>Nama</label><input type="text" id="qtName" placeholder="Cth: Makan Siang"></div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Jenis</label>
+                        <select id="qtType"><option value="out">Pengeluaran</option><option value="in">Pemasukan</option></select>
+                    </div>
+                    <div class="form-group"><label>Akun</label>
+                        <select id="qtAccount"><option value="cash">💵 Cash</option><option value="saldo">🪪 Saldo</option></select>
+                    </div>
+                </div>
+                <div class="form-group"><label>Kategori</label><select id="qtCategory"></select></div>
+                <button type="button" class="btn btn-primary" style="width:100%;" onclick="App.QuickTemplate.addTemplate()">+ Simpan Template</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Quick Scan Modal (Input Cepat dari Screenshot Mutasi) -->
     <div id="scanModal" class="modal-overlay" onclick="if(event.target===this) App.QuickScan.close()">
         <div class="modal-content">
@@ -1932,11 +2020,21 @@
                 <div class="grid-2">
                     <div class="form-group"><label>Tanggal</label><input type="date" id="edit-tanggal" required></div>
                     <div class="form-group"><label>Sumber Dana</label>
-                        <select id="edit-jenis-akun" required>
+                        <select id="edit-jenis-akun" required onchange="document.getElementById('editSubWalletWrap').style.display = this.value === 'saldo' ? 'block' : 'none';">
                             <option value="cash">💵 Cash / Tunai</option>
                             <option value="saldo">🪪 Saldo Bank / E-Wallet</option>
                         </select>
                     </div>
+                </div>
+                <div class="form-group" id="editSubWalletWrap" style="display:none;">
+                    <label>👛 Dompet</label>
+                    <select id="edit-sub-wallet">
+                        <option value="">Umum / Lainnya</option>
+                        <option value="gopay">🟢 GoPay</option>
+                        <option value="dana">🔵 DANA</option>
+                        <option value="shopeepay">🧡 ShopeePay</option>
+                        <option value="seabank">🌊 SeaBank</option>
+                    </select>
                 </div>
                 <div class="grid-2">
                     <div class="form-group"><label>Pemasukan (+)</label><input type="text" id="edit-pemasukan" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div>
@@ -1944,6 +2042,13 @@
                 </div>
                 <div class="form-group"><label>Kategori</label><select id="edit-kategori" required></select></div>
                 <div class="form-group"><label>Keterangan</label><input type="text" id="edit-keterangan"></div>
+                <div class="form-group" style="background: var(--bg-body); padding: 0.85rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+                    <label class="switch-wrapper" style="margin:0;">
+                        <div><span class="font-bold text-sm">🚫 Kecualikan dari Budget</span><p class="text-xs text-muted" style="margin-top:0.15rem;">Transaksi ini gak akan ngurangin jatah budget kategori ini.</p></div>
+                        <input type="checkbox" id="edit-exclude-budget">
+                        <div class="switch"></div>
+                    </label>
+                </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-danger" id="btnDeleteTx" style="width: 100%; margin-bottom: 0.5rem;">Hapus Transaksi</button>
                     <div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('editModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div>
@@ -1952,24 +2057,8 @@
         </div>
     </div>
 
-    <!-- Modals for Budget, Goal, Category, Paylater -->
-    <div id="budgetModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('budgetModal')"><div class="modal-content"><div class="modal-header"><h2>Atur Limit Budget</h2><button class="modal-close" onclick="App.UI.closeModal('budgetModal')">&times;</button></div><form onsubmit="App.Handlers.addBudget(event)"><div class="form-group"><label>Kategori</label><select id="bCategory" required></select></div><div class="form-group"><label>Batas (Rp)</label><input type="text" id="bAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="form-group"><label>Periode</label><select id="bPeriod" required><option value="monthly">Bulanan</option><option value="weekly">Mingguan</option></select></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('budgetModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
-    <div id="goalModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('goalModal')"><div class="modal-content"><div class="modal-header"><h2>Target Impian</h2><button class="modal-close" onclick="App.UI.closeModal('goalModal')">&times;</button></div><form onsubmit="App.Handlers.addGoal(event)"><div class="grid-2"><div class="form-group"><label>Nama</label><input type="text" id="gName" required></div><div class="form-group"><label>Ikon</label><input type="text" id="gIcon" placeholder="📱" required maxlength="2"></div></div><div class="form-group"><label>Target Dana (Rp)</label><input type="text" id="gTarget" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="form-group"><label>Terkumpul (Rp)</label><input type="text" id="gCurrent" placeholder="0" inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="form-group"><label>Tenggat Waktu</label><input type="date" id="gDate" required></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('goalModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
-    <div id="addFundModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('addFundModal')">
-        <div class="modal-content" style="max-width:380px;">
-            <div class="modal-header"><h2>💰 Tambah Dana</h2><button class="modal-close" onclick="App.UI.closeModal('addFundModal')">&times;</button></div>
-            <div id="addFundGoalName" class="text-sm text-muted" style="margin-bottom:1rem;"></div>
-            <div class="form-group">
-                <label>Jumlah Dana (Rp)</label>
-                <input type="text" id="addFundAmount" inputmode="numeric" oninput="App.Utils.formatInput(this)" placeholder="0" required>
-            </div>
-            <input type="hidden" id="addFundGoalId">
-            <div class="grid-2">
-                <button class="btn btn-secondary" onclick="App.UI.closeModal('addFundModal')">Batal</button>
-                <button class="btn btn-primary" onclick="App.Handlers.submitAddFund()">Tabung 💚</button>
-            </div>
-        </div>
-    </div>
+    <!-- Modals for Budget, Category, Paylater -->
+    <div id="budgetModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('budgetModal')"><div class="modal-content"><div class="modal-header"><h2>Atur Limit Budget</h2><button class="modal-close" onclick="App.UI.closeModal('budgetModal')">&times;</button></div><form onsubmit="App.Handlers.addBudget(event)"><div class="form-group"><label>Kategori</label><select id="bCategory" required onchange="if(this.value === '__all__' && !document.getElementById('bAmount').value) document.getElementById('bAmount').value = (1300000).toLocaleString('id-ID');"></select></div><div class="form-group"><label>Batas (Rp)</label><input type="text" id="bAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"><p class="text-xs text-muted" style="margin-top:0.35rem;">Buat "Semua Kategori", coba mulai dari Rp1.300.000/bulan biar aman ya 🙂</p></div><div class="form-group"><label>Periode</label><select id="bPeriod" required><option value="monthly">Bulanan</option><option value="weekly">Mingguan</option></select></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('budgetModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
     <div id="transferModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('transferModal')">
         <div class="modal-content" style="max-width:400px;">
             <div class="modal-header"><h2>⇄ Transfer Antar Akun</h2><button class="modal-close" onclick="App.UI.closeModal('transferModal')">&times;</button></div>
@@ -1977,15 +2066,15 @@
                 <div class="form-group">
                     <label>Dari</label>
                     <select id="tfDari">
-                        <option value="cash">💵 Cash / Tunai</option>
                         <option value="saldo">🪪 Saldo Bank</option>
+                        <option value="cash">💵 Cash / Tunai</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Ke</label>
                     <select id="tfKe">
-                        <option value="saldo">🪪 Saldo Bank</option>
                         <option value="cash">💵 Cash / Tunai</option>
+                        <option value="saldo">🪪 Saldo Bank</option>
                     </select>
                 </div>
             </div>
@@ -2151,7 +2240,7 @@
                 user: null,
                 isAdmin: false,
                 isPremium: true,
-                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [],
+                transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [], quickTemplates: [],
                 settings: { reminderEnabled: false, reminderTime: '20:00', morningEnabled: false, morningTime: '08:00', budgetAlertEnabled: false, theme: 'light', accentHue: 244, themePreset: 'klasik' },
                 isLoading: true, charts: {}, searchTimer: null
             },
@@ -2180,7 +2269,7 @@
                     { id: 'gift', name: 'Gift', icon: '🎁' }
                 ],
                 AccountIcons: { cash: '💵', saldo: '🪪' },
-                FreeLimits: { budget: 3, goal: 2, recurring: 3, historyMonths: 3 }
+                FreeLimits: { budget: 3, recurring: 3, historyMonths: 3 }
             },
 
             // ----------------------------------------------------------------------
@@ -2335,13 +2424,13 @@
                     if (this.isDummy) {
                         localStorage.removeItem('dummy_user_v8');
                         App.UI.showToast('Berhasil keluar. Sampai jumpa! 👋', 'info');
-                        App.State.transactions = []; App.State.recurring = []; App.State.goals = []; App.State.budgets = []; App.State.paylaters = [];
+                        App.State.transactions = []; App.State.recurring = []; App.State.budgets = []; App.State.paylaters = [];
                         if(App.DB.listener) App.DB.listener(); this.handleUserChange(null);
                         return;
                     }
                     signOut(this.instance).then(() => {
                         App.UI.showToast('Berhasil keluar. Sampai jumpa! 👋', 'info');
-                        App.State.transactions = []; App.State.recurring = []; App.State.goals = []; App.State.budgets = []; App.State.paylaters = [];
+                        App.State.transactions = []; App.State.recurring = []; App.State.budgets = []; App.State.paylaters = [];
                         if(App.DB.listener) App.DB.listener();
                     });
                 }
@@ -2552,8 +2641,8 @@
                             const data = JSON.parse(localData);
                             App.State.isPremium = true; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
-                            App.State.goals = data.goals || []; App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
-                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || [];
+                            App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
+                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || []; App.State.quickTemplates = data.quickTemplates || [];
                             if(data.todos && window.TugasProBridge) window.TugasProBridge.applyExternalTodos(data.todos);
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
@@ -2568,8 +2657,8 @@
                             const data = snapshot.val();
                             App.State.isPremium = true; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
-                            App.State.goals = data.goals || []; App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
-                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || [];
+                            App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
+                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || []; App.State.quickTemplates = data.quickTemplates || [];
                             if(data.todos && window.TugasProBridge) window.TugasProBridge.applyExternalTodos(data.todos);
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
@@ -2579,7 +2668,7 @@
                 save() {
                    if (!App.State.user) return;
                    let todosData = null; try { const raw = localStorage.getItem('tugasPro.v2'); if(raw) todosData = JSON.parse(raw); } catch(e){}
-                   const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, debts: App.State.debts, todos: todosData, settings: App.State.settings, updatedAt: new Date().toISOString() };
+                   const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, debts: App.State.debts, quickTemplates: App.State.quickTemplates, todos: todosData, settings: App.State.settings, updatedAt: new Date().toISOString() };
     
                  // ✅ Selalu backup settings ke backup_v6 agar persist saat refresh
                    localStorage.setItem('backup_v6', JSON.stringify({ settings: App.State.settings }));
@@ -2882,6 +2971,76 @@
                 }
             },
 
+            // ----------------------------------------------------------------------
+            // QUICK TEMPLATE — pintasan transaksi yang sering berulang (Quick Respons)
+            // ----------------------------------------------------------------------
+            QuickTemplate: {
+                render() {
+                    const box = document.getElementById('quickTemplateChips'); if (!box) return;
+                    const chips = App.State.quickTemplates.map((t, i) =>
+                        `<button type="button" class="qt-chip" onclick="App.QuickTemplate.openQuickAdd(${i})">${t.icon || '⚡'} ${t.name}</button>`
+                    ).join('');
+                    box.innerHTML = chips + `<button type="button" class="qt-chip qt-chip-add" onclick="App.QuickTemplate.openManage()">+ Tambah</button>`;
+                },
+                openQuickAdd(idx) {
+                    const t = App.State.quickTemplates[idx]; if (!t) return;
+                    document.getElementById('qaTemplateId').value = idx;
+                    document.getElementById('qaModalTitle').textContent = `${t.icon || '⚡'} ${t.name}`;
+                    document.getElementById('qaAmount').value = '';
+                    document.getElementById('qaNote').value = t.name;
+                    App.UI.showModal('quickAddModal');
+                    setTimeout(() => document.getElementById('qaAmount').focus(), 150);
+                },
+                submitQuickAdd(e) {
+                    e.preventDefault();
+                    const idx = parseInt(document.getElementById('qaTemplateId').value);
+                    const t = App.State.quickTemplates[idx]; if (!t) return;
+                    const amount = App.Utils.parseCurrency(document.getElementById('qaAmount').value);
+                    if (!amount) return App.UI.showToast('Isi nominalnya dulu ya', 'error');
+                    const note = document.getElementById('qaNote').value.trim() || t.name;
+                    const tx = { id: Date.now(), tanggal: new Date().toISOString().split('T')[0], jenisAkun: t.jenisAkun, subWallet: null, pemasukan: t.type === 'in' ? amount : 0, pengeluaran: t.type === 'out' ? amount : 0, kategori: t.kategori, keterangan: note, excludeFromBudget: false };
+                    App.State.transactions.push(tx);
+                    App.DB.save(); App.UI.renderAll(); App.UI.closeModal('quickAddModal');
+                    App.UI.showToast(`✅ ${t.name} dicatat!`, 'success');
+                },
+                openManage() {
+                    document.getElementById('qtCategory').innerHTML = [...App.Config.DefaultCategories, ...App.State.customCategories].map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+                    this.renderManageList();
+                    App.UI.showModal('manageTemplatesModal');
+                },
+                renderManageList() {
+                    const list = document.getElementById('qtManageList'); if (!list) return;
+                    if (!App.State.quickTemplates.length) { list.innerHTML = '<p class="text-xs text-muted">Belum ada template. Tambah di bawah ya.</p>'; return; }
+                    list.innerHTML = App.State.quickTemplates.map((t, i) => {
+                        const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === t.kategori) || { icon: '📝', name: t.kategori };
+                        return `<div class="qt-manage-item">
+                            <span style="font-size:1.2rem;">${t.icon || '⚡'}</span>
+                            <div style="flex:1; min-width:0;">
+                                <div class="font-bold text-sm">${t.name}</div>
+                                <div class="text-xs text-muted">${t.type === 'in' ? 'Pemasukan' : 'Pengeluaran'} • ${t.jenisAkun === 'cash' ? 'Cash' : 'Saldo'} • ${catObj.icon} ${catObj.name}</div>
+                            </div>
+                            <button type="button" class="btn btn-icon" style="background:var(--danger-light); color:var(--danger-dark); width:30px; height:30px;" onclick="App.QuickTemplate.deleteTemplate(${i})">🗑️</button>
+                        </div>`;
+                    }).join('');
+                },
+                addTemplate() {
+                    const name = document.getElementById('qtName').value.trim();
+                    if (!name) return App.UI.showToast('Isi nama template dulu', 'error');
+                    const icon = document.getElementById('qtIcon').value.trim() || '⚡';
+                    const type = document.getElementById('qtType').value;
+                    const jenisAkun = document.getElementById('qtAccount').value;
+                    const kategori = document.getElementById('qtCategory').value;
+                    App.State.quickTemplates.push({ id: Date.now(), icon, name, type, jenisAkun, kategori });
+                    App.DB.save(); this.render(); this.renderManageList();
+                    document.getElementById('qtName').value = ''; document.getElementById('qtIcon').value = '⚡';
+                    App.UI.showToast('Template ditambahkan!', 'success');
+                },
+                deleteTemplate(idx) {
+                    App.State.quickTemplates.splice(idx, 1);
+                    App.DB.save(); this.render(); this.renderManageList();
+                }
+            },
+
             Utils: {
                 formatNumber: (num) => new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(num || 0),
                 formatCurrency: (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num || 0),
@@ -2939,10 +3098,10 @@
                     const user = App.State.user;
                     if (user) {
                         const name = user.displayName || user.email.split('@')[0]; const initials = name.charAt(0).toUpperCase();
-                        const pdAvatar = document.getElementById('pdAvatar'); const pdName = document.getElementById('pdName'); const pdRole = document.getElementById('pdRole'); const pdTx = document.getElementById('pdTxCount'); const pdGoal = document.getElementById('pdGoalCount');
+                        const pdAvatar = document.getElementById('pdAvatar'); const pdName = document.getElementById('pdName'); const pdRole = document.getElementById('pdRole'); const pdTx = document.getElementById('pdTxCount'); const pdBudget = document.getElementById('pdBudgetCount');
                         if (pdAvatar) pdAvatar.innerHTML = user.photoURL ? `<img src="${user.photoURL}">` : initials; if (pdName) pdName.textContent = name;
                         if (pdRole) pdRole.textContent = App.State.isAdmin ? '🛡️ Administrator' : 'Pengguna';
-                        if (pdTx) pdTx.textContent = App.State.transactions.length; if (pdGoal) pdGoal.textContent = App.State.goals.length;
+                        if (pdTx) pdTx.textContent = App.State.transactions.length; if (pdBudget) pdBudget.textContent = App.State.budgets.length;
                     }
                     dd.classList.add('open'); setTimeout(() => { document.addEventListener('click', function handler(e) { if (!e.target.closest('#profileBtn') && !e.target.closest('#profileDropdown')) { dd.classList.remove('open'); document.removeEventListener('click', handler); } }); }, 10);
                 },
@@ -2955,18 +3114,24 @@
                     else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
-                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderGoals(); this.renderTransfers(); this.renderSettings(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
+                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
                     const ids = ['txCategory', 'filterCategory', 'edit-kategori', 'bCategory'];
-                    ids.forEach(id => { const el = document.getElementById(id); if(el) { if(id === 'filterCategory') el.innerHTML = '<option value="">Semua Kategori</option>' + options; else el.innerHTML = options; } });
+                    ids.forEach(id => {
+                        const el = document.getElementById(id); if (!el) return;
+                        if (id === 'filterCategory') el.innerHTML = '<option value="">Semua Kategori</option>' + options;
+                        else if (id === 'bCategory') el.innerHTML = '<option value="__all__">🌐 Semua Kategori (Total Bulanan)</option>' + options;
+                        else el.innerHTML = options;
+                    });
                 },
                 renderBalances() {
                     if (App.State.isLoading) return; let bal = { cash: 0, saldo: 0 };
+                    const subWallets = { gopay: 0, dana: 0, shopeepay: 0, seabank: 0, lainnya: 0 };
                     App.State.transactions.forEach(t => {
                         const amt = (t.pemasukan || 0) - (t.pengeluaran || 0);
-                        if (t.jenisAkun === 'cash') bal.cash += amt; else bal.saldo += amt; 
+                        if (t.jenisAkun === 'cash') bal.cash += amt; else { bal.saldo += amt; subWallets[t.subWallet && subWallets.hasOwnProperty(t.subWallet) ? t.subWallet : 'lainnya'] += amt; }
                     });
                     (App.State.transfers || []).forEach(tf => {
                         bal[tf.dari] -= tf.jumlah;
@@ -2981,6 +3146,22 @@
                         <div class="home-mini-card bc-cash"><div class="bc-label">💵 Uang Tunai</div><div class="bc-value">${App.Utils.formatCurrency(bal.cash)}</div></div>
                         <div class="home-mini-card bc-saldo"><div class="bc-label">🪪 Saldo Bank / E-Wallet</div><div class="bc-value">${App.Utils.formatCurrency(bal.saldo)}</div></div>
                     `;
+                    // Rincian sub-dompet (estimasi dari transaksi yang ditandai; transfer & yang gak ditandai masuk "Lainnya")
+                    const subWalletBox = document.getElementById('subWalletBreakdown');
+                    if (subWalletBox) {
+                        const items = [
+                            { key: 'gopay', icon: '🟢', label: 'GoPay' },
+                            { key: 'dana', icon: '🔵', label: 'DANA' },
+                            { key: 'shopeepay', icon: '🧡', label: 'ShopeePay' },
+                            { key: 'seabank', icon: '🌊', label: 'SeaBank' },
+                            { key: 'lainnya', icon: '🪪', label: 'Lainnya / Umum' }
+                        ];
+                        subWalletBox.innerHTML = items.map(it => `
+                            <div class="subwallet-item">
+                                <span class="subwallet-label">${it.icon} ${it.label}</span>
+                                <span class="subwallet-value">${App.Utils.formatCurrency(subWallets[it.key])}</span>
+                            </div>`).join('');
+                    }
                     // Monthly income/expense stats
                     const now = new Date(); const thisYM = now.toISOString().slice(0,7);
                     let monthIn = 0, monthOut = 0;
@@ -3124,6 +3305,7 @@
                                             <span class="item-title">${catObj.name}</span>
                                             <span class="item-meta">
                                                 ${sourceBadge}
+                                                ${t.excludeFromBudget ? `<span class="tx-source-badge" style="background:var(--bg-surface-hover); color:var(--text-muted);">🚫 Di luar budget</span>` : ''}
                                                 ${t.keterangan ? `<span>${t.keterangan}</span>` : '<span style="opacity:0.5">Tanpa keterangan</span>'}
                                                 <span class="acc-badge">${accIcon} ${t.jenisAkun.toUpperCase()}</span>
                                             </span>
@@ -3144,11 +3326,11 @@
                         const now = new Date(); let filterDate;
                         if(b.period === 'weekly') { const day = now.getDay(); filterDate = new Date(now); filterDate.setDate(now.getDate() - (day===0?6:day-1)); filterDate.setHours(0,0,0,0); } 
                         else { filterDate = new Date(now.getFullYear(), now.getMonth(), 1); }
-                        
-                        const spent = App.State.transactions.filter(t => t.kategori === b.category && new Date(t.tanggal) >= filterDate).reduce((s,t) => s + (t.pengeluaran||0), 0);
+                        const isAll = b.category === '__all__';
+                        const spent = App.State.transactions.filter(t => !t.excludeFromBudget && (isAll || t.kategori === b.category) && new Date(t.tanggal) >= filterDate).reduce((s,t) => s + (t.pengeluaran||0), 0);
                         const perc = Math.min((spent / b.amount) * 100, 100);
                         const isDanger = perc >= 90;
-                        const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === b.category) || {icon:'📊', name:b.category};
+                        const catObj = isAll ? { icon: '🌐', name: 'Semua Kategori' } : ([...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === b.category) || {icon:'📊', name:b.category});
 
                         return `<div class="progress-card">
                             <div class="progress-header">
@@ -3159,34 +3341,6 @@
                             </div>
                             <div class="progress-track"><div class="progress-fill" style="width:${perc}%; background:${isDanger?'var(--danger)':'var(--primary)'}"></div></div>
                             ${isDanger ? `<div class="text-xs text-danger font-semibold" style="margin-top:0.5rem;">⚠️ Limit budget hampir/sudah habis!</div>` : ''}
-                        </div>`;
-                    }).join('');
-                },
-                renderGoals() {
-                    const list = document.getElementById('goalsList'); if (App.State.isLoading) return;
-                    if (!App.State.goals.length) { list.innerHTML = `<div class="text-center" style="padding:2rem;"><p>Belum ada target keuangan.</p></div>`; return; }
-
-                    list.innerHTML = App.State.goals.map(g => {
-                        const perc = Math.min((g.current / g.target) * 100, 100); const isDone = perc >= 100; let statusText = `${perc.toFixed(1)}% Terkumpul`;
-                        if(g.date && !isDone) {
-                            if(App.State.isPremium) { const daysLeft = Math.ceil((new Date(g.date) - new Date()) / (1000*60*60*24)); if(daysLeft < 0) statusText = `⚠️ Terlambat ${Math.abs(daysLeft)} hari`; else statusText += ` • Sisa ${daysLeft} hari`; } 
-                            else { statusText += ` • Estimasi 🔒PRO`; }
-                        }
-                        return `<div class="progress-card" style="border-color:${isDone?'var(--success)':''};">
-                            <div class="progress-header">
-                                <div style="display:flex; align-items:center; gap:0.5rem;">
-                                    <div style="width:40px;height:40px;background:var(--bg-surface-hover);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">${g.icon}</div>
-                                    <div><div class="font-bold text-sm">${g.name} ${isDone?'🏆':''}</div><div class="text-xs text-muted">${statusText}</div></div>
-                                </div>
-                                <div style="display:flex;gap:0.35rem;align-items:center;">
-                                    <button class="btn btn-sm" style="background:var(--success-light);color:var(--success-dark);font-size:0.75rem;padding:0.3rem 0.65rem;border-radius:8px;font-weight:700;" onclick="App.Handlers.openAddFundModal(${g.id})">+ Tabung</button>
-                                    <button class="btn btn-icon text-danger" style="background:none;" onclick="App.Handlers.deleteGoal(${g.id})">🗑️</button>
-                                </div>
-                            </div>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;" class="text-xs font-bold">
-                                <span>${App.Utils.formatCurrency(g.current)}</span><span class="text-muted">${App.Utils.formatCurrency(g.target)}</span>
-                            </div>
-                            <div class="progress-track"><div class="progress-fill" style="width:${perc}%; background:${isDone?'var(--success)':'var(--warning)'}"></div></div>
                         </div>`;
                     }).join('');
                 },
@@ -3275,6 +3429,13 @@
                     const el = document.getElementById('editRunningBalanceDetail');
                     if (el) el.style.display = (el.style.display === 'none' || !el.style.display) ? 'block' : 'none';
                 },
+                toggleSubWalletBreakdown() {
+                    const el = document.getElementById('subWalletBreakdown'); const icon = document.getElementById('subWalletToggleIcon');
+                    if (!el) return;
+                    const show = el.style.display === 'none' || !el.style.display;
+                    el.style.display = show ? 'block' : 'none';
+                    if (icon) icon.style.transform = show ? 'rotate(180deg)' : 'rotate(0deg)';
+                },
                 refreshStartupAlertPopup() {
                     const wasOpen = document.getElementById('financeAlertPopup').classList.contains('show');
                     if(wasOpen) App.Handlers.checkStartupAlerts(true);
@@ -3300,7 +3461,7 @@
                     const amtDisp2 = document.getElementById('txAmountDisplay'); if(amtDisp2) amtDisp2.style.outline = ''; errorEl.classList.remove('show');
                     if (document.getElementById('txRecurring').checked && !App.State.isPremium && App.State.recurring.length >= App.Config.FreeLimits.recurring) { App.UI.showToast(`Batas otomatisasi (${App.Config.FreeLimits.recurring}) tercapai.`, 'error'); App.UI.showModal('premiumModal'); return; }
 
-                    const tx = { id: Date.now(), tanggal: document.getElementById('txDate').value, jenisAkun: document.getElementById('txAccount').value, pemasukan: p, pengeluaran: out, kategori: document.getElementById('txCategory').value, keterangan: document.getElementById('txNote').value.trim() };
+                    const tx = { id: Date.now(), tanggal: document.getElementById('txDate').value, jenisAkun: document.getElementById('txAccount').value, subWallet: document.getElementById('txAccount').value === 'saldo' ? (document.getElementById('txSubWallet').value || null) : null, pemasukan: p, pengeluaran: out, kategori: document.getElementById('txCategory').value, keterangan: document.getElementById('txNote').value.trim(), excludeFromBudget: false };
                     App.State.transactions.push(tx);
 
                     if (document.getElementById('txRecurring').checked) {
@@ -3312,7 +3473,7 @@
                         if(type === 'daily') nextDate.setDate(nextDate.getDate() + interval); else if(type === 'weekly') nextDate.setDate(nextDate.getDate() + interval*7); else if(type === 'monthly') nextDate.setMonth(nextDate.getMonth() + interval);
                         App.State.recurring.push({ id: Date.now(), type, interval, startDate, endDate, template: tx, lastExecuted: tx.tanggal, nextExecution: nextDate.toISOString().split('T')[0], status: 'active' });
                     }
-                    App.DB.save(); App.UI.renderAll(); e.target.reset(); App.UI.init(); App.UI.setTxType('in'); document.getElementById('txRecurring').checked = false; document.getElementById('recurringOpts').style.display = 'none'; App.UI.showToast('Transaksi Berhasil Dicatat!', 'success');
+                    App.DB.save(); App.UI.renderAll(); e.target.reset(); App.UI.init(); App.UI.setTxType('in'); document.getElementById('txRecurring').checked = false; document.getElementById('recurringOpts').style.display = 'none'; document.getElementById('txSubWalletWrap').style.display = 'none'; App.UI.showToast('Transaksi Berhasil Dicatat!', 'success');
                 },
                 addPaylater(e) {
                     e.preventDefault(); const name = document.getElementById('plName').value.trim(); const amt = App.Utils.parseCurrency(document.getElementById('plAmount').value);
@@ -3371,6 +3532,8 @@
                 openEdit(id) {
                     const t = App.State.transactions.find(x => x.id === id); if(!t) return;
                     document.getElementById('edit-id').value = id; document.getElementById('edit-tanggal').value = t.tanggal; document.getElementById('edit-jenis-akun').value = t.jenisAkun; document.getElementById('edit-pemasukan').value = t.pemasukan ? t.pemasukan.toLocaleString('id-ID') : ''; document.getElementById('edit-pengeluaran').value = t.pengeluaran ? t.pengeluaran.toLocaleString('id-ID') : ''; document.getElementById('edit-kategori').value = t.kategori; document.getElementById('edit-keterangan').value = t.keterangan || '';
+                    document.getElementById('edit-sub-wallet').value = t.subWallet || ''; document.getElementById('editSubWalletWrap').style.display = t.jenisAkun === 'saldo' ? 'block' : 'none';
+                    document.getElementById('edit-exclude-budget').checked = !!t.excludeFromBudget;
                     // Gabungkan transaksi & transfer jadi satu garis waktu kronologis,
                     // supaya hasilnya konsisten sama total di dashboard (yang juga menghitung transfer antar cash↔saldo).
                     const events = [
@@ -3408,7 +3571,8 @@
                 },
                 saveEdit(e) {
                     e.preventDefault(); const id = parseInt(document.getElementById('edit-id').value); const index = App.State.transactions.findIndex(t => t.id === id); if (index === -1) return;
-                    App.State.transactions[index] = { ...App.State.transactions[index], tanggal: document.getElementById('edit-tanggal').value, jenisAkun: document.getElementById('edit-jenis-akun').value, pemasukan: App.Utils.parseCurrency(document.getElementById('edit-pemasukan').value), pengeluaran: App.Utils.parseCurrency(document.getElementById('edit-pengeluaran').value), kategori: document.getElementById('edit-kategori').value, keterangan: document.getElementById('edit-keterangan').value.trim() };
+                    const jenisAkun = document.getElementById('edit-jenis-akun').value;
+                    App.State.transactions[index] = { ...App.State.transactions[index], tanggal: document.getElementById('edit-tanggal').value, jenisAkun, subWallet: jenisAkun === 'saldo' ? (document.getElementById('edit-sub-wallet').value || null) : null, pemasukan: App.Utils.parseCurrency(document.getElementById('edit-pemasukan').value), pengeluaran: App.Utils.parseCurrency(document.getElementById('edit-pengeluaran').value), kategori: document.getElementById('edit-kategori').value, keterangan: document.getElementById('edit-keterangan').value.trim(), excludeFromBudget: document.getElementById('edit-exclude-budget').checked };
                     App.DB.save(); App.UI.closeModal('editModal'); App.UI.renderAll(); App.UI.showToast('Perubahan disimpan!', 'success');
                 },
                 async deleteTx(id) { const yes = await App.UI.confirm('Transaksi ini akan dihapus secara permanen.'); if(!yes) return; App.State.transactions = App.State.transactions.filter(t => t.id !== id); App.DB.save(); App.UI.closeModal('editModal'); App.UI.renderAll(); App.UI.showToast('Transaksi Dihapus', 'success'); },
@@ -3418,26 +3582,11 @@
                 openBudgetModal() { if (!App.State.isPremium && App.State.budgets.length >= App.Config.FreeLimits.budget) { App.UI.showModal('premiumModal'); return; } App.UI.showModal('budgetModal'); },
                 addBudget(e) { e.preventDefault(); const category = document.getElementById('bCategory').value; const amount = App.Utils.parseCurrency(document.getElementById('bAmount').value); const period = document.getElementById('bPeriod').value; if(amount <= 0) return App.UI.showToast('Isi limit yang valid', 'error'); const existing = App.State.budgets.findIndex(b => b.category === category); if(existing > -1) App.State.budgets[existing] = { id: App.State.budgets[existing].id, category, amount, period }; else App.State.budgets.push({ id: Date.now(), category, amount, period }); App.DB.save(); App.UI.renderBudgets(); App.UI.closeModal('budgetModal'); e.target.reset(); App.UI.showToast('Budget tersimpan!', 'success'); },
                 async deleteBudget(id) { const yes = await App.UI.confirm('Hapus limit budget ini?'); if(!yes) return; App.State.budgets = App.State.budgets.filter(b => b.id !== id); App.DB.save(); App.UI.renderBudgets(); },
-                
-                openGoalModal() { if (!App.State.isPremium && App.State.goals.length >= App.Config.FreeLimits.goal) { App.UI.showModal('premiumModal'); return; } App.UI.showModal('goalModal'); },
-                addGoal(e) { e.preventDefault(); const name = document.getElementById('gName').value.trim(); const icon = document.getElementById('gIcon').value.trim(); const target = App.Utils.parseCurrency(document.getElementById('gTarget').value); const current = App.Utils.parseCurrency(document.getElementById('gCurrent').value); const date = document.getElementById('gDate').value; if(!name || target <= 0) return App.UI.showToast('Form tidak valid', 'error'); App.State.goals.push({ id: Date.now(), name, icon, target, current, date }); App.DB.save(); App.UI.renderGoals(); App.UI.closeModal('goalModal'); e.target.reset(); App.UI.showToast('Target Impian Dibuat! 🎯', 'success'); },
-                async deleteGoal(id) { const yes = await App.UI.confirm('Hapus target ini? Saldo tabungan tidak akan hilang dari transaksi.'); if(!yes) return; App.State.goals = App.State.goals.filter(g => g.id !== id); App.DB.save(); App.UI.renderGoals(); },
-                openAddFundModal(id) {
-                    const goal = App.State.goals.find(g => g.id === id); if(!goal) return;
-                    document.getElementById('addFundGoalId').value = id;
-                    document.getElementById('addFundGoalName').textContent = `${goal.icon} ${goal.name} — Terkumpul: ${App.Utils.formatCurrency(goal.current)} / ${App.Utils.formatCurrency(goal.target)}`;
-                    document.getElementById('addFundAmount').value = '';
-                    App.UI.showModal('addFundModal');
-                },
-                submitAddFund() {
-                    const id = parseInt(document.getElementById('addFundGoalId').value);
-                    const amount = App.Utils.parseCurrency(document.getElementById('addFundAmount').value);
-                    if(!amount || amount <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
-                    const goal = App.State.goals.find(g => g.id === id); if(!goal) return;
-                    goal.current = (goal.current || 0) + amount;
-                    App.DB.save(); App.UI.renderGoals(); App.UI.closeModal('addFundModal');
-                    const isDone = goal.current >= goal.target;
-                    App.UI.showToast(isDone ? `🏆 Target ${goal.name} tercapai!` : `✅ +${App.Utils.formatCurrency(amount)} ditambahkan ke ${goal.name}`, 'success');
+                toggleExcludeBudget(id) {
+                    const t = App.State.transactions.find(x => x.id === id); if(!t) return;
+                    t.excludeFromBudget = !t.excludeFromBudget;
+                    App.DB.save(); App.UI.renderAll();
+                    App.UI.showToast(t.excludeFromBudget ? 'Transaksi dikecualikan dari budget' : 'Transaksi dihitung lagi ke budget', 'info');
                 },
                 saveTransfer() {
                     const dari   = document.getElementById('tfDari').value;
@@ -3636,9 +3785,10 @@
                         let filterDate;
                         if(b.period === 'weekly') { const day = now.getDay(); filterDate = new Date(now); filterDate.setDate(now.getDate() - (day===0?6:day-1)); filterDate.setHours(0,0,0,0); }
                         else { filterDate = new Date(now.getFullYear(), now.getMonth(), 1); }
-                        const spent = App.State.transactions.filter(t => t.kategori === b.category && new Date(t.tanggal) >= filterDate).reduce((s,t) => s + (t.pengeluaran||0), 0);
+                        const isAll = b.category === '__all__';
+                        const spent = App.State.transactions.filter(t => !t.excludeFromBudget && (isAll || t.kategori === b.category) && new Date(t.tanggal) >= filterDate).reduce((s,t) => s + (t.pengeluaran||0), 0);
                         const perc = b.amount > 0 ? (spent / b.amount) * 100 : 0;
-                        const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === b.category) || {icon:'📊', name:b.category};
+                        const catObj = isAll ? { icon: '🌐', name: 'Semua Kategori (Total Bulanan)' } : ([...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === b.category) || {icon:'📊', name:b.category});
                         return { id: b.id, catObj, spent, amount: b.amount, perc, period: b.period };
                     }).filter(b => b.perc >= threshold);
                 },
@@ -3704,7 +3854,7 @@
                     let text = '', filename = '';
                     let todosData = null; try { const raw = localStorage.getItem('tugasPro.v2'); if(raw) todosData = JSON.parse(raw); } catch(e){}
                     if(type === 'json') {
-                        const dataToExport = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, goals: App.State.goals, budgets: App.State.budgets, paylaters: App.State.paylaters, todos: todosData, settings: App.State.settings };
+                        const dataToExport = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, budgets: App.State.budgets, paylaters: App.State.paylaters, todos: todosData, settings: App.State.settings };
                         text = JSON.stringify(dataToExport, null, 2); filename = `Backup_KeuanganPro_${new Date().toISOString().split('T')[0]}.json`;
                     } else {
                         const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
@@ -3723,10 +3873,6 @@
                         lines.push('[BUDGETS]');
                         lines.push('ID,KategoriID,Jumlah,Periode');
                         App.State.budgets.forEach(b => lines.push(`${b.id},${b.category},${b.amount},${b.period}`));
-                        lines.push('');
-                        lines.push('[GOALS]');
-                        lines.push('ID,Nama,Ikon,Target,Terkumpul,Tenggat');
-                        App.State.goals.forEach(g => lines.push(`${g.id},${esc(g.name)},${g.icon||'🎯'},${g.target},${g.current||0},${g.date||''}`));
                         lines.push('');
                         lines.push('[PAYLATERS]');
                         lines.push('ID,Nama,Jumlah');
@@ -3756,7 +3902,7 @@
                                 const data = JSON.parse(ev.target.result);
                                 if(data.transactions) {
                                     const yes = await App.UI.confirm('Menimpa data saat ini dengan data Backup?'); if(!yes) return;
-                                    App.State.isPremium = data.isPremium || App.State.isPremium; App.State.transactions = data.transactions; if(data.customCategories) App.State.customCategories = data.customCategories; if(data.goals) App.State.goals = data.goals; if(data.budgets) App.State.budgets = data.budgets; if(data.recurring) App.State.recurring = data.recurring; if(data.paylaters) App.State.paylaters = data.paylaters; if(data.transfers) App.State.transfers = data.transfers; if(data.debts) App.State.debts = data.debts; App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect(); if(data.todos && window.TugasProBridge && window.TugasProBridge.applyExternalTodos) window.TugasProBridge.applyExternalTodos(data.todos); App.UI.showToast('Backup berhasil dipulihkan!', 'success');
+                                    App.State.isPremium = data.isPremium || App.State.isPremium; App.State.transactions = data.transactions; if(data.customCategories) App.State.customCategories = data.customCategories; if(data.budgets) App.State.budgets = data.budgets; if(data.recurring) App.State.recurring = data.recurring; if(data.paylaters) App.State.paylaters = data.paylaters; if(data.transfers) App.State.transfers = data.transfers; if(data.debts) App.State.debts = data.debts; App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect(); if(data.todos && window.TugasProBridge && window.TugasProBridge.applyExternalTodos) window.TugasProBridge.applyExternalTodos(data.todos); App.UI.showToast('Backup berhasil dipulihkan!', 'success');
                                 }
                             } else if (file.name.endsWith('.csv')) {
                                 const content = ev.target.result;
@@ -3805,14 +3951,6 @@
                                             if(!line.trim()) return;
                                             const p = parseCSVLine(line);
                                             if(p.length >= 4) App.State.budgets.push({ id:parseInt(p[0])||Date.now(), category:p[1], amount:parseInt(p[2])||0, period:p[3] });
-                                        });
-                                    }
-                                    if(sections.GOALS) {
-                                        App.State.goals = [];
-                                        sections.GOALS.slice(1).forEach(line => {
-                                            if(!line.trim()) return;
-                                            const p = parseCSVLine(line);
-                                            if(p.length >= 6) App.State.goals.push({ id:parseInt(p[0])||Date.now(), name:p[1], icon:p[2]||'🎯', target:parseInt(p[3])||0, current:parseInt(p[4])||0, date:p[5] });
                                         });
                                     }
                                     if(sections.PAYLATERS) {
@@ -3880,7 +4018,7 @@
                     } else { document.getElementById('insightLock').classList.add('show'); }
                     let maxCat = '', maxAmt = 0; Object.keys(catMap).forEach(k => { if(catMap[k]>maxAmt){ maxAmt=catMap[k]; maxCat=k; } });
                     if(maxCat && outThis > 0) { const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c=>c.id===maxCat) || {name:maxCat}; const percCat = ((maxAmt / outThis)*100).toFixed(1); html += `<div class="insight-card"><div class="font-bold text-sm mb-1">🔍 Kategori Boros</div><p class="text-xs"><b>${percCat}%</b> habis untuk <b>${catObj.name}</b>.</p></div>`; }
-                    if (inThis > 0) { const saved = inThis - outThis; if(saved < (inThis * 0.1)) html += `<div class="insight-card" style="border-left-color: var(--warning);"><div class="font-bold text-sm mb-1">💡 Saran Keuangan</div><p class="text-xs">Tabungan bulan ini <10% pendapatan. Sisihkan di awal!</p></div>`; else html += `<div class="insight-card" style="border-left-color: var(--primary);"><div class="font-bold text-sm mb-1">✅ Rasio Sehat</div><p class="text-xs">Arus kas positif! Alokasikan sisa ke Target Impian.</p></div>`; }
+                    if (inThis > 0) { const saved = inThis - outThis; if(saved < (inThis * 0.1)) html += `<div class="insight-card" style="border-left-color: var(--warning);"><div class="font-bold text-sm mb-1">💡 Saran Keuangan</div><p class="text-xs">Tabungan bulan ini <10% pendapatan. Sisihkan di awal!</p></div>`; else html += `<div class="insight-card" style="border-left-color: var(--primary);"><div class="font-bold text-sm mb-1">✅ Rasio Sehat</div><p class="text-xs">Arus kas positif bulan ini, pertahankan ya!</p></div>`; }
                     c.innerHTML = html;
                 }
             },
