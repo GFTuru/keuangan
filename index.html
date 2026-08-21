@@ -1586,7 +1586,12 @@
             <div class="card">
                 <div class="section-title"><span>⇄ Transfer Antar Akun</span><button class="btn btn-primary btn-sm" onclick="App.UI.showModal('transferModal')">+ Transfer</button></div>
                 <p class="text-sm text-muted" style="margin-bottom: 1.25rem;">Pindahkan uang antara Cash dan Saldo Bank tanpa mempengaruhi catatan transaksi.</p>
-                <div id="transfersList" class="list-group"><div class="skeleton" style="height: 70px;"></div></div>
+
+                <button type="button" onclick="App.UI.toggleTransferHistory()" style="width:100%; background:var(--bg-body); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:0.75rem 1rem; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <span class="text-sm font-bold">🕒 Riwayat Transfer <span class="text-muted" style="font-weight:500;">(<span id="transferHistoryCount">0</span>)</span></span>
+                    <span id="transferHistoryToggleIcon" class="text-muted" style="transition: transform 0.2s;">▾</span>
+                </button>
+                <div id="transfersList" class="list-group" style="display:none; margin-top:0.75rem;"><div class="skeleton" style="height: 70px;"></div></div>
             </div>
 
         </main>
@@ -3371,24 +3376,25 @@
                 renderTransfers() {
                     const list = document.getElementById('transfersList'); if (!list || App.State.isLoading) return;
                     const transfers = (App.State.transfers || []).slice().sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
-                    if (!transfers.length) { list.innerHTML = `<div class="text-center" style="padding:2rem;"><p>Belum ada riwayat transfer.</p></div>`; return; }
+                    const countEl = document.getElementById('transferHistoryCount'); if (countEl) countEl.textContent = transfers.length;
+                    if (!transfers.length) { list.innerHTML = `<div class="text-center" style="padding:1.5rem 1rem;"><p class="text-sm text-muted">Belum ada riwayat transfer.</p></div>`; return; }
                     list.innerHTML = transfers.map(tf => {
                         const subLabel = { gopay: 'GoPay', dana: 'DANA', shopeepay: 'ShopeePay', seabank: 'SeaBank' };
                         const fromIcon = tf.dari === 'cash' ? '💵' : '🪪';
                         const toIcon   = tf.ke   === 'cash' ? '💵' : '🪪';
                         const fromName = tf.dari === 'cash' ? 'Cash' : ('Saldo' + (tf.dariSubWallet && subLabel[tf.dariSubWallet] ? ' ' + subLabel[tf.dariSubWallet] : ''));
                         const toName   = tf.ke   === 'cash' ? 'Cash' : ('Saldo' + (tf.keSubWallet && subLabel[tf.keSubWallet] ? ' ' + subLabel[tf.keSubWallet] : ''));
-                        return `<div class="list-item" style="padding:0.8rem 1rem;">
+                        return `<div class="list-item" style="padding:0.65rem 0.25rem;">
                             <div class="item-left">
-                                <div class="item-icon" style="width:42px;height:42px;font-size:1.2rem;background:var(--primary-light);color:var(--primary);">⇄</div>
+                                <div class="item-icon" style="width:34px;height:34px;font-size:0.95rem;background:var(--bg-surface-hover);color:var(--text-muted);">⇄</div>
                                 <div class="item-details">
-                                    <span class="item-title">${fromIcon} ${fromName} → ${toIcon} ${toName}</span>
+                                    <span class="text-sm font-semibold">${fromIcon} ${fromName} → ${toIcon} ${toName}</span>
                                     <span class="item-meta">${App.Utils.formatDateStr(tf.tanggal)}${tf.catatan ? ' · ' + tf.catatan : ''}</span>
                                 </div>
                             </div>
-                            <div class="item-right" style="display:flex;align-items:center;gap:0.5rem;">
-                                <span class="item-amount font-bold text-primary">${App.Utils.formatCurrency(tf.jumlah)}</span>
-                                <button class="btn btn-icon text-danger" style="background:none;width:28px;height:28px;font-size:0.8rem;" onclick="App.Handlers.deleteTransfer(${tf.id})" title="Hapus">🗑️</button>
+                            <div class="item-right" style="display:flex;align-items:center;gap:0.4rem;">
+                                <span class="text-sm text-muted font-semibold">${App.Utils.formatCurrency(tf.jumlah)}</span>
+                                <button class="btn btn-icon" style="background:none;width:26px;height:26px;font-size:0.75rem;color:var(--text-light);" onclick="App.Handlers.deleteTransfer(${tf.id})" title="Hapus">🗑️</button>
                             </div>
                         </div>`;
                     }).join('');
@@ -3456,6 +3462,13 @@
                 },
                 toggleSubWalletBreakdown() {
                     const el = document.getElementById('subWalletBreakdown'); const icon = document.getElementById('subWalletToggleIcon');
+                    if (!el) return;
+                    const show = el.style.display === 'none' || !el.style.display;
+                    el.style.display = show ? 'block' : 'none';
+                    if (icon) icon.style.transform = show ? 'rotate(180deg)' : 'rotate(0deg)';
+                },
+                toggleTransferHistory() {
+                    const el = document.getElementById('transfersList'); const icon = document.getElementById('transferHistoryToggleIcon');
                     if (!el) return;
                     const show = el.style.display === 'none' || !el.style.display;
                     el.style.display = show ? 'block' : 'none';
@@ -3621,6 +3634,7 @@
                     const jumlah = App.Utils.parseCurrency(document.getElementById('tfJumlah').value);
                     const tgl    = document.getElementById('tfTanggal').value;
                     const cat    = document.getElementById('tfCatatan').value.trim();
+                    if(dari === ke) return App.UI.showToast('Pilih akun yang berbeda!', 'error');
                     if(!jumlah || jumlah <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
                     if(!tgl) return App.UI.showToast('Pilih tanggal transfer', 'error');
                     App.State.transfers.push({ id: Date.now(), dari, ke, dariSubWallet, keSubWallet, jumlah, tanggal: tgl, catatan: cat });
