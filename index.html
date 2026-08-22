@@ -718,6 +718,9 @@
             display: flex; align-items: center; gap: 0.65rem; padding: 0.7rem 0.85rem;
             border: 1px solid var(--border-light); border-radius: var(--radius-md); margin-bottom: 0.5rem; background: var(--bg-body);
         }
+        .sync-field { padding: 0.75rem; border: 1px solid var(--border-light); border-radius: var(--radius-md); margin-bottom: 0.65rem; background: var(--bg-body); }
+        .sync-field-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+        .sync-field-current { font-size: 0.7rem; color: var(--text-muted); }
         .fap-item {
             display: flex; gap: 0.75rem; align-items: center;
             border: 1px solid var(--border-light); border-radius: var(--radius-md);
@@ -1448,11 +1451,10 @@
                     <div class="form-group" id="txSubWalletWrap" style="display:none;">
                         <label>👛 Dompet</label>
                         <select id="txSubWallet">
-                            <option value="">Umum / Lainnya</option>
+                            <option value="seabank">🌊 SeaBank</option>
                             <option value="gopay">🟢 GoPay</option>
                             <option value="dana">🔵 DANA</option>
                             <option value="shopeepay">🧡 ShopeePay</option>
-                            <option value="seabank">🌊 SeaBank</option>
                         </select>
                     </div>
                     <div class="form-group"><label>📂 Kategori</label><select id="txCategory" required></select></div>
@@ -1519,25 +1521,6 @@
         </main>
 
         <!-- 3. TAB ANALYTICS -->
-        <main class="app-section" id="view-analytics">
-            <div class="card" style="background: var(--primary-light); border: 1px solid var(--primary); position: relative;">
-                <h2 class="section-title text-primary" style="margin-bottom: 0.5rem;">✨ Smart Insights</h2>
-                <p class="text-sm text-main" style="margin-bottom: 1.5rem;">Analisis AI-like berdasarkan polamu.</p>
-                <div id="insightsContainer" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    <div class="skeleton" style="height: 60px;"></div><div class="skeleton" style="height: 60px;"></div>
-                </div>
-                <div id="insightLock" class="premium-lock">
-                    <div class="premium-lock-icon">📊</div><h3 class="font-bold">Advanced Insights</h3>
-                    <p class="text-xs text-muted mb-2">Buka analisis perbandingan bulan cerdas.</p>
-                </div>
-            </div>
-            <div class="card">
-                <h2 class="section-title">📊 Grafik Pengeluaran</h2>
-                <div class="form-group" style="margin-bottom: 2.5rem;"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Kategori Bulan Ini</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartCategory"></canvas></div></div>
-                <div class="form-group"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Trend Arus Kas (6 Bulan)</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartTrend"></canvas></div></div>
-            </div>
-        </main>
-
         <!-- 4. TAB PLANNING (BUDGET & TARGET) -->
         <main class="app-section" id="view-planning">
             <!-- Tagihan & Cicilan (Paylater) -->
@@ -1592,6 +1575,13 @@
                     <span id="transferHistoryToggleIcon" class="text-muted" style="transition: transform 0.2s;">▾</span>
                 </button>
                 <div id="transfersList" class="list-group" style="display:none; margin-top:0.75rem;"><div class="skeleton" style="height: 70px;"></div></div>
+            </div>
+
+            <!-- Grafik Pengeluaran (dipindah dari tab Analisis) -->
+            <div class="card">
+                <h2 class="section-title">📊 Grafik Pengeluaran</h2>
+                <div class="form-group" style="margin-bottom: 2.5rem;"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Kategori Bulan Ini</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartCategory"></canvas></div></div>
+                <div class="form-group"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Trend Arus Kas (6 Bulan)</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartTrend"></canvas></div></div>
             </div>
 
         </main>
@@ -1903,7 +1893,6 @@
             <div class="nav-container">
                 <button class="nav-item active" onclick="App.UI.switchTab('input', this)"><div class="nav-icon">✍️</div><span class="nav-label">Input</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('history', this)"><div class="nav-icon">🕰️</div><span class="nav-label">Riwayat</span></button>
-                <button class="nav-item" onclick="App.UI.switchTab('analytics', this)"><div class="nav-icon">📈</div><span class="nav-label">Analisis</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('planning', this)"><div class="nav-icon">🗂️</div><span class="nav-label">Kelola</span></button>
                 <button class="nav-item" id="navTodoTab" onclick="App.UI.switchTab('todo', this)"><div class="nav-icon nav-icon-wrap">✅<span class="tp-nav-badge" id="todoNavBadge"></span></div><span class="nav-label">Tugas</span></button>
                 <button class="nav-item" id="navSettingsTab" onclick="App.UI.switchTab('settings', this)"><div class="nav-icon">⚙️</div><span class="nav-label">Setelan</span></button>
@@ -1924,6 +1913,19 @@
                 <button class="modal-close" onclick="App.UI.closeStartupAlertPopup()">&times;</button>
             </div>
             <div id="fapBody"></div>
+        </div>
+    </div>
+
+    <!-- Sinkronkan Saldo dengan Kenyataan -->
+    <div id="syncBalanceModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('syncBalanceModal')">
+        <div class="modal-content" style="max-width: 460px;">
+            <div class="modal-header">
+                <h2>🔄 Sinkronkan Saldo</h2>
+                <button class="modal-close" onclick="App.UI.closeModal('syncBalanceModal')">&times;</button>
+            </div>
+            <p class="text-xs text-muted" style="margin-bottom:1.1rem;">Isi saldo yang beneran ada sekarang (cek langsung di app/dompet fisiknya). Selisihnya bakal otomatis dicatat sebagai penyesuaian, gak masuk hitungan budget.</p>
+            <div id="syncBalanceFields"></div>
+            <button type="button" class="btn btn-primary" style="width:100%; padding:0.85rem; margin-top:0.5rem;" onclick="App.Handlers.submitSyncBalance()">✅ Sinkronkan Sekarang</button>
         </div>
     </div>
 
@@ -2034,11 +2036,10 @@
                 <div class="form-group" id="editSubWalletWrap" style="display:none;">
                     <label>👛 Dompet</label>
                     <select id="edit-sub-wallet">
-                        <option value="">Umum / Lainnya</option>
+                        <option value="seabank">🌊 SeaBank</option>
                         <option value="gopay">🟢 GoPay</option>
                         <option value="dana">🔵 DANA</option>
                         <option value="shopeepay">🧡 ShopeePay</option>
-                        <option value="seabank">🌊 SeaBank</option>
                     </select>
                 </div>
                 <div class="grid-2">
@@ -2063,7 +2064,7 @@
     </div>
 
     <!-- Modals for Budget, Category, Paylater -->
-    <div id="budgetModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('budgetModal')"><div class="modal-content"><div class="modal-header"><h2>Atur Limit Budget</h2><button class="modal-close" onclick="App.UI.closeModal('budgetModal')">&times;</button></div><form onsubmit="App.Handlers.addBudget(event)"><div class="form-group"><label>Kategori</label><select id="bCategory" required onchange="if(this.value === '__all__' && !document.getElementById('bAmount').value) document.getElementById('bAmount').value = (1300000).toLocaleString('id-ID');"></select></div><div class="form-group"><label>Batas (Rp)</label><input type="text" id="bAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"><p class="text-xs text-muted" style="margin-top:0.35rem;">Buat "Semua Kategori", coba mulai dari Rp1.300.000/bulan biar aman ya 🙂</p></div><div class="form-group"><label>Periode</label><select id="bPeriod" required><option value="monthly">Bulanan</option><option value="weekly">Mingguan</option></select></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('budgetModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
+    <div id="budgetModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('budgetModal')"><div class="modal-content"><div class="modal-header"><h2>Atur Limit Budget</h2><button class="modal-close" onclick="App.UI.closeModal('budgetModal')">&times;</button></div><form onsubmit="App.Handlers.addBudget(event)"><div class="form-group"><label>Cakupan</label><select id="bCategory" required disabled></select></div><div class="form-group"><label>Batas (Rp)</label><input type="text" id="bAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"><p class="text-xs text-muted" style="margin-top:0.35rem;">Saran: mulai dari Rp1.300.000/bulan biar aman ya 🙂</p></div><div class="form-group"><label>Periode</label><select id="bPeriod" required><option value="monthly">Bulanan</option><option value="weekly">Mingguan</option></select></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('budgetModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
     <div id="transferModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('transferModal')">
         <div class="modal-content" style="max-width:400px;">
             <div class="modal-header"><h2>⇄ Transfer Antar Akun</h2><button class="modal-close" onclick="App.UI.closeModal('transferModal')">&times;</button></div>
@@ -2087,21 +2088,19 @@
                 <div class="form-group" id="tfDariSubWrap">
                     <label>👛 Dompet Asal</label>
                     <select id="tfDariSub">
-                        <option value="">Umum / Lainnya</option>
+                        <option value="seabank">🌊 SeaBank</option>
                         <option value="gopay">🟢 GoPay</option>
                         <option value="dana">🔵 DANA</option>
                         <option value="shopeepay">🧡 ShopeePay</option>
-                        <option value="seabank">🌊 SeaBank</option>
                     </select>
                 </div>
                 <div class="form-group" id="tfKeSubWrap" style="display:none;">
                     <label>👛 Dompet Tujuan</label>
                     <select id="tfKeSub">
-                        <option value="">Umum / Lainnya</option>
+                        <option value="seabank">🌊 SeaBank</option>
                         <option value="gopay">🟢 GoPay</option>
                         <option value="dana">🔵 DANA</option>
                         <option value="shopeepay">🧡 ShopeePay</option>
-                        <option value="seabank">🌊 SeaBank</option>
                     </select>
                 </div>
             </div>
@@ -3141,7 +3140,7 @@
                     else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
-                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-analytics').classList.contains('active')) this.renderAnalytics(); },
+                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-planning').classList.contains('active')) this.renderAnalytics(); },
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
@@ -3149,22 +3148,22 @@
                     ids.forEach(id => {
                         const el = document.getElementById(id); if (!el) return;
                         if (id === 'filterCategory') el.innerHTML = '<option value="">Semua Kategori</option>' + options;
-                        else if (id === 'bCategory') el.innerHTML = '<option value="__all__">🌐 Semua Kategori (Total Bulanan)</option>' + options;
+                        else if (id === 'bCategory') el.innerHTML = '<option value="__all__">🌐 Semua Kategori (Total Bulanan)</option>';
                         else el.innerHTML = options;
                     });
                 },
                 renderBalances() {
                     if (App.State.isLoading) return; let bal = { cash: 0, saldo: 0 };
-                    const subWallets = { gopay: 0, dana: 0, shopeepay: 0, seabank: 0, lainnya: 0 };
+                    const subWallets = { gopay: 0, dana: 0, shopeepay: 0, seabank: 0 };
                     App.State.transactions.forEach(t => {
                         const amt = (t.pemasukan || 0) - (t.pengeluaran || 0);
-                        if (t.jenisAkun === 'cash') bal.cash += amt; else { bal.saldo += amt; subWallets[t.subWallet && subWallets.hasOwnProperty(t.subWallet) ? t.subWallet : 'lainnya'] += amt; }
+                        if (t.jenisAkun === 'cash') bal.cash += amt; else { bal.saldo += amt; subWallets[t.subWallet && subWallets.hasOwnProperty(t.subWallet) ? t.subWallet : 'seabank'] += amt; }
                     });
                     (App.State.transfers || []).forEach(tf => {
                         bal[tf.dari] -= tf.jumlah;
                         bal[tf.ke] += tf.jumlah;
-                        if (tf.dari === 'saldo') { const k = tf.dariSubWallet && subWallets.hasOwnProperty(tf.dariSubWallet) ? tf.dariSubWallet : 'lainnya'; subWallets[k] -= tf.jumlah; }
-                        if (tf.ke === 'saldo') { const k = tf.keSubWallet && subWallets.hasOwnProperty(tf.keSubWallet) ? tf.keSubWallet : 'lainnya'; subWallets[k] += tf.jumlah; }
+                        if (tf.dari === 'saldo') { const k = tf.dariSubWallet && subWallets.hasOwnProperty(tf.dariSubWallet) ? tf.dariSubWallet : 'seabank'; subWallets[k] -= tf.jumlah; }
+                        if (tf.ke === 'saldo') { const k = tf.keSubWallet && subWallets.hasOwnProperty(tf.keSubWallet) ? tf.keSubWallet : 'seabank'; subWallets[k] += tf.jumlah; }
                     });
                     // Net balance
                     const netEl = document.getElementById('homeNetBalance');
@@ -3175,21 +3174,20 @@
                         <div class="home-mini-card bc-cash"><div class="bc-label">💵 Uang Tunai</div><div class="bc-value">${App.Utils.formatCurrency(bal.cash)}</div></div>
                         <div class="home-mini-card bc-saldo"><div class="bc-label">🪪 Saldo Bank / E-Wallet</div><div class="bc-value">${App.Utils.formatCurrency(bal.saldo)}</div></div>
                     `;
-                    // Rincian sub-dompet (estimasi dari transaksi yang ditandai; transfer & yang gak ditandai masuk "Lainnya")
+                    // Rincian sub-dompet (SeaBank sebagai dompet utama/default)
                     const subWalletBox = document.getElementById('subWalletBreakdown');
                     if (subWalletBox) {
                         const items = [
+                            { key: 'seabank', icon: '🌊', label: 'SeaBank' },
                             { key: 'gopay', icon: '🟢', label: 'GoPay' },
                             { key: 'dana', icon: '🔵', label: 'DANA' },
-                            { key: 'shopeepay', icon: '🧡', label: 'ShopeePay' },
-                            { key: 'seabank', icon: '🌊', label: 'SeaBank' },
-                            { key: 'lainnya', icon: '🪪', label: 'Lainnya / Umum' }
+                            { key: 'shopeepay', icon: '🧡', label: 'ShopeePay' }
                         ];
                         subWalletBox.innerHTML = items.map(it => `
                             <div class="subwallet-item">
                                 <span class="subwallet-label">${it.icon} ${it.label}</span>
                                 <span class="subwallet-value">${App.Utils.formatCurrency(subWallets[it.key])}</span>
-                            </div>`).join('');
+                            </div>`).join('') + `<button type="button" class="btn btn-outline btn-sm" style="width:100%; margin-top:0.6rem;" onclick="event.stopPropagation(); App.Handlers.openSyncBalance();">🔄 Sinkronkan Saldo dengan Kenyataan</button>`;
                     }
                     // Monthly income/expense stats
                     const now = new Date(); const thisYM = now.toISOString().slice(0,7);
@@ -3430,7 +3428,7 @@
                     const btnUpgradeRec = document.getElementById('btnUpgradeRec'); if(btnUpgradeRec) btnUpgradeRec.style.display = App.State.isPremium ? 'none' : 'block';
                 },
                 renderAnalytics() {
-                    if (App.State.isLoading) return; App.Insights.generate();
+                    if (App.State.isLoading) return;
                     const tData = App.State.transactions; const d = new Date(); const currentMonth = d.toISOString().substring(0,7);
                     const textColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'; const gridColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#334155' : '#e2e8f0';
                     
@@ -3452,7 +3450,7 @@
                     document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
                     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
                     document.getElementById('view-'+id).classList.add('active'); btn.classList.add('active');
-                    if(id === 'analytics') setTimeout(() => this.renderAnalytics(), 100);
+                    if(id === 'planning') setTimeout(() => this.renderAnalytics(), 100);
                     if(id === 'admin' && App.State.isAdmin) App.Admin.loadData();
                 },
                 showModal(id) { document.getElementById(id).classList.add('show'); },
@@ -3617,7 +3615,7 @@
                 debounceSearch() { clearTimeout(App.State.searchTimer); App.State.searchTimer = setTimeout(() => App.UI.renderHistory(), 300); },
                 resetFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterSearch').value = ''; document.getElementById('filterCategory').value = ''; document.getElementById('filterAccount').value = ''; document.getElementById('filterType').value = 'all'; App.UI.renderHistory(); },
                 
-                openBudgetModal() { if (!App.State.isPremium && App.State.budgets.length >= App.Config.FreeLimits.budget) { App.UI.showModal('premiumModal'); return; } App.UI.showModal('budgetModal'); },
+                openBudgetModal() { if (!App.State.isPremium && App.State.budgets.length >= App.Config.FreeLimits.budget) { App.UI.showModal('premiumModal'); return; } const existing = App.State.budgets.find(b => b.category === '__all__'); document.getElementById('bAmount').value = existing ? existing.amount.toLocaleString('id-ID') : (1300000).toLocaleString('id-ID'); document.getElementById('bPeriod').value = existing ? existing.period : 'monthly'; App.UI.showModal('budgetModal'); },
                 addBudget(e) { e.preventDefault(); const category = document.getElementById('bCategory').value; const amount = App.Utils.parseCurrency(document.getElementById('bAmount').value); const period = document.getElementById('bPeriod').value; if(amount <= 0) return App.UI.showToast('Isi limit yang valid', 'error'); const existing = App.State.budgets.findIndex(b => b.category === category); if(existing > -1) App.State.budgets[existing] = { id: App.State.budgets[existing].id, category, amount, period }; else App.State.budgets.push({ id: Date.now(), category, amount, period }); App.DB.save(); App.UI.renderBudgets(); App.UI.closeModal('budgetModal'); e.target.reset(); App.UI.showToast('Budget tersimpan!', 'success'); },
                 async deleteBudget(id) { const yes = await App.UI.confirm('Hapus limit budget ini?'); if(!yes) return; App.State.budgets = App.State.budgets.filter(b => b.id !== id); App.DB.save(); App.UI.renderBudgets(); },
                 toggleExcludeBudget(id) {
@@ -3625,6 +3623,64 @@
                     t.excludeFromBudget = !t.excludeFromBudget;
                     App.DB.save(); App.UI.renderAll();
                     App.UI.showToast(t.excludeFromBudget ? 'Transaksi dikecualikan dari budget' : 'Transaksi dihitung lagi ke budget', 'info');
+                },
+                _getCurrentBalances() {
+                    let bal = { cash: 0 }; const sub = { seabank: 0, gopay: 0, dana: 0, shopeepay: 0 };
+                    App.State.transactions.forEach(t => {
+                        const amt = (t.pemasukan || 0) - (t.pengeluaran || 0);
+                        if (t.jenisAkun === 'cash') bal.cash += amt; else sub[t.subWallet && sub.hasOwnProperty(t.subWallet) ? t.subWallet : 'seabank'] += amt;
+                    });
+                    (App.State.transfers || []).forEach(tf => {
+                        if (tf.dari === 'cash') bal.cash -= tf.jumlah; else sub[tf.dariSubWallet && sub.hasOwnProperty(tf.dariSubWallet) ? tf.dariSubWallet : 'seabank'] -= tf.jumlah;
+                        if (tf.ke === 'cash') bal.cash += tf.jumlah; else sub[tf.keSubWallet && sub.hasOwnProperty(tf.keSubWallet) ? tf.keSubWallet : 'seabank'] += tf.jumlah;
+                    });
+                    return { cash: bal.cash, ...sub };
+                },
+                openSyncBalance() {
+                    const cur = this._getCurrentBalances();
+                    const fields = [
+                        { key: 'cash', icon: '💵', label: 'Cash / Tunai' },
+                        { key: 'seabank', icon: '🌊', label: 'SeaBank' },
+                        { key: 'gopay', icon: '🟢', label: 'GoPay' },
+                        { key: 'dana', icon: '🔵', label: 'DANA' },
+                        { key: 'shopeepay', icon: '🧡', label: 'ShopeePay' }
+                    ];
+                    document.getElementById('syncBalanceFields').innerHTML = fields.map(f => `
+                        <div class="sync-field">
+                            <div class="sync-field-label">
+                                <span class="font-bold text-sm">${f.icon} ${f.label}</span>
+                                <span class="sync-field-current">Tercatat: ${App.Utils.formatCurrency(cur[f.key])}</span>
+                            </div>
+                            <input type="text" id="sync-${f.key}" inputmode="numeric" value="${cur[f.key].toLocaleString('id-ID')}" oninput="App.Utils.formatInput(this)">
+                        </div>`).join('');
+                    App.UI.showModal('syncBalanceModal');
+                },
+                submitSyncBalance() {
+                    const cur = this._getCurrentBalances();
+                    const fields = [
+                        { key: 'cash', jenisAkun: 'cash', subWallet: null, label: 'Cash / Tunai' },
+                        { key: 'seabank', jenisAkun: 'saldo', subWallet: 'seabank', label: 'SeaBank' },
+                        { key: 'gopay', jenisAkun: 'saldo', subWallet: 'gopay', label: 'GoPay' },
+                        { key: 'dana', jenisAkun: 'saldo', subWallet: 'dana', label: 'DANA' },
+                        { key: 'shopeepay', jenisAkun: 'saldo', subWallet: 'shopeepay', label: 'ShopeePay' }
+                    ];
+                    const today = new Date().toISOString().split('T')[0];
+                    let count = 0;
+                    fields.forEach((f, i) => {
+                        const input = document.getElementById('sync-' + f.key); if (!input) return;
+                        const actual = App.Utils.parseCurrency(input.value);
+                        const diff = actual - cur[f.key];
+                        if (diff === 0) return;
+                        App.State.transactions.push({
+                            id: Date.now() + i, tanggal: today, jenisAkun: f.jenisAkun, subWallet: f.subWallet,
+                            pemasukan: diff > 0 ? diff : 0, pengeluaran: diff < 0 ? -diff : 0,
+                            kategori: 'lainnya', keterangan: `Penyesuaian saldo ${f.label} (sinkronisasi)`, excludeFromBudget: true
+                        });
+                        count++;
+                    });
+                    if (!count) { App.UI.closeModal('syncBalanceModal'); return App.UI.showToast('Semua sudah cocok, gak ada yang perlu disesuaikan 👍', 'info'); }
+                    App.DB.save(); App.UI.renderAll(); App.UI.closeModal('syncBalanceModal');
+                    App.UI.showToast(`✅ ${count} penyesuaian saldo dicatat, sekarang udah sinkron!`, 'success');
                 },
                 saveTransfer() {
                     const dari   = document.getElementById('tfDari').value;
