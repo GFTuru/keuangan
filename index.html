@@ -487,7 +487,12 @@
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-glass); backdrop-filter: blur(20px); border-top: 1px solid var(--border-light); z-index: 100; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0,0,0,0.05); }
         .nav-container { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0.5rem 1rem; overflow-x: auto; scrollbar-width: none; }
         .nav-container::-webkit-scrollbar { display: none; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem; border: none; background: none; cursor: pointer; color: var(--text-muted); border-radius: var(--radius-md); flex: 1; min-width: 60px; transition: var(--transition-fast); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem; border: none; background: none; cursor: pointer; color: var(--text-muted); border-radius: var(--radius-md); flex: 1; min-width: 50px; transition: var(--transition-fast); }
+        @media (max-width: 400px) {
+            .nav-item { padding: 0.4rem 0.2rem; min-width: 46px; }
+            .nav-icon { font-size: 1.1rem; }
+            .nav-label { font-size: 0.58rem; }
+        }
         .nav-item:hover { color: var(--primary); background: var(--bg-surface-hover); }
         .nav-item.active { color: var(--primary); }
         .nav-icon { font-size: 1.25rem; transition: transform var(--transition-bounce); filter: grayscale(1) opacity(0.7); }
@@ -1586,6 +1591,53 @@
 
         </main>
 
+        <!-- 4B. TAB ALOKASI -->
+        <main class="app-section" id="view-alokasi">
+            <div class="card">
+                <div class="section-title"><span>🎯 Alokasi Budget Bulanan</span><button class="btn btn-outline btn-sm" onclick="App.UI.toggleAllocSettings()">⚙️ Atur</button></div>
+                <p class="text-sm text-muted" style="margin-bottom: 1.25rem;">Bagi total budget bulananmu ke 3 pos, biar kebayang kepakainya kemana.</p>
+
+                <div id="allocSettingsPanel" style="display:none; margin-bottom:1.25rem; padding-bottom:1.25rem; border-bottom:1px dashed var(--border-medium);">
+                    <div class="form-group">
+                        <label>Total Budget Bulanan (Rp)</label>
+                        <input type="text" id="allocTotal" inputmode="numeric" oninput="App.Utils.formatInput(this)">
+                    </div>
+                    <label class="switch-wrapper" style="margin-bottom:0.9rem;">
+                        <div><span class="font-bold text-sm">Custom Persentase</span><p class="text-xs text-muted" style="margin:0.1rem 0 0;">Default 50/20/30, bisa diubah di sini</p></div>
+                        <input type="checkbox" id="allocCustomPct" onchange="document.getElementById('allocPctFields').style.display = this.checked ? 'block' : 'none';">
+                        <div class="switch"></div>
+                    </label>
+                    <div id="allocPctFields" style="display:none;">
+                        <div class="grid-2">
+                            <div class="form-group"><label>🍚 Pokok (%)</label><input type="number" id="allocPctPokok" min="0" max="100" oninput="App.UI.updateAllocPctHint()"></div>
+                            <div class="form-group"><label>🎓 Kuliah (%)</label><input type="number" id="allocPctKuliah" min="0" max="100" oninput="App.UI.updateAllocPctHint()"></div>
+                        </div>
+                        <div class="form-group"><label>🎉 Fleksibel (%)</label><input type="number" id="allocPctFleksibel" min="0" max="100" oninput="App.UI.updateAllocPctHint()"></div>
+                        <p class="text-xs" id="allocPctTotalHint"></p>
+                    </div>
+                    <button type="button" class="btn btn-primary" style="width:100%;" onclick="App.Handlers.saveAllocationSettings()">💾 Simpan Pengaturan</button>
+                </div>
+
+                <div id="allocProgressCards" style="display:flex; flex-direction:column; gap:0.85rem;"></div>
+            </div>
+
+            <div class="card" id="allocInsightCard" style="display:none; background: var(--primary-light); border: 1px solid var(--primary);"></div>
+
+            <div class="card">
+                <button type="button" onclick="App.UI.toggleAllocCategoryMap()" style="width:100%; background:none; border:none; padding:0; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <span class="font-bold text-sm">🗂️ Pemetaan Kategori</span>
+                    <span id="allocCategoryMapToggleIcon" class="text-muted" style="transition: transform 0.2s;">▾</span>
+                </button>
+                <p class="text-xs text-muted" style="margin-top:0.5rem;">Atur kategori transaksi masuk ke pos yang mana.</p>
+                <div id="allocCategoryMapList" style="display:none; margin-top:0.9rem;"></div>
+            </div>
+
+            <div class="card">
+                <h2 class="section-title">📊 Rencana vs Realisasi (6 Bulan)</h2>
+                <div style="position: relative; height: 250px; width: 100%;"><canvas id="chartAllocTrend"></canvas></div>
+            </div>
+        </main>
+
         <!-- 5. TAB SETTINGS -->
         <main class="app-section" id="view-settings">
 
@@ -1894,6 +1946,7 @@
                 <button class="nav-item active" onclick="App.UI.switchTab('input', this)"><div class="nav-icon">✍️</div><span class="nav-label">Input</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('history', this)"><div class="nav-icon">🕰️</div><span class="nav-label">Riwayat</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('planning', this)"><div class="nav-icon">🗂️</div><span class="nav-label">Kelola</span></button>
+                <button class="nav-item" onclick="App.UI.switchTab('alokasi', this)"><div class="nav-icon">🎯</div><span class="nav-label">Alokasi</span></button>
                 <button class="nav-item" id="navTodoTab" onclick="App.UI.switchTab('todo', this)"><div class="nav-icon nav-icon-wrap">✅<span class="tp-nav-badge" id="todoNavBadge"></span></div><span class="nav-label">Tugas</span></button>
                 <button class="nav-item" id="navSettingsTab" onclick="App.UI.switchTab('settings', this)"><div class="nav-icon">⚙️</div><span class="nav-label">Setelan</span></button>
                 <button class="nav-item" id="navAdminTab" style="display: none;" onclick="App.UI.switchTab('admin', this)"><div class="nav-icon">🛡️</div><span class="nav-label">Admin</span></button>
@@ -2064,7 +2117,7 @@
     </div>
 
     <!-- Modals for Budget, Category, Paylater -->
-    <div id="budgetModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('budgetModal')"><div class="modal-content"><div class="modal-header"><h2>Atur Limit Budget</h2><button class="modal-close" onclick="App.UI.closeModal('budgetModal')">&times;</button></div><form onsubmit="App.Handlers.addBudget(event)"><div class="form-group"><label>Cakupan</label><select id="bCategory" required disabled></select></div><div class="form-group"><label>Batas (Rp)</label><input type="text" id="bAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"><p class="text-xs text-muted" style="margin-top:0.35rem;">Saran: mulai dari Rp1.300.000/bulan biar aman ya 🙂</p></div><div class="form-group"><label>Periode</label><select id="bPeriod" required><option value="monthly">Bulanan</option><option value="weekly">Mingguan</option></select></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('budgetModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
+    <div id="budgetModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('budgetModal')"><div class="modal-content"><div class="modal-header"><h2>Atur Limit Budget</h2><button class="modal-close" onclick="App.UI.closeModal('budgetModal')">&times;</button></div><form onsubmit="App.Handlers.addBudget(event)"><div class="form-group"><label>Kategori</label><select id="bCategory" required></select></div><div class="form-group"><label>Batas (Rp)</label><input type="text" id="bAmount" required inputmode="numeric" oninput="App.Utils.formatInput(this)"></div><div class="form-group"><label>Periode</label><select id="bPeriod" required><option value="monthly">Bulanan</option><option value="weekly">Mingguan</option></select></div><div class="grid-2"><button type="button" class="btn btn-secondary" onclick="App.UI.closeModal('budgetModal')">Batal</button><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
     <div id="transferModal" class="modal-overlay" onclick="if(event.target===this) App.UI.closeModal('transferModal')">
         <div class="modal-content" style="max-width:400px;">
             <div class="modal-header"><h2>⇄ Transfer Antar Akun</h2><button class="modal-close" onclick="App.UI.closeModal('transferModal')">&times;</button></div>
@@ -2267,6 +2320,8 @@
                 isAdmin: false,
                 isPremium: true,
                 transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [], quickTemplates: [],
+                budgetAllocation: { total: 1300000, splits: { pokok: 50, kuliah: 20, fleksibel: 30 } },
+                categoryBucketMap: { jajan: 'pokok', sekolah: 'kuliah', uang_mingguan: 'fleksibel', shopping: 'fleksibel', gift: 'fleksibel', lainnya: 'fleksibel' },
                 settings: { reminderEnabled: false, reminderTime: '20:00', morningEnabled: false, morningTime: '08:00', budgetAlertEnabled: false, theme: 'light', accentHue: 244, themePreset: 'klasik' },
                 isLoading: true, charts: {}, searchTimer: null
             },
@@ -2668,7 +2723,7 @@
                             App.State.isPremium = true; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
                             App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
-                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || []; App.State.quickTemplates = data.quickTemplates || [];
+                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || []; App.State.quickTemplates = data.quickTemplates || []; if(data.budgetAllocation) App.State.budgetAllocation = data.budgetAllocation; if(data.categoryBucketMap) App.State.categoryBucketMap = {...App.State.categoryBucketMap, ...data.categoryBucketMap};
                             if(data.todos && window.TugasProBridge) window.TugasProBridge.applyExternalTodos(data.todos);
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
@@ -2684,7 +2739,7 @@
                             App.State.isPremium = true; App.State.transactions = data.transactions || [];
                             App.State.recurring = data.recurring || []; App.State.customCategories = data.customCategories || [];
                             App.State.budgets = data.budgets || []; App.State.paylaters = data.paylaters || [];
-                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || []; App.State.quickTemplates = data.quickTemplates || [];
+                            App.State.transfers = data.transfers || []; App.State.debts = data.debts || []; App.State.quickTemplates = data.quickTemplates || []; if(data.budgetAllocation) App.State.budgetAllocation = data.budgetAllocation; if(data.categoryBucketMap) App.State.categoryBucketMap = {...App.State.categoryBucketMap, ...data.categoryBucketMap};
                             if(data.todos && window.TugasProBridge) window.TugasProBridge.applyExternalTodos(data.todos);
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
@@ -2694,7 +2749,7 @@
                 save() {
                    if (!App.State.user) return;
                    let todosData = null; try { const raw = localStorage.getItem('tugasPro.v2'); if(raw) todosData = JSON.parse(raw); } catch(e){}
-                   const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, debts: App.State.debts, quickTemplates: App.State.quickTemplates, todos: todosData, settings: App.State.settings, updatedAt: new Date().toISOString() };
+                   const dataToSave = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, budgets: App.State.budgets, paylaters: App.State.paylaters, transfers: App.State.transfers, debts: App.State.debts, quickTemplates: App.State.quickTemplates, budgetAllocation: App.State.budgetAllocation, categoryBucketMap: App.State.categoryBucketMap, todos: todosData, settings: App.State.settings, updatedAt: new Date().toISOString() };
     
                  // ✅ Selalu backup settings ke backup_v6 agar persist saat refresh
                    localStorage.setItem('backup_v6', JSON.stringify({ settings: App.State.settings }));
@@ -3140,7 +3195,7 @@
                     else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
-                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-planning').classList.contains('active')) this.renderAnalytics(); },
+                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-planning').classList.contains('active')) this.renderAnalytics(); if(document.getElementById('view-alokasi').classList.contains('active')) this.renderAllocation(); },
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
@@ -3148,7 +3203,6 @@
                     ids.forEach(id => {
                         const el = document.getElementById(id); if (!el) return;
                         if (id === 'filterCategory') el.innerHTML = '<option value="">Semua Kategori</option>' + options;
-                        else if (id === 'bCategory') el.innerHTML = '<option value="__all__">🌐 Semua Kategori (Total Bulanan)</option>';
                         else el.innerHTML = options;
                     });
                 },
@@ -3451,6 +3505,7 @@
                     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
                     document.getElementById('view-'+id).classList.add('active'); btn.classList.add('active');
                     if(id === 'planning') setTimeout(() => this.renderAnalytics(), 100);
+                    if(id === 'alokasi') setTimeout(() => this.renderAllocation(), 100);
                     if(id === 'admin' && App.State.isAdmin) App.Admin.loadData();
                 },
                 showModal(id) { document.getElementById(id).classList.add('show'); },
@@ -3471,6 +3526,104 @@
                     const show = el.style.display === 'none' || !el.style.display;
                     el.style.display = show ? 'block' : 'none';
                     if (icon) icon.style.transform = show ? 'rotate(180deg)' : 'rotate(0deg)';
+                },
+                toggleAllocSettings() {
+                    const el = document.getElementById('allocSettingsPanel'); if (!el) return;
+                    const show = el.style.display === 'none' || !el.style.display;
+                    if (show) {
+                        const alloc = App.State.budgetAllocation;
+                        document.getElementById('allocTotal').value = alloc.total.toLocaleString('id-ID');
+                        const isDefault = alloc.splits.pokok === 50 && alloc.splits.kuliah === 20 && alloc.splits.fleksibel === 30;
+                        document.getElementById('allocCustomPct').checked = !isDefault;
+                        document.getElementById('allocPctFields').style.display = isDefault ? 'none' : 'block';
+                        document.getElementById('allocPctPokok').value = alloc.splits.pokok;
+                        document.getElementById('allocPctKuliah').value = alloc.splits.kuliah;
+                        document.getElementById('allocPctFleksibel').value = alloc.splits.fleksibel;
+                        this.updateAllocPctHint();
+                    }
+                    el.style.display = show ? 'block' : 'none';
+                },
+                updateAllocPctHint() {
+                    const p = parseInt(document.getElementById('allocPctPokok').value) || 0;
+                    const k = parseInt(document.getElementById('allocPctKuliah').value) || 0;
+                    const f = parseInt(document.getElementById('allocPctFleksibel').value) || 0;
+                    const total = p + k + f;
+                    const hint = document.getElementById('allocPctTotalHint');
+                    hint.textContent = `Total: ${total}% ${total === 100 ? '✅' : '(harus pas 100%)'}`;
+                    hint.className = 'text-xs ' + (total === 100 ? 'text-success' : 'text-danger');
+                },
+                toggleAllocCategoryMap() {
+                    const el = document.getElementById('allocCategoryMapList'); const icon = document.getElementById('allocCategoryMapToggleIcon');
+                    if (!el) return;
+                    const show = el.style.display === 'none' || !el.style.display;
+                    if (show) {
+                        const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
+                        el.innerHTML = all.map(c => {
+                            const current = App.State.categoryBucketMap[c.id] || 'fleksibel';
+                            const opts = App.Handlers.allocBucketDefs.map(d => `<option value="${d.key}" ${current === d.key ? 'selected' : ''}>${d.icon} ${d.label}</option>`).join('');
+                            return `<div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; padding:0.55rem 0; border-bottom:1px solid var(--border-light);">
+                                <span class="text-sm font-semibold">${c.icon} ${c.name}</span>
+                                <select style="width:auto; padding:0.4rem 0.6rem; font-size:0.78rem;" onchange="App.Handlers.setCategoryBucket('${c.id}', this.value)">${opts}</select>
+                            </div>`;
+                        }).join('');
+                    }
+                    el.style.display = show ? 'block' : 'none';
+                    if (icon) icon.style.transform = show ? 'rotate(180deg)' : 'rotate(0deg)';
+                },
+                renderAllocation() {
+                    if (App.State.isLoading) return;
+                    const status = App.Handlers.getAllocationStatus();
+                    const box = document.getElementById('allocProgressCards'); if (!box) return;
+                    box.innerHTML = status.map(s => {
+                        const percClamped = Math.min(s.perc, 100);
+                        const barColor = s.perc >= 100 ? 'var(--danger)' : s.perc >= 80 ? 'var(--warning)' : 'var(--success)';
+                        return `<div class="progress-card">
+                            <div class="progress-header">
+                                <div><div class="font-bold text-sm">${s.icon} ${s.label}</div>
+                                <div class="text-xs text-muted">${App.Utils.formatCurrency(s.spent)} / ${App.Utils.formatCurrency(s.allocated)}</div></div>
+                                <span class="font-bold text-sm" style="color:${barColor};">${s.perc.toFixed(0)}%</span>
+                            </div>
+                            <div class="progress-track"><div class="progress-fill" style="width:${percClamped}%; background:${barColor};"></div></div>
+                            <div class="text-xs ${s.remaining < 0 ? 'text-danger' : 'text-muted'} font-semibold" style="margin-top:0.5rem;">${s.remaining < 0 ? `⚠️ Sudah lebih ${App.Utils.formatCurrency(-s.remaining)}` : `Sisa ${App.Utils.formatCurrency(s.remaining)}`}</div>
+                        </div>`;
+                    }).join('');
+
+                    // Rekomendasi otomatis
+                    const insightBox = document.getElementById('allocInsightCard');
+                    const over = status.filter(s => s.remaining < 0);
+                    const under = status.filter(s => s.perc < 50);
+                    if (insightBox) {
+                        if (over.length && under.length) {
+                            insightBox.style.display = 'block';
+                            insightBox.innerHTML = `<p class="text-sm"><b>💡 Saran:</b> ${over[0].label} udah lebih ${App.Utils.formatCurrency(-over[0].remaining)}, tapi ${under[0].label} masih longgar (baru ${under[0].perc.toFixed(0)}%). Coba geser dikit alokasinya bulan depan.</p>`;
+                        } else if (over.length) {
+                            insightBox.style.display = 'block';
+                            insightBox.innerHTML = `<p class="text-sm"><b>⚠️ Perhatian:</b> ${over.map(o=>o.label).join(', ')} udah kebablasan bulan ini.</p>`;
+                        } else {
+                            insightBox.style.display = 'none';
+                        }
+                    }
+                    this.renderAllocTrendChart();
+                },
+                renderAllocTrendChart() {
+                    const ctx = document.getElementById('chartAllocTrend'); if (!ctx || typeof Chart === 'undefined') return;
+                    const labels = [], planned = [], actual = [];
+                    for (let i = 5; i >= 0; i--) {
+                        const d = new Date(); d.setMonth(d.getMonth() - i);
+                        labels.push(d.toLocaleDateString('id-ID', { month: 'short' }));
+                        const status = App.Handlers.getAllocationStatus(-i);
+                        planned.push(App.State.budgetAllocation.total);
+                        actual.push(status.reduce((s, x) => s + x.spent, 0));
+                    }
+                    if (App.State.charts.allocTrend) App.State.charts.allocTrend.destroy();
+                    App.State.charts.allocTrend = new Chart(ctx, {
+                        type: 'bar',
+                        data: { labels, datasets: [
+                            { label: 'Rencana', data: planned, backgroundColor: 'rgba(99,102,241,0.25)', borderRadius: 6 },
+                            { label: 'Realisasi', data: actual, backgroundColor: 'rgba(239,68,68,0.7)', borderRadius: 6 }
+                        ]},
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { callback: v => App.Utils.formatCurrency(v) } } } }
+                    });
                 },
                 refreshStartupAlertPopup() {
                     const wasOpen = document.getElementById('financeAlertPopup').classList.contains('show');
@@ -3615,9 +3768,55 @@
                 debounceSearch() { clearTimeout(App.State.searchTimer); App.State.searchTimer = setTimeout(() => App.UI.renderHistory(), 300); },
                 resetFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterSearch').value = ''; document.getElementById('filterCategory').value = ''; document.getElementById('filterAccount').value = ''; document.getElementById('filterType').value = 'all'; App.UI.renderHistory(); },
                 
-                openBudgetModal() { if (!App.State.isPremium && App.State.budgets.length >= App.Config.FreeLimits.budget) { App.UI.showModal('premiumModal'); return; } const existing = App.State.budgets.find(b => b.category === '__all__'); document.getElementById('bAmount').value = existing ? existing.amount.toLocaleString('id-ID') : (1300000).toLocaleString('id-ID'); document.getElementById('bPeriod').value = existing ? existing.period : 'monthly'; App.UI.showModal('budgetModal'); },
+                openBudgetModal() { if (!App.State.isPremium && App.State.budgets.length >= App.Config.FreeLimits.budget) { App.UI.showModal('premiumModal'); return; } App.UI.showModal('budgetModal'); },
                 addBudget(e) { e.preventDefault(); const category = document.getElementById('bCategory').value; const amount = App.Utils.parseCurrency(document.getElementById('bAmount').value); const period = document.getElementById('bPeriod').value; if(amount <= 0) return App.UI.showToast('Isi limit yang valid', 'error'); const existing = App.State.budgets.findIndex(b => b.category === category); if(existing > -1) App.State.budgets[existing] = { id: App.State.budgets[existing].id, category, amount, period }; else App.State.budgets.push({ id: Date.now(), category, amount, period }); App.DB.save(); App.UI.renderBudgets(); App.UI.closeModal('budgetModal'); e.target.reset(); App.UI.showToast('Budget tersimpan!', 'success'); },
                 async deleteBudget(id) { const yes = await App.UI.confirm('Hapus limit budget ini?'); if(!yes) return; App.State.budgets = App.State.budgets.filter(b => b.id !== id); App.DB.save(); App.UI.renderBudgets(); },
+
+                // ---------------------------------------------------------------------
+                // ALOKASI BUDGET (Pokok / Kuliah & Transport / Fleksibel & Hiburan)
+                // ---------------------------------------------------------------------
+                allocBucketDefs: [
+                    { key: 'pokok', icon: '🍚', label: 'Kebutuhan Pokok' },
+                    { key: 'kuliah', icon: '🎓', label: 'Kuliah & Transport' },
+                    { key: 'fleksibel', icon: '🎉', label: 'Fleksibel & Hiburan' }
+                ],
+                getAllocationStatus(monthOffset = 0) {
+                    const alloc = App.State.budgetAllocation; const map = App.State.categoryBucketMap;
+                    const now = new Date(); now.setMonth(now.getMonth() + monthOffset);
+                    const ym = now.toISOString().slice(0, 7);
+                    const totals = { pokok: 0, kuliah: 0, fleksibel: 0 };
+                    App.State.transactions.forEach(t => {
+                        if (t.excludeFromBudget || !t.pengeluaran || !t.tanggal || t.tanggal.slice(0, 7) !== ym) return;
+                        const bucket = map[t.kategori] || 'fleksibel';
+                        if (totals.hasOwnProperty(bucket)) totals[bucket] += t.pengeluaran;
+                    });
+                    return this.allocBucketDefs.map(d => {
+                        const allocated = alloc.total * ((alloc.splits[d.key] || 0) / 100);
+                        const spent = totals[d.key];
+                        const perc = allocated > 0 ? (spent / allocated) * 100 : 0;
+                        return { ...d, allocated, spent, remaining: allocated - spent, perc };
+                    });
+                },
+                saveAllocationSettings() {
+                    const total = App.Utils.parseCurrency(document.getElementById('allocTotal').value);
+                    if (!total || total <= 0) return App.UI.showToast('Isi total budget yang valid', 'error');
+                    let splits = { pokok: 50, kuliah: 20, fleksibel: 30 };
+                    if (document.getElementById('allocCustomPct').checked) {
+                        const p = parseInt(document.getElementById('allocPctPokok').value) || 0;
+                        const k = parseInt(document.getElementById('allocPctKuliah').value) || 0;
+                        const f = parseInt(document.getElementById('allocPctFleksibel').value) || 0;
+                        if (p + k + f !== 100) return App.UI.showToast('Total persentase harus 100%', 'error');
+                        splits = { pokok: p, kuliah: k, fleksibel: f };
+                    }
+                    App.State.budgetAllocation = { total, splits };
+                    App.DB.save(); App.UI.renderAllocation();
+                    document.getElementById('allocSettingsPanel').style.display = 'none';
+                    App.UI.showToast('Pengaturan alokasi disimpan!', 'success');
+                },
+                setCategoryBucket(catId, bucket) {
+                    App.State.categoryBucketMap[catId] = bucket;
+                    App.DB.save(); App.UI.renderAllocation();
+                },
                 toggleExcludeBudget(id) {
                     const t = App.State.transactions.find(x => x.id === id); if(!t) return;
                     t.excludeFromBudget = !t.excludeFromBudget;
@@ -3891,7 +4090,8 @@
                 checkStartupAlerts(isRefresh) {
                     const budgetAlerts = this.getBudgetAlerts(80);
                     const pendingRecurring = this.getPendingRecurring();
-                    if(!budgetAlerts.length && !pendingRecurring.length) {
+                    const allocAlerts = this.getAllocationStatus().filter(s => s.perc >= 80);
+                    if(!budgetAlerts.length && !pendingRecurring.length && !allocAlerts.length) {
                         if(isRefresh) {
                             App.UI.closeModal('financeAlertPopup');
                             App.UI.showToast('Semua sudah beres ✅', 'success');
@@ -3923,8 +4123,23 @@
                         });
                     }
 
+                    if(allocAlerts.length){
+                        html += `<div class="fap-section-title" style="margin-top:${pendingRecurring.length?'1.25rem':'0'};">🎯 Alokasi Hampir/Sudah Habis</div>`;
+                        allocAlerts.forEach(a => {
+                            const over = a.remaining < 0;
+                            html += `<div class="fap-item">
+                                <div style="flex:1; min-width:0;">
+                                    <div class="font-bold text-sm">${a.icon} ${a.label}</div>
+                                    <div class="text-xs text-muted" style="margin-top:0.15rem;">${fmt(a.spent)} / ${fmt(a.allocated)}</div>
+                                    <div class="progress-track" style="margin-top:0.4rem;"><div class="progress-fill" style="width:${Math.min(a.perc,100)}%; background:var(--danger);"></div></div>
+                                    <div class="text-xs text-danger font-semibold" style="margin-top:0.35rem;">${over ? `⚠️ Sudah lebih ${fmt(-a.remaining)}!` : `Tinggal ${(100-a.perc).toFixed(0)}% lagi`}</div>
+                                </div>
+                            </div>`;
+                        });
+                    }
+
                     if(budgetAlerts.length){
-                        html += `<div class="fap-section-title" style="margin-top:${pendingRecurring.length?'1.25rem':'0'};">⚠️ Budget Hampir/Sudah Habis</div>`;
+                        html += `<div class="fap-section-title" style="margin-top:${(pendingRecurring.length||allocAlerts.length)?'1.25rem':'0'};">⚠️ Budget Hampir/Sudah Habis</div>`;
                         budgetAlerts.forEach(b => {
                             const over = b.spent > b.amount;
                             html += `<div class="fap-item">
@@ -3944,13 +4159,12 @@
                 },
                 processRecurring() { /* dipertahankan agar kompatibel; penjadwalan sekarang lewat checkStartupAlerts() + konfirmasi manual */ },
 
-                // ── Subscribe FCM: ambil token & simpan ke Firebase DB ──
                 exportData(type) {
                     if(type === 'json' && !App.State.isPremium) { App.UI.showModal('premiumModal'); return; }
                     let text = '', filename = '';
                     let todosData = null; try { const raw = localStorage.getItem('tugasPro.v2'); if(raw) todosData = JSON.parse(raw); } catch(e){}
                     if(type === 'json') {
-                        const dataToExport = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, budgets: App.State.budgets, paylaters: App.State.paylaters, todos: todosData, settings: App.State.settings };
+                        const dataToExport = { isPremium: App.State.isPremium, transactions: App.State.transactions, recurring: App.State.recurring, customCategories: App.State.customCategories, budgets: App.State.budgets, paylaters: App.State.paylaters, budgetAllocation: App.State.budgetAllocation, categoryBucketMap: App.State.categoryBucketMap, todos: todosData, settings: App.State.settings };
                         text = JSON.stringify(dataToExport, null, 2); filename = `Backup_KeuanganPro_${new Date().toISOString().split('T')[0]}.json`;
                     } else {
                         const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
@@ -3998,7 +4212,7 @@
                                 const data = JSON.parse(ev.target.result);
                                 if(data.transactions) {
                                     const yes = await App.UI.confirm('Menimpa data saat ini dengan data Backup?'); if(!yes) return;
-                                    App.State.isPremium = data.isPremium || App.State.isPremium; App.State.transactions = data.transactions; if(data.customCategories) App.State.customCategories = data.customCategories; if(data.budgets) App.State.budgets = data.budgets; if(data.recurring) App.State.recurring = data.recurring; if(data.paylaters) App.State.paylaters = data.paylaters; if(data.transfers) App.State.transfers = data.transfers; if(data.debts) App.State.debts = data.debts; App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect(); if(data.todos && window.TugasProBridge && window.TugasProBridge.applyExternalTodos) window.TugasProBridge.applyExternalTodos(data.todos); App.UI.showToast('Backup berhasil dipulihkan!', 'success');
+                                    App.State.isPremium = data.isPremium || App.State.isPremium; App.State.transactions = data.transactions; if(data.customCategories) App.State.customCategories = data.customCategories; if(data.budgets) App.State.budgets = data.budgets; if(data.recurring) App.State.recurring = data.recurring; if(data.paylaters) App.State.paylaters = data.paylaters; if(data.transfers) App.State.transfers = data.transfers; if(data.debts) App.State.debts = data.debts; if(data.budgetAllocation) App.State.budgetAllocation = data.budgetAllocation; if(data.categoryBucketMap) App.State.categoryBucketMap = {...App.State.categoryBucketMap, ...data.categoryBucketMap}; App.DB.save(); App.UI.renderAll(); App.UI.renderCategoriesSelect(); if(data.todos && window.TugasProBridge && window.TugasProBridge.applyExternalTodos) window.TugasProBridge.applyExternalTodos(data.todos); App.UI.showToast('Backup berhasil dipulihkan!', 'success');
                                 }
                             } else if (file.name.endsWith('.csv')) {
                                 const content = ev.target.result;
