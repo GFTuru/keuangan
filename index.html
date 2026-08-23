@@ -1523,6 +1523,15 @@
                 
                 <div id="historyLock" class="premium-lock" style="display:none!important;"></div>
             </div>
+
+            <div class="card">
+                <button type="button" onclick="App.UI.toggleAdjustmentHistory()" style="width:100%; background:none; border:none; padding:0; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                    <span class="font-bold text-sm">🔄 Riwayat Penyesuaian Saldo <span class="text-muted" style="font-weight:500;">(<span id="adjustmentHistoryCount">0</span>)</span></span>
+                    <span id="adjustmentHistoryToggleIcon" class="text-muted" style="transition: transform 0.2s;">▾</span>
+                </button>
+                <p class="text-xs text-muted" style="margin-top:0.5rem;">Hasil dari fitur Sinkronkan Saldo, dipisah biar riwayat transaksi biasa tetap bersih.</p>
+                <div id="adjustmentHistoryList" class="list-group" style="display:none; margin-top:0.9rem;"></div>
+            </div>
         </main>
 
         <!-- 3. TAB ANALYTICS -->
@@ -2727,7 +2736,7 @@
                             if(data.todos && window.TugasProBridge) window.TugasProBridge.applyExternalTodos(data.todos);
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
-                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.UI.renderAll(); setTimeout(() => { if(window.AppNotifyQueue) window.AppNotifyQueue.register('finance-alert', () => App.Handlers.checkStartupAlerts()); else App.Handlers.checkStartupAlerts(); }, 700);
+                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.UI.renderCategoriesSelect(); App.UI.renderAll(); setTimeout(() => { if(window.AppNotifyQueue) window.AppNotifyQueue.register('finance-alert', () => App.Handlers.checkStartupAlerts()); else App.Handlers.checkStartupAlerts(); }, 700);
                         return;
                     }
 
@@ -2743,7 +2752,7 @@
                             if(data.todos && window.TugasProBridge) window.TugasProBridge.applyExternalTodos(data.todos);
                             if(data.settings) App.State.settings = {...App.State.settings, ...data.settings};
                         } else { this.save(); }
-                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.UI.renderAll(); setTimeout(() => { if(window.AppNotifyQueue) window.AppNotifyQueue.register('finance-alert', () => App.Handlers.checkStartupAlerts()); else App.Handlers.checkStartupAlerts(); }, 700);
+                        App.State.isLoading = false; App.Premium.applyState(); App.Theme.init(); App.UI.renderCategoriesSelect(); App.UI.renderAll(); setTimeout(() => { if(window.AppNotifyQueue) window.AppNotifyQueue.register('finance-alert', () => App.Handlers.checkStartupAlerts()); else App.Handlers.checkStartupAlerts(); }, 700);
                     }, (error) => { console.error("Firebase DB Error:", error); App.UI.updateSyncStatus('error'); });
                 },
                 save() {
@@ -3195,7 +3204,7 @@
                     else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
-                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-planning').classList.contains('active')) this.renderAnalytics(); if(document.getElementById('view-alokasi').classList.contains('active')) this.renderAllocation(); },
+                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderAdjustmentHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-planning').classList.contains('active')) this.renderAnalytics(); if(document.getElementById('view-alokasi').classList.contains('active')) this.renderAllocation(); },
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
@@ -3335,6 +3344,7 @@
                     if(!App.State.isPremium) { const limitDate = new Date(); limitDate.setMonth(limitDate.getMonth() - App.Config.FreeLimits.historyMonths); limitDateStr = limitDate.toISOString().split('T')[0]; }
 
                     let filtered = App.State.transactions.filter(t => {
+                        if (t.isAdjustment) return false; // penyesuaian saldo ditampilkan terpisah, bukan di riwayat biasa
                         const matchDate = (!start || t.tanggal >= start) && (!end || t.tanggal <= end);
                         const matchQ = !q || (t.keterangan||'').toLowerCase().includes(q) || t.kategori.toLowerCase().includes(q);
                         const matchCat = !cat || t.kategori === cat;
@@ -3527,6 +3537,35 @@
                     el.style.display = show ? 'block' : 'none';
                     if (icon) icon.style.transform = show ? 'rotate(180deg)' : 'rotate(0deg)';
                 },
+                toggleAdjustmentHistory() {
+                    const el = document.getElementById('adjustmentHistoryList'); const icon = document.getElementById('adjustmentHistoryToggleIcon');
+                    if (!el) return;
+                    const show = el.style.display === 'none' || !el.style.display;
+                    el.style.display = show ? 'block' : 'none';
+                    if (icon) icon.style.transform = show ? 'rotate(180deg)' : 'rotate(0deg)';
+                },
+                renderAdjustmentHistory() {
+                    const list = document.getElementById('adjustmentHistoryList'); if (!list || App.State.isLoading) return;
+                    const adj = App.State.transactions.filter(t => t.isAdjustment).sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
+                    const countEl = document.getElementById('adjustmentHistoryCount'); if (countEl) countEl.textContent = adj.length;
+                    if (!adj.length) { list.innerHTML = `<div class="text-center" style="padding:1.5rem 1rem;"><p class="text-sm text-muted">Belum ada riwayat penyesuaian.</p></div>`; return; }
+                    list.innerHTML = adj.map(t => {
+                        const isPlus = t.pemasukan > 0;
+                        const amt = isPlus ? t.pemasukan : t.pengeluaran;
+                        return `<div class="list-item" style="padding:0.65rem 0.25rem;">
+                            <div class="item-left">
+                                <div class="item-icon" style="width:34px;height:34px;font-size:0.95rem;background:var(--bg-surface-hover);color:var(--text-muted);">🔄</div>
+                                <div class="item-details">
+                                    <span class="text-sm font-semibold">${t.keterangan}</span>
+                                    <span class="item-meta">${App.Utils.formatDateStr(t.tanggal)}</span>
+                                </div>
+                            </div>
+                            <div class="item-right">
+                                <span class="text-sm font-semibold ${isPlus ? 'text-success' : 'text-danger'}">${isPlus ? '+' : '-'}${App.Utils.formatCurrency(amt)}</span>
+                            </div>
+                        </div>`;
+                    }).join('');
+                },
                 toggleAllocSettings() {
                     const el = document.getElementById('allocSettingsPanel'); if (!el) return;
                     const show = el.style.display === 'none' || !el.style.display;
@@ -3560,7 +3599,7 @@
                         const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                         el.innerHTML = all.map(c => {
                             const current = App.State.categoryBucketMap[c.id] || 'fleksibel';
-                            const opts = App.Handlers.allocBucketDefs.map(d => `<option value="${d.key}" ${current === d.key ? 'selected' : ''}>${d.icon} ${d.label}</option>`).join('');
+                            const opts = App.Handlers.allocBucketDefs.map(d => `<option value="${d.key}" ${current === d.key ? 'selected' : ''}>${d.icon} ${d.label}</option>`).join('') + `<option value="none" ${current === 'none' ? 'selected' : ''}>🚫 Di Luar Budget</option>`;
                             return `<div style="display:flex; align-items:center; justify-content:space-between; gap:0.75rem; padding:0.55rem 0; border-bottom:1px solid var(--border-light);">
                                 <span class="text-sm font-semibold">${c.icon} ${c.name}</span>
                                 <select style="width:auto; padding:0.4rem 0.6rem; font-size:0.78rem;" onchange="App.Handlers.setCategoryBucket('${c.id}', this.value)">${opts}</select>
@@ -3873,7 +3912,7 @@
                         App.State.transactions.push({
                             id: Date.now() + i, tanggal: today, jenisAkun: f.jenisAkun, subWallet: f.subWallet,
                             pemasukan: diff > 0 ? diff : 0, pengeluaran: diff < 0 ? -diff : 0,
-                            kategori: 'lainnya', keterangan: `Penyesuaian saldo ${f.label} (sinkronisasi)`, excludeFromBudget: true
+                            kategori: 'lainnya', keterangan: `Penyesuaian saldo ${f.label} (sinkronisasi)`, excludeFromBudget: true, isAdjustment: true
                         });
                         count++;
                     });
