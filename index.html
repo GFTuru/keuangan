@@ -1456,10 +1456,11 @@
                     <div class="form-group" id="txSubWalletWrap" style="display:none;">
                         <label>👛 Dompet</label>
                         <select id="txSubWallet">
-                            <option value="seabank">🌊 SeaBank</option>
+                            <option value="seabank">🏦 SeaBank</option>
+                            <option value="krombank">🟣 KromBank</option>
                             <option value="gopay">🟢 GoPay</option>
                             <option value="dana">🔵 DANA</option>
-                            <option value="shopeepay">🧡 ShopeePay</option>
+                            <option value="shopeepay">👛 ShopeePay</option>
                         </select>
                     </div>
                     <div class="form-group"><label>📂 Kategori</label><select id="txCategory" required></select></div>
@@ -1975,6 +1976,10 @@
                 <button class="modal-close" onclick="App.UI.closeStartupAlertPopup()">&times;</button>
             </div>
             <div id="fapBody"></div>
+            <label class="hpp-dont-show" style="display:flex; align-items:center; gap:0.5rem; margin-top:1rem; padding-top:0.9rem; border-top:1px solid var(--border-light); cursor:pointer;">
+                <input type="checkbox" id="fapDontShowToday" style="accent-color:var(--primary); width:16px; height:16px; cursor:pointer; flex-shrink:0;">
+                <span class="text-xs text-muted">Jangan tampilkan lagi untuk hari ini</span>
+            </label>
         </div>
     </div>
 
@@ -2098,10 +2103,11 @@
                 <div class="form-group" id="editSubWalletWrap" style="display:none;">
                     <label>👛 Dompet</label>
                     <select id="edit-sub-wallet">
-                        <option value="seabank">🌊 SeaBank</option>
+                        <option value="seabank">🏦 SeaBank</option>
+                        <option value="krombank">🟣 KromBank</option>
                         <option value="gopay">🟢 GoPay</option>
                         <option value="dana">🔵 DANA</option>
-                        <option value="shopeepay">🧡 ShopeePay</option>
+                        <option value="shopeepay">👛 ShopeePay</option>
                     </select>
                 </div>
                 <div class="grid-2">
@@ -2150,19 +2156,21 @@
                 <div class="form-group" id="tfDariSubWrap">
                     <label>👛 Dompet Asal</label>
                     <select id="tfDariSub">
-                        <option value="seabank">🌊 SeaBank</option>
+                        <option value="seabank">🏦 SeaBank</option>
+                        <option value="krombank">🟣 KromBank</option>
                         <option value="gopay">🟢 GoPay</option>
                         <option value="dana">🔵 DANA</option>
-                        <option value="shopeepay">🧡 ShopeePay</option>
+                        <option value="shopeepay">👛 ShopeePay</option>
                     </select>
                 </div>
                 <div class="form-group" id="tfKeSubWrap" style="display:none;">
                     <label>👛 Dompet Tujuan</label>
                     <select id="tfKeSub">
-                        <option value="seabank">🌊 SeaBank</option>
+                        <option value="seabank">🏦 SeaBank</option>
+                        <option value="krombank">🟣 KromBank</option>
                         <option value="gopay">🟢 GoPay</option>
                         <option value="dana">🔵 DANA</option>
-                        <option value="shopeepay">🧡 ShopeePay</option>
+                        <option value="shopeepay">👛 ShopeePay</option>
                     </select>
                 </div>
             </div>
@@ -2330,7 +2338,7 @@
                 isPremium: true,
                 transactions: [], recurring: [], customCategories: [], goals: [], budgets: [], paylaters: [], transfers: [], debts: [], quickTemplates: [],
                 budgetAllocation: { total: 1300000, splits: { pokok: 50, kuliah: 20, fleksibel: 30 } },
-                categoryBucketMap: { jajan: 'pokok', sekolah: 'kuliah', uang_mingguan: 'fleksibel', shopping: 'fleksibel', gift: 'fleksibel', lainnya: 'fleksibel' },
+                categoryBucketMap: { jajan: 'pokok', uang_mingguan: 'fleksibel', shopping: 'fleksibel', gift: 'fleksibel', lainnya: 'fleksibel' },
                 settings: { reminderEnabled: false, reminderTime: '20:00', morningEnabled: false, morningTime: '08:00', budgetAlertEnabled: false, theme: 'light', accentHue: 244, themePreset: 'klasik' },
                 isLoading: true, charts: {}, searchTimer: null
             },
@@ -2352,7 +2360,6 @@
                 // Updated Default Categories based on user request image
                 DefaultCategories: [
                     { id: 'lainnya', name: 'Lainnya', icon: '📦' },
-                    { id: 'sekolah', name: 'Sekolah', icon: '🎓' },
                     { id: 'jajan', name: 'Jajan', icon: '🍿' },
                     { id: 'uang_mingguan', name: 'Uang Mingguan', icon: '💵' },
                     { id: 'shopping', name: 'Shopping', icon: '🛍️' },
@@ -3217,7 +3224,7 @@
                 },
                 renderBalances() {
                     if (App.State.isLoading) return; let bal = { cash: 0, saldo: 0 };
-                    const subWallets = { gopay: 0, dana: 0, shopeepay: 0, seabank: 0 };
+                    const subWallets = { gopay: 0, dana: 0, shopeepay: 0, seabank: 0, krombank: 0 };
                     App.State.transactions.forEach(t => {
                         const amt = (t.pemasukan || 0) - (t.pengeluaran || 0);
                         if (t.jenisAkun === 'cash') bal.cash += amt; else { bal.saldo += amt; subWallets[t.subWallet && subWallets.hasOwnProperty(t.subWallet) ? t.subWallet : 'seabank'] += amt; }
@@ -3241,10 +3248,11 @@
                     const subWalletBox = document.getElementById('subWalletBreakdown');
                     if (subWalletBox) {
                         const items = [
-                            { key: 'seabank', icon: '🌊', label: 'SeaBank' },
+                            { key: 'seabank', icon: '🏦', label: 'SeaBank' },
+                            { key: 'krombank', icon: '🟣', label: 'KromBank' },
                             { key: 'gopay', icon: '🟢', label: 'GoPay' },
                             { key: 'dana', icon: '🔵', label: 'DANA' },
-                            { key: 'shopeepay', icon: '🧡', label: 'ShopeePay' }
+                            { key: 'shopeepay', icon: '👛', label: 'ShopeePay' }
                         ];
                         subWalletBox.innerHTML = items.map(it => `
                             <div class="subwallet-item">
@@ -3441,7 +3449,7 @@
                     const countEl = document.getElementById('transferHistoryCount'); if (countEl) countEl.textContent = transfers.length;
                     if (!transfers.length) { list.innerHTML = `<div class="text-center" style="padding:1.5rem 1rem;"><p class="text-sm text-muted">Belum ada riwayat transfer.</p></div>`; return; }
                     list.innerHTML = transfers.map(tf => {
-                        const subLabel = { gopay: 'GoPay', dana: 'DANA', shopeepay: 'ShopeePay', seabank: 'SeaBank' };
+                        const subLabel = { gopay: 'GoPay', dana: 'DANA', shopeepay: 'ShopeePay', seabank: 'SeaBank', krombank: 'KromBank' };
                         const fromIcon = tf.dari === 'cash' ? '💵' : '🪪';
                         const toIcon   = tf.ke   === 'cash' ? '💵' : '🪪';
                         const fromName = tf.dari === 'cash' ? 'Cash' : ('Saldo' + (tf.dariSubWallet && subLabel[tf.dariSubWallet] ? ' ' + subLabel[tf.dariSubWallet] : ''));
@@ -3668,7 +3676,12 @@
                     const wasOpen = document.getElementById('financeAlertPopup').classList.contains('show');
                     if(wasOpen) App.Handlers.checkStartupAlerts(true);
                 },
-                closeStartupAlertPopup() { this.closeModal('financeAlertPopup'); if(window.AppNotifyQueue) window.AppNotifyQueue.closed('finance-alert'); },
+                closeStartupAlertPopup() {
+                    const dontShow = document.getElementById('fapDontShowToday');
+                    if (dontShow && dontShow.checked) { const today = new Date().toISOString().split('T')[0]; localStorage.setItem('financeAlertDismissedDate', today); }
+                    this.closeModal('financeAlertPopup');
+                    if(window.AppNotifyQueue) window.AppNotifyQueue.closed('finance-alert');
+                },
                 closeModal(id) { document.getElementById(id).classList.remove('show'); },
                 showToast(msg, type='success') {
                     const c = document.getElementById('toastContainer'); const t = document.createElement('div'); t.className = `toast ${type}`;
@@ -3863,7 +3876,7 @@
                     App.UI.showToast(t.excludeFromBudget ? 'Transaksi dikecualikan dari budget' : 'Transaksi dihitung lagi ke budget', 'info');
                 },
                 _getCurrentBalances() {
-                    let bal = { cash: 0 }; const sub = { seabank: 0, gopay: 0, dana: 0, shopeepay: 0 };
+                    let bal = { cash: 0 }; const sub = { seabank: 0, krombank: 0, gopay: 0, dana: 0, shopeepay: 0 };
                     App.State.transactions.forEach(t => {
                         const amt = (t.pemasukan || 0) - (t.pengeluaran || 0);
                         if (t.jenisAkun === 'cash') bal.cash += amt; else sub[t.subWallet && sub.hasOwnProperty(t.subWallet) ? t.subWallet : 'seabank'] += amt;
@@ -3878,10 +3891,11 @@
                     const cur = this._getCurrentBalances();
                     const fields = [
                         { key: 'cash', icon: '💵', label: 'Cash / Tunai' },
-                        { key: 'seabank', icon: '🌊', label: 'SeaBank' },
+                        { key: 'seabank', icon: '🏦', label: 'SeaBank' },
+                        { key: 'krombank', icon: '🟣', label: 'KromBank' },
                         { key: 'gopay', icon: '🟢', label: 'GoPay' },
                         { key: 'dana', icon: '🔵', label: 'DANA' },
-                        { key: 'shopeepay', icon: '🧡', label: 'ShopeePay' }
+                        { key: 'shopeepay', icon: '👛', label: 'ShopeePay' }
                     ];
                     document.getElementById('syncBalanceFields').innerHTML = fields.map(f => `
                         <div class="sync-field">
@@ -3898,6 +3912,7 @@
                     const fields = [
                         { key: 'cash', jenisAkun: 'cash', subWallet: null, label: 'Cash / Tunai' },
                         { key: 'seabank', jenisAkun: 'saldo', subWallet: 'seabank', label: 'SeaBank' },
+                        { key: 'krombank', jenisAkun: 'saldo', subWallet: 'krombank', label: 'KromBank' },
                         { key: 'gopay', jenisAkun: 'saldo', subWallet: 'gopay', label: 'GoPay' },
                         { key: 'dana', jenisAkun: 'saldo', subWallet: 'dana', label: 'DANA' },
                         { key: 'shopeepay', jenisAkun: 'saldo', subWallet: 'shopeepay', label: 'ShopeePay' }
@@ -3928,6 +3943,7 @@
                     const jumlah = App.Utils.parseCurrency(document.getElementById('tfJumlah').value);
                     const tgl    = document.getElementById('tfTanggal').value;
                     const cat    = document.getElementById('tfCatatan').value.trim();
+                    if(dari === ke && (dari !== 'saldo' || dariSubWallet === keSubWallet)) return App.UI.showToast(dari === 'saldo' ? 'Pilih dompet asal & tujuan yang berbeda!' : 'Pilih akun yang berbeda!', 'error');
                     if(!jumlah || jumlah <= 0) return App.UI.showToast('Masukkan jumlah yang valid', 'error');
                     if(!tgl) return App.UI.showToast('Pilih tanggal transfer', 'error');
                     App.State.transfers.push({ id: Date.now(), dari, ke, dariSubWallet, keSubWallet, jumlah, tanggal: tgl, catatan: cat });
@@ -4126,6 +4142,11 @@
                     }).filter(b => b.perc >= threshold);
                 },
                 checkStartupAlerts(isRefresh) {
+                    if (!isRefresh) {
+                        const dismissedDate = localStorage.getItem('financeAlertDismissedDate');
+                        const today = new Date().toISOString().split('T')[0];
+                        if (dismissedDate === today) return false;
+                    }
                     const budgetAlerts = this.getBudgetAlerts(80);
                     const pendingRecurring = this.getPendingRecurring();
                     const allocAlerts = this.getAllocationStatus().filter(s => s.perc >= 80);
