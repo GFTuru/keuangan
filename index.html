@@ -487,11 +487,11 @@
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-glass); backdrop-filter: blur(20px); border-top: 1px solid var(--border-light); z-index: 100; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0,0,0,0.05); }
         .nav-container { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; padding: 0.5rem 1rem; overflow-x: auto; scrollbar-width: none; }
         .nav-container::-webkit-scrollbar { display: none; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.5rem; border: none; background: none; cursor: pointer; color: var(--text-muted); border-radius: var(--radius-md); flex: 1; min-width: 50px; transition: var(--transition-fast); }
-        @media (max-width: 400px) {
-            .nav-item { padding: 0.4rem 0.2rem; min-width: 46px; }
-            .nav-icon { font-size: 1.1rem; }
-            .nav-label { font-size: 0.58rem; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; padding: 0.45rem 0.3rem; border: none; background: none; cursor: pointer; color: var(--text-muted); border-radius: var(--radius-md); flex: 1; min-width: 44px; transition: var(--transition-fast); }
+        @media (max-width: 430px) {
+            .nav-item { padding: 0.4rem 0.15rem; min-width: 40px; }
+            .nav-icon { font-size: 1.05rem; }
+            .nav-label { font-size: 0.55rem; }
         }
         .nav-item:hover { color: var(--primary); background: var(--bg-surface-hover); }
         .nav-item.active { color: var(--primary); }
@@ -726,6 +726,29 @@
         .sync-field { padding: 0.75rem; border: 1px solid var(--border-light); border-radius: var(--radius-md); margin-bottom: 0.65rem; background: var(--bg-body); }
         .sync-field-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
         .sync-field-current { font-size: 0.7rem; color: var(--text-muted); }
+
+        /* Floating button + panel Riwayat Penyesuaian Saldo (cuma tampil di tab Riwayat) */
+        #adjustmentFAB {
+            position: fixed; right: 1rem; bottom: 5.5rem; z-index: 500;
+            width: 52px; height: 52px; border-radius: 50%; border: none;
+            background: var(--primary); color: white; font-size: 1.35rem;
+            box-shadow: var(--shadow-lg); cursor: pointer; align-items: center; justify-content: center;
+        }
+        #adjustmentFAB .tp-nav-badge { top: -4px; right: -4px; }
+        #adjustmentPanelOverlay {
+            display: none; position: fixed; inset: 0; z-index: 600;
+            background: rgba(0,0,0,0.4); align-items: flex-end; justify-content: center;
+        }
+        #adjustmentPanelOverlay.show { display: flex; }
+        #adjustmentPanel {
+            background: var(--bg-surface); border-radius: 24px 24px 0 0;
+            width: 100%; max-width: 480px; max-height: 78vh; overflow-y: auto;
+            padding: 1.25rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom));
+            animation: slideUpPopup 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .adj-item-actions { display: flex; gap: 0.35rem; flex-shrink: 0; }
+        .adj-item-actions button { background: var(--bg-surface-hover); border: none; width: 28px; height: 28px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; color: var(--text-muted); }
+        .adj-item-actions button:hover { background: var(--border-light); }
         .fap-item {
             display: flex; gap: 0.75rem; align-items: center;
             border: 1px solid var(--border-light); border-radius: var(--radius-md);
@@ -812,6 +835,11 @@
             color: var(--text-muted);
             background: transparent;
             transition: all var(--transition-normal);
+        }
+        .tx-type-btn.active {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            box-shadow: var(--shadow-sm);
         }
         #txTypeBtnIn.active {
             background: var(--success-light);
@@ -1159,8 +1187,10 @@
         #todoReminderPopup .trp-item-tag.today { background: rgba(184,83,42,0.12); color: #b8532a; }
         #todoReminderPopup .trp-empty { text-align: center; padding: 1.25rem 0.5rem; color: var(--text-muted); font-size: 0.85rem; }
         #todoReminderPopup .trp-dont-show { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.9rem; cursor: pointer; }
-        #todoReminderPopup .trp-dont-show input { accent-color: var(--primary); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
+        #todoReminderPopup .trp-dont-show input { display: inline-block; accent-color: var(--primary); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
         #todoReminderPopup .trp-dont-show span { font-size: 0.75rem; color: var(--text-muted); user-select: none; }
+        .hpp-dont-show input { display: inline-block; accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer; flex-shrink: 0; }
+        .hpp-dont-show span { user-select: none; }
     </style>
 
 </head>
@@ -1524,18 +1554,67 @@
                 
                 <div id="historyLock" class="premium-lock" style="display:none!important;"></div>
             </div>
+        </main>
+
+        <!-- Floating button Riwayat Penyesuaian Saldo (cuma muncul di tab Riwayat) -->
+        <button type="button" id="adjustmentFAB" onclick="App.UI.openAdjustmentPanel()" style="display:none;">
+            🔄<span class="tp-nav-badge" id="adjustmentFABBadge"></span>
+        </button>
+
+        <!-- Panel Riwayat Penyesuaian Saldo -->
+        <div id="adjustmentPanelOverlay" onclick="if(event.target===this) App.UI.closeAdjustmentPanel()">
+            <div id="adjustmentPanel">
+                <div class="modal-header" style="margin-bottom:0.5rem;">
+                    <h2 style="font-size:1.05rem;">🔄 Riwayat Penyesuaian Saldo</h2>
+                    <button class="modal-close" onclick="App.UI.closeAdjustmentPanel()">&times;</button>
+                </div>
+                <p class="text-xs text-muted" style="margin-bottom:0.9rem;">Hasil dari fitur Sinkronkan Saldo, dipisah biar riwayat transaksi biasa tetap bersih.</p>
+                <div id="adjustmentHistoryList" class="list-group"></div>
+            </div>
+        </div>
+
+        <!-- 3. TAB ANALYTICS -->
+        <!-- 3. TAB LAPORAN -->
+        <main class="app-section" id="view-laporan">
+            <div class="card">
+                <h2 class="section-title">📄 Laporan Keuangan</h2>
+                <div class="tx-type-toggle" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <button type="button" class="tx-type-btn active" id="repPeriodMonthBtn" onclick="App.UI.setReportPeriod('month')">Bulanan</button>
+                    <button type="button" class="tx-type-btn" id="repPeriodWeekBtn" onclick="App.UI.setReportPeriod('week')">Mingguan</button>
+                    <button type="button" class="tx-type-btn" id="repPeriodCustomBtn" onclick="App.UI.setReportPeriod('custom')">Custom</button>
+                </div>
+                <div id="repCustomDateWrap" style="display:none; margin-bottom:1rem;">
+                    <div class="grid-2">
+                        <div class="form-group"><label>Dari</label><input type="date" id="repDateFrom" onchange="App.UI.renderReport()"></div>
+                        <div class="form-group"><label>Sampai</label><input type="date" id="repDateTo" onchange="App.UI.renderReport()"></div>
+                    </div>
+                </div>
+                <p class="text-xs text-muted font-semibold" id="repPeriodLabel" style="text-align:center;"></p>
+            </div>
+
+            <div id="repSummaryCards" style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.25rem;"></div>
 
             <div class="card">
-                <button type="button" onclick="App.UI.toggleAdjustmentHistory()" style="width:100%; background:none; border:none; padding:0; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-                    <span class="font-bold text-sm">🔄 Riwayat Penyesuaian Saldo <span class="text-muted" style="font-weight:500;">(<span id="adjustmentHistoryCount">0</span>)</span></span>
-                    <span id="adjustmentHistoryToggleIcon" class="text-muted" style="transition: transform 0.2s;">▾</span>
-                </button>
-                <p class="text-xs text-muted" style="margin-top:0.5rem;">Hasil dari fitur Sinkronkan Saldo, dipisah biar riwayat transaksi biasa tetap bersih.</p>
-                <div id="adjustmentHistoryList" class="list-group" style="display:none; margin-top:0.9rem;"></div>
+                <h3 class="text-sm font-semibold text-center" style="margin-bottom:0.25rem;">📊 Pengeluaran Harian</h3>
+                <p class="text-xs text-muted text-center" style="margin-bottom:1rem;" id="repBorosLabel"></p>
+                <div style="position:relative; height:220px; width:100%;"><canvas id="chartDaily"></canvas></div>
+            </div>
+
+            <div class="card">
+                <h3 class="text-sm font-semibold" style="margin-bottom:1rem;">🗂️ Per Kategori</h3>
+                <div id="repCategoryList"></div>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width:100%; padding:1rem; margin-bottom:1.25rem; font-size:0.95rem;" onclick="App.Handlers.exportReportPDF()">📄 Export Laporan PDF</button>
+
+            <!-- Grafik Pengeluaran (dipindah dari tab Kelola) -->
+            <div class="card">
+                <h2 class="section-title">📊 Grafik Pengeluaran</h2>
+                <div class="form-group" style="margin-bottom: 2.5rem;"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Kategori Bulan Ini</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartCategory"></canvas></div></div>
+                <div class="form-group"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Trend Arus Kas (6 Bulan)</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartTrend"></canvas></div></div>
             </div>
         </main>
 
-        <!-- 3. TAB ANALYTICS -->
         <!-- 4. TAB PLANNING (BUDGET & TARGET) -->
         <main class="app-section" id="view-planning">
             <!-- Tagihan & Cicilan (Paylater) -->
@@ -1592,13 +1671,6 @@
                 <div id="transfersList" class="list-group" style="display:none; margin-top:0.75rem;"><div class="skeleton" style="height: 70px;"></div></div>
             </div>
 
-            <!-- Grafik Pengeluaran (dipindah dari tab Analisis) -->
-            <div class="card">
-                <h2 class="section-title">📊 Grafik Pengeluaran</h2>
-                <div class="form-group" style="margin-bottom: 2.5rem;"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Kategori Bulan Ini</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartCategory"></canvas></div></div>
-                <div class="form-group"><h3 class="text-sm font-semibold text-center" style="margin-bottom: 1rem;">Trend Arus Kas (6 Bulan)</h3><div style="position: relative; height: 250px; width: 100%;"><canvas id="chartTrend"></canvas></div></div>
-            </div>
-
         </main>
 
         <!-- 4B. TAB ALOKASI -->
@@ -1628,7 +1700,10 @@
                     <button type="button" class="btn btn-primary" style="width:100%;" onclick="App.Handlers.saveAllocationSettings()">💾 Simpan Pengaturan</button>
                 </div>
 
+                <div id="allocSummaryHeader" style="background:var(--bg-body); border-radius:var(--radius-lg); padding:1.1rem; margin-bottom:1rem; text-align:center;"></div>
+                <div style="position:relative; height:160px; margin-bottom:1.25rem;"><canvas id="chartAllocDonut"></canvas></div>
                 <div id="allocProgressCards" style="display:flex; flex-direction:column; gap:0.85rem;"></div>
+                <div id="allocDailyTips" style="margin-top:1rem;"></div>
             </div>
 
             <div class="card" id="allocInsightCard" style="display:none; background: var(--primary-light); border: 1px solid var(--primary);"></div>
@@ -1955,6 +2030,7 @@
             <div class="nav-container">
                 <button class="nav-item active" onclick="App.UI.switchTab('input', this)"><div class="nav-icon">✍️</div><span class="nav-label">Input</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('history', this)"><div class="nav-icon">🕰️</div><span class="nav-label">Riwayat</span></button>
+                <button class="nav-item" onclick="App.UI.switchTab('laporan', this)"><div class="nav-icon">📄</div><span class="nav-label">Laporan</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('planning', this)"><div class="nav-icon">🗂️</div><span class="nav-label">Kelola</span></button>
                 <button class="nav-item" onclick="App.UI.switchTab('alokasi', this)"><div class="nav-icon">🎯</div><span class="nav-label">Alokasi</span></button>
                 <button class="nav-item" id="navTodoTab" onclick="App.UI.switchTab('todo', this)"><div class="nav-icon nav-icon-wrap">✅<span class="tp-nav-badge" id="todoNavBadge"></span></div><span class="nav-label">Tugas</span></button>
@@ -3211,7 +3287,7 @@
                     else if (status === 'error') { dot.classList.add('error'); txt.textContent = 'Offline'; } 
                     else { txt.textContent = 'Menyinkronkan...'; }
                 },
-                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderAdjustmentHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-planning').classList.contains('active')) this.renderAnalytics(); if(document.getElementById('view-alokasi').classList.contains('active')) this.renderAllocation(); },
+                renderAll() { this.renderBalances(); this.renderPaylaters(); this.renderDebts(); this.renderHistory(); this.renderAdjustmentHistory(); this.renderBudgets(); this.renderTransfers(); this.renderSettings(); App.QuickTemplate.render(); if(document.getElementById('view-laporan').classList.contains('active')) { this.renderAnalytics(); this.renderReport(); } if(document.getElementById('view-alokasi').classList.contains('active')) this.renderAllocation(); },
                 renderCategoriesSelect() {
                     const all = [...App.Config.DefaultCategories, ...App.State.customCategories];
                     const options = all.map(c => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
@@ -3499,8 +3575,101 @@
                         
                     const btnUpgradeRec = document.getElementById('btnUpgradeRec'); if(btnUpgradeRec) btnUpgradeRec.style.display = App.State.isPremium ? 'none' : 'block';
                 },
-                renderAnalytics() {
+                _reportPeriod: 'month',
+                setReportPeriod(type) {
+                    this._reportPeriod = type;
+                    ['Month', 'Week', 'Custom'].forEach(t => document.getElementById(`repPeriod${t}Btn`).classList.toggle('active', t.toLowerCase() === type));
+                    document.getElementById('repCustomDateWrap').style.display = type === 'custom' ? 'block' : 'none';
+                    if (type === 'custom') {
+                        const from = document.getElementById('repDateFrom'), to = document.getElementById('repDateTo');
+                        if (!from.value) { const d = new Date(); d.setDate(d.getDate() - 6); from.value = d.toISOString().split('T')[0]; }
+                        if (!to.value) to.value = new Date().toISOString().split('T')[0];
+                    }
+                    this.renderReport();
+                },
+                getReportDateRange() {
+                    const now = new Date(); let start, end, label;
+                    if (this._reportPeriod === 'week') {
+                        const day = now.getDay(); start = new Date(now); start.setDate(now.getDate() - (day === 0 ? 6 : day - 1)); start.setHours(0,0,0,0);
+                        end = new Date(start); end.setDate(start.getDate() + 6);
+                        label = `${start.toLocaleDateString('id-ID',{day:'numeric',month:'short'})} — ${end.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}`;
+                    } else if (this._reportPeriod === 'custom') {
+                        const fromVal = document.getElementById('repDateFrom').value, toVal = document.getElementById('repDateTo').value;
+                        start = fromVal ? new Date(fromVal + 'T00:00:00') : new Date(now.getFullYear(), now.getMonth(), 1);
+                        end = toVal ? new Date(toVal + 'T00:00:00') : now;
+                        label = `${start.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})} — ${end.toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}`;
+                    } else {
+                        start = new Date(now.getFullYear(), now.getMonth(), 1);
+                        end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                        label = start.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+                    }
+                    return { start, end, label };
+                },
+                renderReport() {
                     if (App.State.isLoading) return;
+                    const { start, end, label } = this.getReportDateRange();
+                    const startStr = start.toISOString().split('T')[0], endStr = end.toISOString().split('T')[0];
+                    document.getElementById('repPeriodLabel').textContent = `Periode: ${label}`;
+
+                    const tx = App.State.transactions.filter(t => !t.isAdjustment && t.tanggal >= startStr && t.tanggal <= endStr);
+                    const totIn = tx.reduce((s,t) => s + (t.pemasukan||0), 0);
+                    const totOut = tx.reduce((s,t) => s + (t.pengeluaran||0), 0);
+
+                    document.getElementById('repSummaryCards').innerHTML = `
+                        <div class="home-mini-card bc-cash"><div class="bc-label">⬆ Pemasukan</div><div class="bc-value">${App.Utils.formatCurrency(totIn)}</div></div>
+                        <div class="home-mini-card bc-saldo"><div class="bc-label">⬇ Pengeluaran</div><div class="bc-value">${App.Utils.formatCurrency(totOut)}</div></div>
+                        <div class="home-mini-card bc-cash" style="grid-column:1/-1;"><div class="bc-label">💰 Selisih Bersih</div><div class="bc-value">${totIn - totOut >= 0 ? '+' : ''}${App.Utils.formatCurrency(totIn - totOut)}</div></div>
+                    `;
+
+                    // Agregasi harian
+                    const dayMs = 86400000;
+                    const dayCount = Math.round((end - start) / dayMs) + 1;
+                    const dailyLabels = [], dailyData = [];
+                    let maxDay = null, maxAmt = -1;
+                    for (let i = 0; i < dayCount; i++) {
+                        const d = new Date(start.getTime() + i * dayMs);
+                        const ds = d.toISOString().split('T')[0];
+                        const sum = tx.filter(t => t.tanggal === ds).reduce((s,t) => s + (t.pengeluaran||0), 0);
+                        dailyLabels.push(d.toLocaleDateString('id-ID', { day: 'numeric', month: dayCount > 31 ? 'short' : undefined }));
+                        dailyData.push(sum);
+                        if (sum > maxAmt) { maxAmt = sum; maxDay = d; }
+                    }
+                    const borosLabel = document.getElementById('repBorosLabel');
+                    borosLabel.textContent = (maxAmt > 0) ? `Paling boros: ${maxDay.toLocaleDateString('id-ID',{day:'numeric',month:'long'})} (${App.Utils.formatCurrency(maxAmt)})` : 'Belum ada pengeluaran di periode ini';
+
+                    const ctxDaily = document.getElementById('chartDaily');
+                    if (ctxDaily && typeof Chart !== 'undefined') {
+                        if (App.State.charts.daily) App.State.charts.daily.destroy();
+                        App.State.charts.daily = new Chart(ctxDaily, {
+                            type: 'bar',
+                            data: { labels: dailyLabels, datasets: [{ label: 'Pengeluaran', data: dailyData, backgroundColor: dailyData.map(v => v === maxAmt && v > 0 ? 'rgba(239,68,68,0.8)' : 'rgba(99,102,241,0.5)'), borderRadius: 4 }] },
+                            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => App.Utils.formatCurrency(v) } } } }
+                        });
+                    }
+
+                    // Per kategori
+                    const catMap = {};
+                    tx.forEach(t => { if (t.pengeluaran) catMap[t.kategori] = (catMap[t.kategori] || 0) + t.pengeluaran; });
+                    const catList = Object.entries(catMap).sort((a,b) => b[1] - a[1]);
+                    const catBox = document.getElementById('repCategoryList');
+                    if (!catList.length) {
+                        catBox.innerHTML = `<p class="text-sm text-muted text-center" style="padding:1rem 0;">Belum ada pengeluaran di periode ini.</p>`;
+                    } else {
+                        catBox.innerHTML = catList.map(([catId, amt]) => {
+                            const catObj = [...App.Config.DefaultCategories, ...App.State.customCategories].find(c => c.id === catId) || { icon: '📦', name: catId };
+                            const perc = totOut > 0 ? (amt / totOut) * 100 : 0;
+                            return `<div style="margin-bottom:0.85rem;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem;">
+                                    <span class="text-sm font-semibold">${catObj.icon} ${catObj.name}</span>
+                                    <span class="text-sm font-semibold">${App.Utils.formatCurrency(amt)} <span class="text-muted" style="font-weight:400;">(${perc.toFixed(0)}%)</span></span>
+                                </div>
+                                <div class="progress-track"><div class="progress-fill" style="width:${perc}%; background:var(--primary);"></div></div>
+                            </div>`;
+                        }).join('');
+                    }
+                },
+                renderAnalytics() {
+                    if (App.State.isLoading || typeof Chart === 'undefined') return;
                     const tData = App.State.transactions; const d = new Date(); const currentMonth = d.toISOString().substring(0,7);
                     const textColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#f8fafc' : '#0f172a'; const gridColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#334155' : '#e2e8f0';
                     
@@ -3522,8 +3691,9 @@
                     document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active'));
                     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
                     document.getElementById('view-'+id).classList.add('active'); btn.classList.add('active');
-                    if(id === 'planning') setTimeout(() => this.renderAnalytics(), 100);
+                    if(id === 'laporan') setTimeout(() => { this.renderAnalytics(); this.renderReport(); }, 100);
                     if(id === 'alokasi') setTimeout(() => this.renderAllocation(), 100);
+                    const fab = document.getElementById('adjustmentFAB'); if (fab) fab.style.display = (id === 'history') ? 'flex' : 'none';
                     if(id === 'admin' && App.State.isAdmin) App.Admin.loadData();
                 },
                 showModal(id) { document.getElementById(id).classList.add('show'); },
@@ -3545,17 +3715,13 @@
                     el.style.display = show ? 'block' : 'none';
                     if (icon) icon.style.transform = show ? 'rotate(180deg)' : 'rotate(0deg)';
                 },
-                toggleAdjustmentHistory() {
-                    const el = document.getElementById('adjustmentHistoryList'); const icon = document.getElementById('adjustmentHistoryToggleIcon');
-                    if (!el) return;
-                    const show = el.style.display === 'none' || !el.style.display;
-                    el.style.display = show ? 'block' : 'none';
-                    if (icon) icon.style.transform = show ? 'rotate(180deg)' : 'rotate(0deg)';
-                },
+                openAdjustmentPanel() { document.getElementById('adjustmentPanelOverlay').classList.add('show'); },
+                closeAdjustmentPanel() { document.getElementById('adjustmentPanelOverlay').classList.remove('show'); },
                 renderAdjustmentHistory() {
                     const list = document.getElementById('adjustmentHistoryList'); if (!list || App.State.isLoading) return;
                     const adj = App.State.transactions.filter(t => t.isAdjustment).sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
-                    const countEl = document.getElementById('adjustmentHistoryCount'); if (countEl) countEl.textContent = adj.length;
+                    const badge = document.getElementById('adjustmentFABBadge');
+                    if (badge) { if (adj.length) { badge.textContent = adj.length > 9 ? '9+' : adj.length; badge.classList.add('show'); } else { badge.classList.remove('show'); } }
                     if (!adj.length) { list.innerHTML = `<div class="text-center" style="padding:1.5rem 1rem;"><p class="text-sm text-muted">Belum ada riwayat penyesuaian.</p></div>`; return; }
                     list.innerHTML = adj.map(t => {
                         const isPlus = t.pemasukan > 0;
@@ -3568,8 +3734,12 @@
                                     <span class="item-meta">${App.Utils.formatDateStr(t.tanggal)}</span>
                                 </div>
                             </div>
-                            <div class="item-right">
+                            <div class="item-right" style="gap:0.6rem;">
                                 <span class="text-sm font-semibold ${isPlus ? 'text-success' : 'text-danger'}">${isPlus ? '+' : '-'}${App.Utils.formatCurrency(amt)}</span>
+                                <div class="adj-item-actions">
+                                    <button onclick="App.UI.closeAdjustmentPanel(); App.Handlers.openEdit(${t.id});" title="Edit">✏️</button>
+                                    <button onclick="App.Handlers.deleteAdjustment(${t.id})" title="Hapus">🗑️</button>
+                                </div>
                             </div>
                         </div>`;
                     }).join('');
@@ -3621,6 +3791,40 @@
                     if (App.State.isLoading) return;
                     const status = App.Handlers.getAllocationStatus();
                     const box = document.getElementById('allocProgressCards'); if (!box) return;
+
+                    // Ringkasan total gabungan
+                    const totalAlloc = status.reduce((s,x) => s + x.allocated, 0);
+                    const totalSpent = status.reduce((s,x) => s + x.spent, 0);
+                    const totalPerc = totalAlloc > 0 ? (totalSpent / totalAlloc) * 100 : 0;
+                    const now = new Date();
+                    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+                    const daysLeft = Math.max(lastDay - now.getDate() + 1, 1);
+                    const totalRemaining = totalAlloc - totalSpent;
+                    const dailyAllowance = totalRemaining > 0 ? totalRemaining / daysLeft : 0;
+                    const summaryColor = totalPerc >= 100 ? 'var(--danger)' : totalPerc >= 80 ? 'var(--warning)' : 'var(--success)';
+
+                    const summaryBox = document.getElementById('allocSummaryHeader');
+                    if (summaryBox) {
+                        summaryBox.innerHTML = `
+                            <div class="text-xs text-muted font-semibold" style="text-transform:uppercase; letter-spacing:0.03em;">Total Bulan Ini</div>
+                            <div class="font-bold" style="font-size:1.65rem; margin:0.25rem 0; color:${summaryColor};">${App.Utils.formatCurrency(totalSpent)}</div>
+                            <div class="text-xs text-muted">dari ${App.Utils.formatCurrency(totalAlloc)} (${totalPerc.toFixed(0)}%)</div>
+                            <div class="progress-track" style="margin:0.75rem 0 0.6rem;"><div class="progress-fill" style="width:${Math.min(totalPerc,100)}%; background:${summaryColor};"></div></div>
+                            <div class="text-xs font-semibold" style="color:${summaryColor};">${totalRemaining >= 0 ? `💡 Aman ${dailyAllowance > 0 ? App.Utils.formatCurrency(dailyAllowance) + '/hari' : ''} sampai akhir bulan (${daysLeft} hari lagi)` : `⚠️ Sudah lebih ${App.Utils.formatCurrency(-totalRemaining)} dari total budget`}</div>
+                        `;
+                    }
+
+                    // Donut chart pembagian pos
+                    const ctxDonut = document.getElementById('chartAllocDonut');
+                    if (ctxDonut && typeof Chart !== 'undefined') {
+                        if (App.State.charts.allocDonut) App.State.charts.allocDonut.destroy();
+                        App.State.charts.allocDonut = new Chart(ctxDonut, {
+                            type: 'doughnut',
+                            data: { labels: status.map(s => s.label), datasets: [{ data: status.map(s => s.allocated), backgroundColor: ['#6366f1', '#f59e0b', '#10b981'], borderWidth: 3, borderColor: getComputedStyle(document.body).getPropertyValue('--bg-surface') }] },
+                            options: { responsive: true, maintainAspectRatio: false, cutout: '68%', plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } } }
+                        });
+                    }
+
                     box.innerHTML = status.map(s => {
                         const percClamped = Math.min(s.perc, 100);
                         const barColor = s.perc >= 100 ? 'var(--danger)' : s.perc >= 80 ? 'var(--warning)' : 'var(--success)';
@@ -3634,6 +3838,15 @@
                             <div class="text-xs ${s.remaining < 0 ? 'text-danger' : 'text-muted'} font-semibold" style="margin-top:0.5rem;">${s.remaining < 0 ? `⚠️ Sudah lebih ${App.Utils.formatCurrency(-s.remaining)}` : `Sisa ${App.Utils.formatCurrency(s.remaining)}`}</div>
                         </div>`;
                     }).join('');
+
+                    // Saran budget harian per pos
+                    const dailyBox = document.getElementById('allocDailyTips');
+                    if (dailyBox) {
+                        dailyBox.innerHTML = `<div class="fap-section-title">📅 Jatah Harian Sisa Bulan Ini (${daysLeft} hari lagi)</div>` + status.map(s => {
+                            const daily = s.remaining > 0 ? s.remaining / daysLeft : 0;
+                            return `<div class="subwallet-item"><span class="subwallet-label">${s.icon} ${s.label}</span><span class="subwallet-value">${daily > 0 ? App.Utils.formatCurrency(daily) + '/hari' : 'Rp 0/hari'}</span></div>`;
+                        }).join('');
+                    }
 
                     // Rekomendasi otomatis
                     const insightBox = document.getElementById('allocInsightCard');
@@ -3817,6 +4030,7 @@
                     App.DB.save(); App.UI.closeModal('editModal'); App.UI.renderAll(); App.UI.showToast('Perubahan disimpan!', 'success');
                 },
                 async deleteTx(id) { const yes = await App.UI.confirm('Transaksi ini akan dihapus secara permanen.'); if(!yes) return; App.State.transactions = App.State.transactions.filter(t => t.id !== id); App.DB.save(); App.UI.closeModal('editModal'); App.UI.renderAll(); App.UI.showToast('Transaksi Dihapus', 'success'); },
+                async deleteAdjustment(id) { const yes = await App.UI.confirm('Hapus catatan penyesuaian ini?'); if(!yes) return; App.State.transactions = App.State.transactions.filter(t => t.id !== id); App.DB.save(); App.UI.renderAll(); App.UI.showToast('Penyesuaian dihapus', 'success'); },
                 debounceSearch() { clearTimeout(App.State.searchTimer); App.State.searchTimer = setTimeout(() => App.UI.renderHistory(), 300); },
                 resetFilters() { document.getElementById('filterStart').value = ''; document.getElementById('filterEnd').value = ''; document.getElementById('filterSearch').value = ''; document.getElementById('filterCategory').value = ''; document.getElementById('filterAccount').value = ''; document.getElementById('filterType').value = 'all'; App.UI.renderHistory(); },
                 
@@ -4360,6 +4574,69 @@
                             }
                         } catch(err) { console.error(err); App.UI.showToast('Gagal memproses file', 'error'); } e.target.value = '';
                     }; reader.readAsText(file);
+                },
+                exportReportPDF() {
+                    if(!window.jspdf || !window.jspdf.jsPDF) return App.UI.showToast('Library gagal dimuat.', 'error');
+                    App.UI.showToast('Menyiapkan Laporan PDF...', 'info');
+                    setTimeout(() => {
+                        const { start, end, label } = App.UI.getReportDateRange();
+                        const startStr = start.toISOString().split('T')[0], endStr = end.toISOString().split('T')[0];
+                        const tx = App.State.transactions.filter(t => !t.isAdjustment && t.tanggal >= startStr && t.tanggal <= endStr).sort((a,b) => new Date(a.tanggal) - new Date(b.tanggal));
+                        const totIn = tx.reduce((s,t) => s + (t.pemasukan||0), 0);
+                        const totOut = tx.reduce((s,t) => s + (t.pengeluaran||0), 0);
+                        const catMap = {}; tx.forEach(t => { if (t.pengeluaran) catMap[t.kategori] = (catMap[t.kategori]||0) + t.pengeluaran; });
+                        const catRows = Object.entries(catMap).sort((a,b) => b[1]-a[1]).map(([id, amt]) => {
+                            const c = [...App.Config.DefaultCategories, ...App.State.customCategories].find(x => x.id === id) || { name: id };
+                            return [c.name, `Rp ${App.Utils.formatNumber(amt)}`, `${totOut > 0 ? ((amt/totOut)*100).toFixed(1) : 0}%`];
+                        });
+                        const now = new Date();
+                        const terbit = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ', ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+                        const doc = new window.jspdf.jsPDF();
+                        // Header
+                        doc.setFillColor(79, 70, 229); doc.rect(0, 0, 210, 32, 'F');
+                        doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(18);
+                        doc.text('Laporan Keuangan Pro', 14, 16);
+                        doc.setFont('helvetica','normal'); doc.setFontSize(10);
+                        doc.text(`Periode: ${label}`, 14, 24);
+
+                        doc.setTextColor(90); doc.setFontSize(8.5);
+                        doc.text(`Diterbitkan pada ${terbit}`, 14, 40);
+
+                        // Ringkasan
+                        let y = 50;
+                        doc.setTextColor(0); doc.setFont('helvetica','bold'); doc.setFontSize(12);
+                        doc.text('Ringkasan', 14, y); y += 7;
+                        doc.setFont('helvetica','normal'); doc.setFontSize(10);
+                        doc.text(`Total Pemasukan   : Rp ${App.Utils.formatNumber(totIn)}`, 14, y); y += 6;
+                        doc.text(`Total Pengeluaran : Rp ${App.Utils.formatNumber(totOut)}`, 14, y); y += 6;
+                        doc.setFont('helvetica','bold');
+                        doc.text(`Selisih Bersih    : Rp ${App.Utils.formatNumber(totIn - totOut)}`, 14, y); y += 10;
+
+                        // Tabel kategori
+                        doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.text('Rincian per Kategori', 14, y); y += 4;
+                        doc.autoTable({ head: [['Kategori', 'Jumlah', '% dari Pengeluaran']], body: catRows.length ? catRows : [['(Tidak ada pengeluaran)', '-', '-']], startY: y, theme: 'grid', headStyles: { fillColor: [79,70,229] }, styles: { fontSize: 9 } });
+                        y = doc.lastAutoTable.finalY + 10;
+
+                        // Tabel transaksi
+                        if (y > 250) { doc.addPage(); y = 20; }
+                        doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.text('Rincian Transaksi', 14, y); y += 4;
+                        const txRows = tx.map(t => {
+                            const cat = ([...App.Config.DefaultCategories, ...App.State.customCategories].find(c=>c.id===t.kategori)||{}).name || t.kategori;
+                            return [App.Utils.formatDateStr(t.tanggal), cat, t.keterangan || '-', t.pemasukan ? `Rp ${App.Utils.formatNumber(t.pemasukan)}` : '-', t.pengeluaran ? `Rp ${App.Utils.formatNumber(t.pengeluaran)}` : '-'];
+                        });
+                        doc.autoTable({ head: [['Tanggal','Kategori','Keterangan','Pemasukan','Pengeluaran']], body: txRows.length ? txRows : [['-','-','Tidak ada transaksi','-','-']], startY: y, theme: 'grid', headStyles: { fillColor: [79,70,229] }, styles: { fontSize: 8.5 } });
+
+                        // Footer tiap halaman
+                        const pageCount = doc.internal.getNumberOfPages();
+                        for (let i = 1; i <= pageCount; i++) {
+                            doc.setPage(i); doc.setFontSize(8); doc.setTextColor(150);
+                            doc.text(`Keuangan Pro — Laporan Keuangan · Halaman ${i} dari ${pageCount}`, 14, 290);
+                        }
+
+                        doc.save(`Laporan_KeuanganPro_${startStr}_${endStr}.pdf`);
+                        App.UI.showToast('Laporan PDF berhasil diunduh!', 'success');
+                    }, 400);
                 },
                 exportPDF() {
                     if(!App.State.isPremium) { App.UI.showModal('premiumModal'); return; }
